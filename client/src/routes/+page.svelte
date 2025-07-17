@@ -1,45 +1,28 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import type { Course } from '$lib/types';
 	
-	// Mock data for demo
-	const featuredCourses: Course[] = [
-		{
-			id: 1,
-			title: "Introduction to SvelteKit",
-			description: "Learn the basics of SvelteKit framework and build your first application",
-			thumbnail_url: null,
-			difficulty: "beginner",
-			estimated_duration: 120,
-			user_id: 1,
-			is_published: true,
-			created_at: "2024-01-01T00:00:00Z",
-			updated_at: "2024-01-01T00:00:00Z"
-		},
-		{
-			id: 2,
-			title: "Advanced SvelteKit Patterns",
-			description: "Master advanced patterns and best practices for building scalable applications",
-			thumbnail_url: null,
-			difficulty: "intermediate",
-			estimated_duration: 180,
-			user_id: 1,
-			is_published: true,
-			created_at: "2024-01-01T00:00:00Z",
-			updated_at: "2024-01-01T00:00:00Z"
-		},
-		{
-			id: 3,
-			title: "Building APIs with SvelteKit",
-			description: "Create robust APIs using SvelteKit's server-side capabilities",
-			thumbnail_url: null,
-			difficulty: "intermediate",
-			estimated_duration: 150,
-			user_id: 2,
-			is_published: true,
-			created_at: "2024-01-01T00:00:00Z",
-			updated_at: "2024-01-01T00:00:00Z"
+	let featuredCourses: Course[] = [];
+	let loading = true;
+	
+	async function loadFeaturedCourses() {
+		try {
+			const response = await fetch('/api/courses?limit=3');
+			const data = await response.json();
+			
+			if (response.ok) {
+				featuredCourses = data.courses.slice(0, 3); // Get first 3 courses
+			}
+		} catch (error) {
+			console.error('Error loading featured courses:', error);
+		} finally {
+			loading = false;
 		}
-	];
+	}
+	
+	onMount(() => {
+		loadFeaturedCourses();
+	});
 
 	const features = [
 		{
