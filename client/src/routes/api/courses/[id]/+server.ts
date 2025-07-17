@@ -1,5 +1,5 @@
 import { json } from '@sveltejs/kit';
-import { getCourseWithLessons } from '$lib/mock-data';
+import { getConnection } from '$lib/database';
 import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = async ({ params }) => {
@@ -13,18 +13,35 @@ export const GET: RequestHandler = async ({ params }) => {
 			);
 		}
 
-		const result = await getCourseWithLessons(courseId);
+		const connection = await getConnection();
 		
-		if (!result) {
+		// Get course
+		const [courseRows] = await connection.execute(
+			'SELECT * FROM courses WHERE id = ?',
+			[courseId]
+		);
+		
+		const courses = courseRows as any[];
+		if (courses.length === 0) {
 			return json(
 				{ error: 'Course not found' },
 				{ status: 404 }
 			);
 		}
+		
+		const course = courses[0];
+		
+		// Get lessons for this course
+		const [lessonRows] = await connection.execute(
+			'SELECT * FROM lessons WHERE course_id = ? ORDER BY order_index ASC',
+			[courseId]
+		);
+		
+		const lessons = lessonRows as any[];
 
 		return json({
-			course: result.course,
-			lessons: result.lessons
+			course,
+			lessons
 		});
 	} catch (error) {
 		console.error('Error fetching course:', error);

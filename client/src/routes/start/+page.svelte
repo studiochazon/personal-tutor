@@ -1,148 +1,195 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { goto } from '$app/navigation';
 	import type { CreateCourseRequest } from '$lib/types';
 
-	let messages: Array<{ role: 'user' | 'assistant'; content: string; timestamp: Date }> = [];
-	let currentMessage = '';
+	let userPrompt = '';
 	let isLoading = false;
-	let openaiApiKey = '';
+	let errorMessage = '';
+	let testResult = '';
 
-	// System prompt for course creation
-	const systemPrompt = `You are an expert course creator for Personal Tutor AI. Your job is to help users create comprehensive, well-structured courses.
+	// System prompt for course creation - this should match the content from system-prompt.md
+	const systemPrompt = `You are an expert educational content creator and curriculum designer for Personal Tutor AI. Your role is to create comprehensive, engaging, and well-structured learning courses based on user requests.
 
-When a user wants to create a course, follow these steps:
+## Core Principles
 
-1. **Understand the Topic**: Ask clarifying questions about what they want to teach
-2. **Define Learning Objectives**: Help them identify what students should learn
-3. **Structure the Course**: Create a logical progression of lessons
-4. **Generate Content**: Provide detailed lesson content with examples and exercises
+### 1. Educational Excellence
+- Create content that follows proven learning methodologies
+- Structure courses with clear learning objectives
+- Ensure progressive difficulty and logical flow
+- Include practical examples and real-world applications
+- Design for different learning styles (visual, auditory, kinesthetic)
 
-Course Structure Guidelines:
-- Start with an introduction lesson
-- Break complex topics into digestible lessons
-- Include practical exercises and examples
-- End with a summary or project
-- Aim for 5-15 lessons depending on complexity
-- Each lesson should be 10-30 minutes of content
+### 2. Content Quality Standards
+- Write clear, concise, and engaging content
+- Use active voice and conversational tone
+- Include relevant examples and case studies
+- Provide actionable insights and practical takeaways
+- Ensure accuracy and up-to-date information
 
-Difficulty Levels:
-- Beginner: No prior knowledge required, basic concepts
-- Intermediate: Some background knowledge, deeper concepts
-- Advanced: Significant prior knowledge, complex topics
+### 3. Course Structure Guidelines
+- **Course Title**: Clear, descriptive, and engaging
+- **Description**: Comprehensive overview of what learners will gain
+- **Difficulty Level**: beginner, intermediate, or advanced
+- **Estimated Duration**: Realistic time commitment in minutes
+- **Lessons**: 5-15 lessons per course, depending on complexity
 
-Always ask for the user's topic first, then guide them through the creation process step by step.`;
+## Course Generation Process
 
-	onMount(() => {
-		// Add initial system message
-		messages = [
-			{
-				role: 'assistant',
-				content: `Hello! I'm your AI course creation assistant. I'll help you create a comprehensive course that your students will love.
+### 1. Analysis Phase
+- Analyze the user's learning goals and requirements
+- Identify the target audience and their skill level
+- Determine the scope and depth of the course
+- Assess prerequisites and foundational knowledge needed
 
-What topic would you like to create a course about?`,
-				timestamp: new Date()
-			}
-		];
-	});
+### 2. Planning Phase
+- Create a logical learning progression
+- Break down complex topics into digestible lessons
+- Design hands-on activities and assessments
+- Plan for knowledge retention and application
 
-	async function sendMessage() {
-		if (!currentMessage.trim() || isLoading) return;
+### 3. Content Creation Phase
+- Write engaging lesson content with clear objectives
+- Include practical examples and exercises
+- Provide step-by-step instructions where applicable
+- Incorporate multimedia suggestions (images, videos, diagrams)
 
-		const userMessage = currentMessage.trim();
-		currentMessage = '';
-		
-		// Add user message
-		messages = [...messages, {
-			role: 'user',
-			content: userMessage,
-			timestamp: new Date()
-		}];
+## Lesson Structure Template
 
-		isLoading = true;
+Each lesson should follow this structure:
 
-		try {
-			const response = await fetch('/api/start/chat', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify({
-					messages: [
-						{ role: 'system', content: systemPrompt },
-						...messages.map(msg => ({ role: msg.role, content: msg.content }))
-					]
-				})
-			});
+1. **Introduction** (10-15% of content)
+   - Hook the learner's interest
+   - State learning objectives
+   - Provide context and relevance
 
-			if (!response.ok) {
-				throw new Error('Failed to get response');
-			}
+2. **Main Content** (70-80% of content)
+   - Core concepts and explanations
+   - Examples and demonstrations
+   - Step-by-step processes
+   - Best practices and tips
 
-			const data = await response.json();
-			
-			// Add assistant response
-			messages = [...messages, {
-				role: 'assistant',
-				content: data.content,
-				timestamp: new Date()
-			}];
+3. **Practice/Application** (10-15% of content)
+   - Hands-on exercises
+   - Real-world scenarios
+   - Self-assessment questions
+   - Next steps and preparation
 
-			// If the response includes course data, offer to create it
-			if (data.courseData) {
-				messages = [...messages, {
-					role: 'assistant',
-					content: `Great! I've prepared a course structure for you. Would you like me to create this course in your account? Just say "yes" or "create course" to proceed.`,
-					timestamp: new Date()
-				}];
-			}
+## Content Guidelines
 
-		} catch (error) {
-			console.error('Error:', error);
-			messages = [...messages, {
-				role: 'assistant',
-				content: 'Sorry, I encountered an error. Please try again or check your OpenAI API key configuration.',
-				timestamp: new Date()
-			}];
-		} finally {
-			isLoading = false;
-		}
-	}
+### Writing Style
+- Use clear, simple language appropriate for the target audience
+- Avoid jargon unless necessary, and always explain technical terms
+- Write in an encouraging, supportive tone
+- Use bullet points and numbered lists for better readability
+- Include "Pro Tips" and "Common Mistakes to Avoid" sections
+
+### Engagement Techniques
+- Start with compelling questions or scenarios
+- Use storytelling and real-world examples
+- Include interactive elements and thought experiments
+- Provide immediate value and actionable insights
+- End with clear next steps and motivation
+
+### Assessment and Progress
+- Include self-assessment questions throughout lessons
+- Provide practical exercises and challenges
+- Create opportunities for reflection and application
+- Design progressive complexity in exercises
+
+## Specialized Course Types
+
+### Technical Courses
+- Include code examples and syntax highlighting
+- Provide step-by-step tutorials
+- Include debugging and troubleshooting sections
+- Offer multiple approaches to problem-solving
+
+### Business/Professional Courses
+- Include case studies and industry examples
+- Provide templates and frameworks
+- Include role-playing scenarios
+- Offer networking and career advancement tips
+
+### Creative/Skill-Based Courses
+- Include inspiration and creative prompts
+- Provide multiple techniques and approaches
+- Include critique and feedback frameworks
+- Offer portfolio-building opportunities
+
+## Quality Assurance Checklist
+
+Before finalizing any course, ensure:
+
+- [ ] Learning objectives are clear and measurable
+- [ ] Content flows logically from one lesson to the next
+- [ ] Examples are relevant and up-to-date
+- [ ] Language is appropriate for the target audience
+- [ ] Practical exercises are included
+- [ ] Course provides immediate value
+- [ ] Content is accurate and well-researched
+- [ ] Course length is appropriate for the topic
+- [ ] Difficulty level matches the target audience
+
+## Response Format
+
+When generating a course, always respond with a valid JSON object containing:
+
+{
+  "title": "Engaging and descriptive course title",
+  "description": "Comprehensive overview of the course content and learning outcomes",
+  "difficulty": "beginner|intermediate|advanced",
+  "estimated_duration": number in minutes,
+  "lessons": [
+    {
+      "title": "Clear lesson title",
+      "content": "Comprehensive lesson content with clear structure, examples, and practical exercises",
+      "order_index": number,
+      "estimated_duration": number in minutes
+    }
+  ]
+}
+
+Remember: Your goal is to create transformative learning experiences that empower users to achieve their goals and develop new skills effectively.`;
 
 	async function createCourse() {
-		if (isLoading) return;
+		if (!userPrompt.trim() || isLoading) return;
 
 		isLoading = true;
+		errorMessage = '';
 
 		try {
+			// Create messages array with system prompt and user input
+			const messages = [
+				{ role: 'system', content: systemPrompt },
+				{ role: 'user', content: userPrompt.trim() }
+			];
+
 			const response = await fetch('/api/start/create-course', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'
 				},
-				body: JSON.stringify({
-					messages: messages.map(msg => ({ role: msg.role, content: msg.content }))
-				})
+				body: JSON.stringify({ messages })
 			});
 
 			if (!response.ok) {
-				throw new Error('Failed to create course');
+				const errorData = await response.json();
+				throw new Error(errorData.error || 'Failed to create course');
 			}
 
 			const data = await response.json();
 			
-			messages = [...messages, {
-				role: 'assistant',
-				content: `Perfect! Your course "${data.course.title}" has been created successfully. You can now view and edit it in your dashboard.`,
-				timestamp: new Date()
-			}];
+			if (data.success && data.course) {
+				// Redirect to the course page
+				goto(`/courses/${data.course.id}`);
+			} else {
+				throw new Error('Course creation failed');
+			}
 
 		} catch (error) {
-			console.error('Error:', error);
-			messages = [...messages, {
-				role: 'assistant',
-				content: 'Sorry, I encountered an error while creating your course. Please try again.',
-				timestamp: new Date()
-			}];
+			console.error('Error creating course:', error);
+			errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
 		} finally {
 			isLoading = false;
 		}
@@ -151,12 +198,46 @@ What topic would you like to create a course about?`,
 	function handleKeyPress(event: KeyboardEvent) {
 		if (event.key === 'Enter' && !event.shiftKey) {
 			event.preventDefault();
-			sendMessage();
+			createCourse();
 		}
 	}
 
-	function formatTime(date: Date): string {
-		return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+	async function testDbConnection() {
+		testResult = 'Testing database connection...';
+		
+		try {
+			const response = await fetch('/api/test-db', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({
+					title: 'Test Course',
+					description: 'This is a test course to verify database connection and write operations.',
+					difficulty: 'beginner',
+					estimated_duration: 60,
+					lessons: [
+						{
+							title: 'Test Lesson 1',
+							content: 'This is a test lesson content.',
+							order_index: 1,
+							estimated_duration: 30
+						}
+					]
+				})
+			});
+
+			const data = await response.json();
+			
+			if (data.success) {
+				testResult = `✅ Database test successful! Course created with ID: ${data.courseId}`;
+			} else {
+				testResult = `❌ Database test failed: ${data.error}`;
+			}
+		} catch (error) {
+			console.error('Database test error:', error);
+			testResult = `❌ Database test error: ${error instanceof Error ? error.message : 'Unknown error'}`;
+		}
 	}
 </script>
 
@@ -167,64 +248,90 @@ What topic would you like to create a course about?`,
 <div class="container">
 	<div class="header">
 		<h1>Create Your Course</h1>
-		<p>Chat with AI to design and create your perfect course</p>
+		<p>Describe what you want to teach and AI will create a comprehensive course for you</p>
 	</div>
 
-	<div class="chat-container">
-		<div class="messages" id="messages">
-			{#each messages as message, index}
-				<div class="message {message.role}">
-					<div class="message-content">
-						<div class="message-text">
-							{#if message.role === 'assistant'}
-								<div class="ai-avatar">AI</div>
-							{:else}
-								<div class="user-avatar">You</div>
-							{/if}
-							<div class="text">{message.content}</div>
-						</div>
-						<div class="timestamp">{formatTime(message.timestamp)}</div>
-					</div>
-				</div>
-			{/each}
+	<div class="form-container">
+		<div class="input-section">
+			<label for="course-prompt" class="label">What would you like to teach?</label>
+			<textarea
+				id="course-prompt"
+				bind:value={userPrompt}
+				on:keypress={handleKeyPress}
+				placeholder="e.g., I want to create a course about Python programming for beginners, covering variables, functions, and basic data structures..."
+				disabled={isLoading}
+				rows="6"
+				class="prompt-input"
+			></textarea>
 			
-			{#if isLoading}
-				<div class="message assistant">
-					<div class="message-content">
-						<div class="message-text">
-							<div class="ai-avatar">AI</div>
-							<div class="text">
-								<div class="typing-indicator">
-									<span></span>
-									<span></span>
-									<span></span>
-								</div>
-							</div>
-						</div>
-					</div>
+			{#if errorMessage}
+				<div class="error-message">
+					{errorMessage}
+				</div>
+			{/if}
+
+			<button 
+				on:click={createCourse} 
+				disabled={!userPrompt.trim() || isLoading}
+				class="create-button"
+			>
+				{#if isLoading}
+					<div class="loading-spinner"></div>
+					Creating Course...
+				{:else}
+					Create Course
+				{/if}
+			</button>
+
+			<button 
+				on:click={testDbConnection} 
+				class="test-button"
+				style="margin-top: 10px; background-color: #28a745;"
+			>
+				Test DB Connection & Write
+			</button>
+
+			{#if testResult}
+				<div class="test-result" style="margin-top: 10px; padding: 10px; border-radius: 5px; background-color: #f8f9fa; border: 1px solid #dee2e6;">
+					{testResult}
 				</div>
 			{/if}
 		</div>
 
-		<div class="input-container">
-			<div class="input-wrapper">
-				<textarea
-					bind:value={currentMessage}
-					on:keypress={handleKeyPress}
-					placeholder="Describe what you want to teach..."
-					disabled={isLoading}
-					rows="1"
-				></textarea>
-				<button 
-					on:click={sendMessage} 
-					disabled={!currentMessage.trim() || isLoading}
-					class="send-button"
-					aria-label="Send message"
-				>
-					<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-						<path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
-					</svg>
-				</button>
+		<div class="info-section">
+			<h3>How it works</h3>
+			<div class="steps">
+				<div class="step">
+					<div class="step-number">1</div>
+					<div class="step-content">
+						<h4>Describe Your Topic</h4>
+						<p>Tell us what you want to teach, your target audience, and any specific requirements.</p>
+					</div>
+				</div>
+				<div class="step">
+					<div class="step-number">2</div>
+					<div class="step-content">
+						<h4>AI Generates Course</h4>
+						<p>Our AI creates a comprehensive course structure with lessons, examples, and exercises.</p>
+					</div>
+				</div>
+				<div class="step">
+					<div class="step-number">3</div>
+					<div class="step-content">
+						<h4>Review & Customize</h4>
+						<p>Review your course and make any adjustments to fit your needs perfectly.</p>
+					</div>
+				</div>
+			</div>
+
+			<div class="examples">
+				<h4>Example prompts:</h4>
+				<ul>
+					<li>"Create a beginner-friendly course on JavaScript fundamentals"</li>
+					<li>"Design a course about digital marketing for small business owners"</li>
+					<li>"Make a course teaching photography basics with practical exercises"</li>
+					<li>"Create an advanced course on machine learning algorithms"</li>
+				</ul>
 			</div>
 		</div>
 	</div>
@@ -237,195 +344,189 @@ What topic would you like to create a course about?`,
 
 <style>
 	.container {
-		max-width: 800px;
+		max-width: 1000px;
 		margin: 0 auto;
 		padding: 20px;
-		height: 100vh;
-		display: flex;
-		flex-direction: column;
+		min-height: 100vh;
 	}
 
 	.header {
 		text-align: center;
-		margin-bottom: 20px;
+		margin-bottom: 40px;
 	}
 
 	.header h1 {
 		color: #333;
 		margin-bottom: 8px;
+		font-size: 2.5rem;
 	}
 
 	.header p {
 		color: #666;
 		margin: 0;
+		font-size: 1.1rem;
 	}
 
-	.chat-container {
-		flex: 1;
-		display: flex;
-		flex-direction: column;
-		border: 1px solid #e0e0e0;
-		border-radius: 12px;
-		overflow: hidden;
+	.form-container {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 40px;
+		margin-bottom: 40px;
+	}
+
+	.input-section {
 		background: white;
+		padding: 30px;
+		border-radius: 12px;
 		box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 	}
 
-	.messages {
-		flex: 1;
-		overflow-y: auto;
-		padding: 20px;
-		display: flex;
-		flex-direction: column;
-		gap: 16px;
+	.label {
+		display: block;
+		font-weight: 600;
+		margin-bottom: 12px;
+		color: #333;
+		font-size: 1.1rem;
 	}
 
-	.message {
-		display: flex;
-		margin-bottom: 16px;
+	.prompt-input {
+		width: 100%;
+		border: 2px solid #e0e0e0;
+		border-radius: 8px;
+		padding: 16px;
+		font-family: inherit;
+		font-size: 14px;
+		line-height: 1.5;
+		resize: vertical;
+		transition: border-color 0.2s;
 	}
 
-	.message.user {
-		justify-content: flex-end;
+	.prompt-input:focus {
+		outline: none;
+		border-color: #007bff;
+		box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
 	}
 
-	.message.assistant {
-		justify-content: flex-start;
-	}
-
-	.message-content {
-		max-width: 80%;
+	.prompt-input:disabled {
 		background: #f8f9fa;
-		padding: 12px 16px;
-		border-radius: 18px;
-		position: relative;
+		cursor: not-allowed;
 	}
 
-	.message.user .message-content {
+	.error-message {
+		background: #f8d7da;
+		color: #721c24;
+		padding: 12px;
+		border-radius: 6px;
+		margin: 16px 0;
+		border: 1px solid #f5c6cb;
+	}
+
+	.create-button {
+		width: 100%;
 		background: #007bff;
 		color: white;
+		border: none;
+		padding: 16px 24px;
+		border-radius: 8px;
+		font-size: 16px;
+		font-weight: 600;
+		cursor: pointer;
+		transition: background-color 0.2s;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 8px;
+		margin-top: 20px;
 	}
 
-	.message.assistant .message-content {
-		background: #f1f3f4;
+	.create-button:hover:not(:disabled) {
+		background: #0056b3;
+	}
+
+	.create-button:disabled {
+		background: #ccc;
+		cursor: not-allowed;
+	}
+
+	.loading-spinner {
+		width: 20px;
+		height: 20px;
+		border: 2px solid #ffffff;
+		border-top: 2px solid transparent;
+		border-radius: 50%;
+		animation: spin 1s linear infinite;
+	}
+
+	@keyframes spin {
+		0% { transform: rotate(0deg); }
+		100% { transform: rotate(360deg); }
+	}
+
+	.info-section {
+		background: #f8f9fa;
+		padding: 30px;
+		border-radius: 12px;
+	}
+
+	.info-section h3 {
+		margin: 0 0 24px 0;
 		color: #333;
+		font-size: 1.3rem;
 	}
 
-	.message-text {
+	.steps {
+		margin-bottom: 30px;
+	}
+
+	.step {
 		display: flex;
 		align-items: flex-start;
-		gap: 8px;
+		gap: 16px;
+		margin-bottom: 20px;
 	}
 
-	.ai-avatar, .user-avatar {
+	.step-number {
 		width: 32px;
 		height: 32px;
+		background: #007bff;
+		color: white;
 		border-radius: 50%;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		font-size: 12px;
 		font-weight: bold;
 		flex-shrink: 0;
 	}
 
-	.ai-avatar {
-		background: #007bff;
-		color: white;
+	.step-content h4 {
+		margin: 0 0 4px 0;
+		color: #333;
+		font-size: 1rem;
 	}
 
-	.user-avatar {
-		background: #28a745;
-		color: white;
-	}
-
-	.text {
-		flex: 1;
-		line-height: 1.5;
-		white-space: pre-wrap;
-	}
-
-	.timestamp {
-		font-size: 11px;
-		color: #999;
-		margin-top: 4px;
-		text-align: right;
-	}
-
-	.typing-indicator {
-		display: flex;
-		gap: 4px;
-		align-items: center;
-	}
-
-	.typing-indicator span {
-		width: 8px;
-		height: 8px;
-		border-radius: 50%;
-		background: #999;
-		animation: typing 1.4s infinite ease-in-out;
-	}
-
-	.typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
-	.typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
-
-	@keyframes typing {
-		0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
-		40% { transform: scale(1); opacity: 1; }
-	}
-
-	.input-container {
-		padding: 20px;
-		border-top: 1px solid #e0e0e0;
-		background: white;
-	}
-
-	.input-wrapper {
-		display: flex;
-		gap: 12px;
-		align-items: flex-end;
-	}
-
-	textarea {
-		flex: 1;
-		border: 1px solid #ddd;
-		border-radius: 24px;
-		padding: 12px 16px;
-		resize: none;
-		font-family: inherit;
-		font-size: 14px;
+	.step-content p {
+		margin: 0;
+		color: #666;
+		font-size: 0.9rem;
 		line-height: 1.4;
-		max-height: 120px;
-		min-height: 44px;
 	}
 
-	textarea:focus {
-		outline: none;
-		border-color: #007bff;
-		box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+	.examples h4 {
+		margin: 0 0 12px 0;
+		color: #333;
+		font-size: 1rem;
 	}
 
-	.send-button {
-		width: 44px;
-		height: 44px;
-		border: none;
-		border-radius: 50%;
-		background: #007bff;
-		color: white;
-		cursor: pointer;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		transition: background-color 0.2s;
+	.examples ul {
+		margin: 0;
+		padding-left: 20px;
 	}
 
-	.send-button:hover:not(:disabled) {
-		background: #0056b3;
-	}
-
-	.send-button:disabled {
-		background: #ccc;
-		cursor: not-allowed;
+	.examples li {
+		margin-bottom: 8px;
+		color: #666;
+		font-size: 0.9rem;
+		line-height: 1.4;
 	}
 
 	.setup-note {
@@ -449,8 +550,18 @@ What topic would you like to create a course about?`,
 			padding: 10px;
 		}
 		
-		.message-content {
-			max-width: 90%;
+		.form-container {
+			grid-template-columns: 1fr;
+			gap: 20px;
+		}
+		
+		.header h1 {
+			font-size: 2rem;
+		}
+		
+		.input-section,
+		.info-section {
+			padding: 20px;
 		}
 	}
 </style> 

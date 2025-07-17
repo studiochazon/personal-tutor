@@ -1,122 +1,120 @@
 # Database Setup Guide
 
-## Prerequisites
+## Issue Resolution
 
-1. **MySQL Server** - Make sure MySQL is installed and running
-2. **MySQL Client** - For running SQL commands
+The application is currently failing to connect to MySQL due to authentication issues. Here's how to fix it:
 
-## Setup Options
+## Step 1: Create Environment Variables
 
-### Option 1: Using the Setup Script (Recommended)
+Create a `.env` file in the `client` directory with the following content:
 
-1. **Update the database configuration** in `client/src/lib/config.ts`:
-   ```typescript
-   export const dbConfig = {
-       host: 'localhost',
-       user: 'root',
-       password: 'your_mysql_password', // Update this
-       database: 'personal_tutor_ai',
-       port: 3306
-   };
-   ```
+```bash
+# Database Configuration
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=your_actual_mysql_password
+DB_NAME=personal_tutor_ai
+DB_PORT=3306
 
-2. **Update the setup script** in `setup-database.sh`:
-   ```bash
-   DB_PASSWORD="your_mysql_password"  # Update this
-   ```
+# OpenAI Configuration
+OPENAI_API_KEY=your_openai_api_key_here
+```
 
-3. **Run the setup script**:
-   ```bash
-   ./setup-database.sh
-   ```
+## Step 2: Update Database Configuration
 
-### Option 2: Manual Setup
+The application now uses environment variables for database configuration. Make sure your MySQL credentials are correct:
 
-1. **Connect to MySQL**:
-   ```bash
-   mysql -u root -p
-   ```
+### Option A: If you have a MySQL password
+```bash
+DB_PASSWORD=your_actual_password
+```
 
-2. **Create the database**:
-   ```sql
-   CREATE DATABASE personal_tutor_ai;
-   USE personal_tutor_ai;
-   ```
+### Option B: If you want to use no password (not recommended for production)
+```bash
+DB_PASSWORD=
+```
 
-3. **Run the schema file**:
-   ```bash
-   mysql -u root -p personal_tutor_ai < database/schema.sql
-   ```
+### Option C: Create a new MySQL user (recommended)
+```sql
+-- Connect to MySQL as root
+mysql -u root -p
 
-### Option 3: Using MySQL Workbench or phpMyAdmin
+-- Create a new user for the application
+CREATE USER 'personal_tutor'@'localhost' IDENTIFIED BY 'your_secure_password';
 
-1. Create a new database named `personal_tutor_ai`
-2. Import the `database/schema.sql` file
+-- Grant permissions
+GRANT ALL PRIVILEGES ON personal_tutor_ai.* TO 'personal_tutor'@'localhost';
+FLUSH PRIVILEGES;
 
-## Common MySQL Password Locations
+-- Exit MySQL
+EXIT;
+```
 
-### macOS (Homebrew)
-- Default: No password (try `mysql -u root`)
-- If that fails, try: `mysql -u root -p` (press Enter for no password)
-- Or check: `cat ~/.my.cnf` for credentials
+Then update your `.env` file:
+```bash
+DB_USER=personal_tutor
+DB_PASSWORD=your_secure_password
+```
 
-### macOS (Official Installer)
-- Password is set during installation
-- Check your installation notes
+## Step 3: Run Database Setup
 
-### Linux
-- Default: No password or `sudo mysql`
-- Or check: `sudo cat /etc/mysql/debian.cnf`
+Execute the database setup script:
 
-### Windows
-- Password set during installation
-- Check MySQL installation directory
+```bash
+chmod +x setup-database.sh
+./setup-database.sh
+```
+
+## Step 4: Verify Connection
+
+Test the database connection:
+
+```bash
+mysql -u your_user -p personal_tutor_ai -e "SELECT COUNT(*) FROM courses;"
+```
+
+## Common Issues and Solutions
+
+### Issue: "Access denied for user 'root'@'localhost'"
+**Solution**: 
+1. Check if you're using the correct password
+2. Try connecting manually: `mysql -u root -p`
+3. If no password works, reset MySQL root password
+
+### Issue: "Database doesn't exist"
+**Solution**: 
+1. Run the setup script: `./setup-database.sh`
+2. Or manually create: `CREATE DATABASE personal_tutor_ai;`
+
+### Issue: "Tables don't exist"
+**Solution**: 
+1. Run the schema file: `mysql -u your_user -p personal_tutor_ai < database/schema.sql`
+
+## Testing the Application
+
+After setting up the database:
+
+1. Start the development server:
+```bash
+cd client
+yarn dev
+```
+
+2. Visit `http://localhost:5173/start`
+3. Try creating a course to test the full flow
+
+## Security Notes
+
+- Never commit your `.env` file to version control
+- Use strong passwords for production environments
+- Consider using a dedicated database user instead of root
+- Regularly backup your database
 
 ## Troubleshooting
 
-### "Access denied" Error
-1. Try connecting without password: `mysql -u root`
-2. Try with password prompt: `mysql -u root -p`
-3. Reset MySQL root password if needed
+If you're still having issues:
 
-### "Connection refused" Error
-1. Start MySQL service:
-   ```bash
-   # macOS
-   brew services start mysql
-   
-   # Linux
-   sudo systemctl start mysql
-   
-   # Windows
-   net start mysql
-   ```
-
-### "Database doesn't exist" Error
-1. Create the database manually:
-   ```sql
-   CREATE DATABASE personal_tutor_ai;
-   ```
-
-## Verification
-
-After setup, you should have:
-- 3 users (admin, teacher, instructor)
-- 6 courses with different difficulties
-- 18+ lessons across all courses
-- All tables with proper relationships
-
-Check with:
-```sql
-USE personal_tutor_ai;
-SELECT COUNT(*) FROM users;
-SELECT COUNT(*) FROM courses;
-SELECT COUNT(*) FROM lessons;
-```
-
-## Next Steps
-
-1. Update the database configuration in `client/src/lib/config.ts`
-2. Start the development server: `cd client && yarn dev`
-3. Visit `http://localhost:5173` to see your application
-4. Navigate to `/courses` to see the database-driven course listing 
+1. Check MySQL service status: `sudo systemctl status mysql`
+2. Verify MySQL is listening: `netstat -tlnp | grep 3306`
+3. Check MySQL error logs: `sudo tail -f /var/log/mysql/error.log`
+4. Test connection with different credentials 

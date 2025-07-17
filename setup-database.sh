@@ -5,11 +5,11 @@
 echo "🚀 Setting up Personal Tutor AI Database..."
 
 # Database configuration
-DB_NAME="personal_tutor_ai"
-DB_USER="root"
-DB_PASSWORD=""
-DB_HOST="localhost"
-DB_PORT="3306"
+DB_NAME="${DB_NAME:-personal_tutor_ai}"
+DB_USER="${DB_USER:-root}"
+DB_PASSWORD="${DB_PASSWORD:-}"
+DB_HOST="${DB_HOST:-localhost}"
+DB_PORT="${DB_PORT:-3306}"
 
 # Colors for output
 RED='\033[0;31m'

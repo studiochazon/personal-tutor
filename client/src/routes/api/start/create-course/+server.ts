@@ -103,28 +103,38 @@ export const POST: RequestHandler = async ({ request }) => {
 
 async function extractCourseFromConversation(messages: ChatMessage[]): Promise<any> {
 	try {
-		// Create a prompt to extract structured course data
-		const extractionPrompt = `Based on the conversation below, extract the course information in the following JSON format:
+		// Get the user's prompt from the messages
+		const userMessage = messages.find(msg => msg.role === 'user')?.content || '';
+		
+		// Create a more robust prompt for course generation
+		const extractionPrompt = `You are an expert educational content creator. Based on the user's request below, create a comprehensive course structure.
+
+User Request: "${userMessage}"
+
+Generate a course with the following JSON structure (respond ONLY with valid JSON, no additional text):
 
 {
-  "title": "Course Title",
-  "description": "Course description",
+  "title": "Engaging and descriptive course title",
+  "description": "Comprehensive overview of what learners will gain from this course",
   "difficulty": "beginner|intermediate|advanced",
   "estimated_duration": number in minutes,
   "lessons": [
     {
-      "title": "Lesson Title",
-      "content": "Lesson content",
+      "title": "Clear lesson title",
+      "content": "Comprehensive lesson content with clear structure, examples, and practical exercises. Use markdown formatting for better readability.",
       "order_index": number,
       "estimated_duration": number in minutes
     }
   ]
 }
 
-Conversation:
-${messages.map(msg => `${msg.role}: ${msg.content}`).join('\n')}
-
-Extract only the JSON, no additional text.`;
+Guidelines:
+- Create 5-10 lessons depending on topic complexity
+- Each lesson should be 10-30 minutes of content
+- Include practical examples and exercises
+- Use clear, engaging language
+- Structure content logically from basic to advanced concepts
+- Ensure the difficulty level matches the content`;
 
 		const response = await fetch('https://api.openai.com/v1/chat/completions', {
 			method: 'POST',
@@ -137,15 +147,15 @@ Extract only the JSON, no additional text.`;
 				messages: [
 					{
 						role: 'system',
-						content: 'You are a course data extraction assistant. Extract course information from conversations and return only valid JSON.'
+						content: 'You are a course generation assistant. You must respond with ONLY valid JSON. Do not include any explanatory text, markdown formatting, or additional content outside the JSON object.'
 					},
 					{
 						role: 'user',
 						content: extractionPrompt
 					}
 				],
-				max_tokens: 2000,
-				temperature: 0.1
+				max_tokens: 3000,
+				temperature: 0.3
 			})
 		});
 
@@ -160,20 +170,41 @@ Extract only the JSON, no additional text.`;
 			throw new Error('No response from OpenAI');
 		}
 
+		// Clean the content to extract JSON
+		let jsonContent = content.trim();
+		
+		// Remove any markdown code blocks
+		if (jsonContent.startsWith('```json')) {
+			jsonContent = jsonContent.replace(/^```json\s*/, '').replace(/\s*```$/, '');
+		} else if (jsonContent.startsWith('```')) {
+			jsonContent = jsonContent.replace(/^```\s*/, '').replace(/\s*```$/, '');
+		}
+		
+		// Try to find JSON object in the response
+		const jsonMatch = jsonContent.match(/\{[\s\S]*\}/);
+		if (jsonMatch) {
+			jsonContent = jsonMatch[0];
+		}
+
 		// Try to parse the JSON response
 		try {
-			const courseData = JSON.parse(content);
+			const courseData = JSON.parse(jsonContent);
 			
 			// Validate and set defaults
 			return {
-				title: courseData.title || 'Untitled Course',
+				title: courseData.title || 'AI Generated Course',
 				description: courseData.description || 'A comprehensive course created with AI assistance.',
 				difficulty: courseData.difficulty || 'intermediate',
 				estimated_duration: courseData.estimated_duration || 60,
-				lessons: courseData.lessons || [
+				lessons: courseData.lessons && Array.isArray(courseData.lessons) ? courseData.lessons.map((lesson: any, index: number) => ({
+					title: lesson.title || `Lesson ${index + 1}`,
+					content: lesson.content || 'Lesson content will be added here.',
+					order_index: lesson.order_index || index + 1,
+					estimated_duration: lesson.estimated_duration || 15
+				})) : [
 					{
 						title: 'Introduction',
-						content: 'Welcome to the course!',
+						content: 'Welcome to your AI-generated course! This lesson will introduce you to the key concepts.',
 						order_index: 1,
 						estimated_duration: 10
 					}
@@ -181,18 +212,42 @@ Extract only the JSON, no additional text.`;
 			};
 		} catch (parseError) {
 			console.error('Failed to parse course data:', parseError);
-			// Return a default course structure
+			console.error('Raw content:', content);
+			
+			// Generate a fallback course based on the user's request
+			const fallbackTitle = userMessage.includes('course') ? 
+				userMessage.replace(/create.*course.*about/i, '').trim() || 'AI Generated Course' :
+				`Course about ${userMessage}`;
+			
 			return {
-				title: 'AI Generated Course',
-				description: 'A comprehensive course created with AI assistance.',
+				title: fallbackTitle,
+				description: `A comprehensive course about ${userMessage}. This course was generated with AI assistance and covers the essential topics you need to know.`,
 				difficulty: 'intermediate',
 				estimated_duration: 60,
 				lessons: [
 					{
 						title: 'Introduction',
-						content: 'Welcome to your AI-generated course! This lesson will introduce you to the key concepts.',
+						content: `Welcome to your course about ${userMessage}! In this lesson, we'll introduce you to the fundamental concepts and what you can expect to learn throughout this course.`,
 						order_index: 1,
 						estimated_duration: 10
+					},
+					{
+						title: 'Getting Started',
+						content: `Let's dive into the basics of ${userMessage}. This lesson will cover the essential foundations you need to understand before moving forward.`,
+						order_index: 2,
+						estimated_duration: 15
+					},
+					{
+						title: 'Core Concepts',
+						content: `Now we'll explore the core concepts and principles related to ${userMessage}. This is where the real learning begins!`,
+						order_index: 3,
+						estimated_duration: 20
+					},
+					{
+						title: 'Practical Application',
+						content: `Let's put what you've learned into practice. This lesson will show you how to apply the concepts of ${userMessage} in real-world scenarios.`,
+						order_index: 4,
+						estimated_duration: 15
 					}
 				]
 			};
