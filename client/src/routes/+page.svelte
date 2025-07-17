@@ -51,9 +51,9 @@
 			description: "Get instant help and guidance from our intelligent tutoring system"
 		},
 		{
-			icon: "🌐",
-			title: "Community Learning",
-			description: "Connect with fellow learners and share knowledge in our community"
+			icon: "✨",
+			title: "AI Course Creation",
+			description: "Create your own courses with our AI assistant - just describe what you want to teach"
 		}
 	];
 
@@ -103,6 +103,9 @@
 		<div class="flex gap-6 justify-center" style="display: flex; gap: 1.5rem; justify-content: center;">
 			<a href="/courses" class="btn btn-primary btn-lg" style="display: inline-flex; align-items: center; justify-content: center; padding: 1rem 2rem; border-radius: 0.5rem; font-weight: 600; text-decoration: none; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; font-size: 1.125rem;">
 				Start Learning
+			</a>
+			<a href="/start" class="btn btn-secondary btn-lg" style="display: inline-flex; align-items: center; justify-content: center; padding: 1rem 2rem; border-radius: 0.5rem; font-weight: 600; text-decoration: none; background: rgba(255, 255, 255, 0.1); color: white; border: 2px solid rgba(255, 255, 255, 0.2); font-size: 1.125rem;">
+				Create Course
 			</a>
 			<a href="/auth/register" class="btn btn-secondary btn-lg" style="display: inline-flex; align-items: center; justify-content: center; padding: 1rem 2rem; border-radius: 0.5rem; font-weight: 600; text-decoration: none; background: rgba(255, 255, 255, 0.1); color: white; border: 2px solid rgba(255, 255, 255, 0.2); font-size: 1.125rem;">
 				Get Started Free
