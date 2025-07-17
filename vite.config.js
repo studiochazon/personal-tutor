@@ -5,5 +5,8 @@ export default defineConfig({
 	plugins: [sveltekit()],
 	ssr: {
 		noExternal: ['@sveltejs/kit']
+	},
+	optimizeDeps: {
+		exclude: ['@sveltejs/kit']
 	}
 }); 
