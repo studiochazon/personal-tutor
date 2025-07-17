@@ -1,0 +1,53 @@
+{
+  "name": "personal-tutor",
+  "version": "1.0.0",
+  "description": "AI-powered personal tutor app that creates custom courses from user requests.",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:frontend\"",
+    "kill-port": "lsof -ti:4000 | xargs kill -9 || true",
+    "dev:server": "npm run kill-port && nodemon --exec tsx src/server/index.ts",
+    "dev:frontend": "cd src && npm run dev",
+    "build": "npm run build:server && npm run build:client",
+    "build:server": "tsc -p tsconfig.server.json",
+    "build:client": "cd client && npm run build",
+    "start": "node dist/server/index.js",
+    "db:migrate": "ts-node src/server/database/migrate.ts",
+    "db:seed": "ts-node src/server/database/seed.ts"
+  },
+  "keywords": [
+    "education",
+    "tutor",
+    "ai",
+    "learning"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.6.0",
+    "bcryptjs": "^2.4.3",
+    "cheerio": "^1.0.0-rc.12",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "helmet": "^7.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "openai": "^4.20.0",
+    "sqlite": "^5.1.1",
+    "sqlite3": "^5.1.6",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.2",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/jsonwebtoken": "^9.0.2",
+    "@types/node": "^20.8.0",
+    "@types/uuid": "^9.0.2",
+    "concurrently": "^8.2.0",
+    "nodemon": "^3.0.1",
+    "ts-node": "^10.9.1",
+    "tsx": "^4.20.3",
+    "typescript": "^5.2.2"
+  }
+}
