@@ -219,22 +219,22 @@
 	}
 
 	.header h1 {
-		color: #333;
-		margin-bottom: 8px;
+		color: var(--color-gray-800);
+		margin-bottom: var(--spacing-2);
 	}
 
 	.header p {
-		color: #666;
+		color: var(--color-gray-500);
 		margin: 0;
 	}
 
 	.error-message {
-		background-color: #fee;
-		color: #c33;
-		padding: 12px;
-		border-radius: 6px;
-		margin-bottom: 20px;
-		border: 1px solid #fcc;
+		background-color: var(--color-error-light);
+		color: var(--color-error-text);
+		padding: var(--spacing-3);
+		border-radius: var(--radius-md);
+		margin-bottom: var(--spacing-5);
+		border: 1px solid var(--color-error);
 	}
 
 	.stats-section {
@@ -242,160 +242,160 @@
 	}
 
 	.stats-section h2 {
-		color: #333;
-		margin-bottom: 20px;
+		color: var(--color-gray-800);
+		margin-bottom: var(--spacing-5);
 	}
 
 	.stats-grid {
 		display: grid;
 		grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-		gap: 20px;
-		margin-bottom: 20px;
+		gap: var(--spacing-5);
+		margin-bottom: var(--spacing-5);
 	}
 
 	.stat-card {
 		background: white;
-		padding: 20px;
-		border-radius: 8px;
-		box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+		padding: var(--spacing-5);
+		border-radius: var(--radius-lg);
+		box-shadow: var(--shadow-base);
 		text-align: center;
 	}
 
 	.stat-value {
 		font-size: 2rem;
 		font-weight: bold;
-		color: #333;
-		margin-bottom: 8px;
+		color: var(--color-gray-800);
+		margin-bottom: var(--spacing-2);
 	}
 
 	.stat-value.success {
-		color: #28a745;
+		color: var(--color-success);
 	}
 
 	.stat-value.error {
-		color: #dc3545;
+		color: var(--color-error);
 	}
 
 	.stat-label {
-		color: #666;
+		color: var(--color-gray-500);
 		font-size: 0.9rem;
 	}
 
 	.models-section {
 		background: white;
-		padding: 20px;
-		border-radius: 8px;
-		box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+		padding: var(--spacing-5);
+		border-radius: var(--radius-lg);
+		box-shadow: var(--shadow-base);
 	}
 
 	.models-section h3 {
-		margin-bottom: 15px;
-		color: #333;
+		margin-bottom: var(--spacing-4);
+		color: var(--color-gray-800);
 	}
 
 	.models-list {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 10px;
+		gap: var(--spacing-3);
 	}
 
 	.model-item {
-		background: #f8f9fa;
-		padding: 8px 12px;
-		border-radius: 4px;
+		background: var(--color-gray-50);
+		padding: var(--spacing-2) var(--spacing-3);
+		border-radius: var(--radius-base);
 		display: flex;
 		align-items: center;
-		gap: 8px;
+		gap: var(--spacing-2);
 	}
 
 	.model-name {
 		font-weight: 500;
-		color: #333;
+		color: var(--color-gray-800);
 	}
 
 	.model-count {
-		background: #007bff;
+		background: var(--color-primary);
 		color: white;
-		padding: 2px 6px;
-		border-radius: 10px;
+		padding: 2px var(--spacing-2);
+		border-radius: var(--radius-full);
 		font-size: 0.8rem;
 	}
 
 	.logs-section {
 		background: white;
-		border-radius: 8px;
-		box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+		border-radius: var(--radius-lg);
+		box-shadow: var(--shadow-base);
 		overflow: hidden;
 	}
 
 	.logs-header {
-		padding: 20px;
-		border-bottom: 1px solid #eee;
+		padding: var(--spacing-5);
+		border-bottom: 1px solid var(--color-gray-200);
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
 		flex-wrap: wrap;
-		gap: 15px;
+		gap: var(--spacing-4);
 	}
 
 	.logs-header h2 {
 		margin: 0;
-		color: #333;
+		color: var(--color-gray-800);
 	}
 
 	.logs-controls {
 		display: flex;
-		gap: 10px;
+		gap: var(--spacing-3);
 		align-items: center;
 	}
 
 	.date-input {
-		padding: 8px 12px;
-		border: 1px solid #ddd;
-		border-radius: 4px;
+		padding: var(--spacing-2) var(--spacing-3);
+		border: 1px solid var(--color-gray-300);
+		border-radius: var(--radius-base);
 	}
 
 	.refresh-btn, .export-btn {
-		padding: 8px 16px;
+		padding: var(--spacing-2) var(--spacing-4);
 		border: none;
-		border-radius: 4px;
+		border-radius: var(--radius-base);
 		cursor: pointer;
 		font-size: 0.9rem;
 	}
 
 	.refresh-btn {
-		background: #007bff;
+		background: var(--color-primary);
 		color: white;
 	}
 
 	.refresh-btn:hover {
-		background: #0056b3;
+		background: var(--color-primary-dark);
 	}
 
 	.refresh-btn:disabled {
-		background: #ccc;
+		background: var(--color-gray-400);
 		cursor: not-allowed;
 	}
 
 	.export-btn {
-		background: #28a745;
+		background: var(--color-success);
 		color: white;
 	}
 
 	.export-btn:hover {
-		background: #1e7e34;
+		background: var(--color-success-dark);
 	}
 
 	.loading {
-		padding: 40px;
+		padding: var(--spacing-10);
 		text-align: center;
-		color: #666;
+		color: var(--color-gray-500);
 	}
 
 	.no-logs {
-		padding: 40px;
+		padding: var(--spacing-10);
 		text-align: center;
-		color: #666;
+		color: var(--color-gray-500);
 	}
 
 	.logs-list {
@@ -404,8 +404,8 @@
 	}
 
 	.log-item {
-		padding: 15px 20px;
-		border-bottom: 1px solid #eee;
+		padding: var(--spacing-4) var(--spacing-5);
+		border-bottom: 1px solid var(--color-gray-200);
 	}
 
 	.log-item:last-child {
@@ -415,13 +415,13 @@
 	.log-header {
 		display: flex;
 		align-items: center;
-		gap: 15px;
-		margin-bottom: 10px;
+		gap: var(--spacing-4);
+		margin-bottom: var(--spacing-3);
 		font-size: 0.9rem;
 	}
 
 	.log-time {
-		color: #666;
+		color: var(--color-gray-500);
 		font-family: monospace;
 	}
 
@@ -430,23 +430,23 @@
 	}
 
 	.log-status.success {
-		color: #28a745;
+		color: var(--color-success);
 	}
 
 	.log-status.error {
-		color: #dc3545;
+		color: var(--color-error);
 	}
 
 	.log-model {
-		background: #f8f9fa;
-		padding: 2px 6px;
-		border-radius: 4px;
+		background: var(--color-gray-50);
+		padding: 2px var(--spacing-2);
+		border-radius: var(--radius-base);
 		font-size: 0.8rem;
-		color: #666;
+		color: var(--color-gray-500);
 	}
 
 	.log-duration {
-		color: #666;
+		color: var(--color-gray-500);
 		font-family: monospace;
 	}
 
@@ -456,19 +456,19 @@
 	}
 
 	.log-prompt, .log-response, .log-error, .log-usage {
-		margin-bottom: 8px;
+		margin-bottom: var(--spacing-2);
 	}
 
 	.log-prompt strong, .log-response strong, .log-error strong {
-		color: #333;
+		color: var(--color-gray-800);
 	}
 
 	.log-error {
-		color: #dc3545;
+		color: var(--color-error);
 	}
 
 	.log-usage {
-		color: #666;
+		color: var(--color-gray-500);
 		font-size: 0.8rem;
 		font-family: monospace;
 	}

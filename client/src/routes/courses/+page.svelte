@@ -172,13 +172,13 @@
 	/* Page Layout */
 	.page-container {
 		min-height: 100vh;
-		background-color: #F9FAFB;
+		background-color: var(--color-gray-50);
 	}
 
 	/* Header Section */
 	.page-header {
-		background: linear-gradient(135deg, #0066FF 0%, #4D94FF 100%);
-		padding: 4rem 0;
+		background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
+		padding: var(--spacing-16) 0;
 		color: white;
 		text-align: center;
 	}
@@ -207,16 +207,16 @@
 	/* Filters Section */
 	.filters-section {
 		background-color: white;
-		border-bottom: 1px solid #E5E7EB;
-		padding: 2rem 0;
+		border-bottom: 1px solid var(--color-gray-200);
+		padding: var(--spacing-8) 0;
 	}
 
 	.filters-container {
 		max-width: 1200px;
 		margin: 0 auto;
-		padding: 0 1rem;
+		padding: 0 var(--spacing-4);
 		display: flex;
-		gap: 1rem;
+		gap: var(--spacing-4);
 		flex-wrap: wrap;
 		align-items: center;
 	}
@@ -228,9 +228,9 @@
 
 	.search-input {
 		width: 100%;
-		padding: 0.75rem 1rem;
-		border: 1px solid #D1D5DB;
-		border-radius: 0.5rem;
+		padding: var(--spacing-3) var(--spacing-4);
+		border: 1px solid var(--color-gray-300);
+		border-radius: var(--radius-lg);
 		font-size: 1rem;
 		transition: all 0.2s ease;
 		background-color: white;
@@ -238,14 +238,14 @@
 
 	.search-input:focus {
 		outline: none;
-		border-color: #0066FF;
+		border-color: var(--color-primary);
 		box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.1);
 	}
 
 	.difficulty-select {
-		padding: 0.75rem 1rem;
-		border: 1px solid #D1D5DB;
-		border-radius: 0.5rem;
+		padding: var(--spacing-3) var(--spacing-4);
+		border: 1px solid var(--color-gray-300);
+		border-radius: var(--radius-lg);
 		font-size: 1rem;
 		background-color: white;
 		transition: all 0.2s ease;
@@ -254,7 +254,7 @@
 
 	.difficulty-select:focus {
 		outline: none;
-		border-color: #0066FF;
+		border-color: var(--color-primary);
 		box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.1);
 	}
 

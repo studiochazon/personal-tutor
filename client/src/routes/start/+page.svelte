@@ -356,13 +356,13 @@ Remember: Your goal is to create transformative learning experiences that empowe
 	}
 
 	.header h1 {
-		color: #333;
-		margin-bottom: 8px;
+		color: var(--color-gray-800);
+		margin-bottom: var(--spacing-2);
 		font-size: 2.5rem;
 	}
 
 	.header p {
-		color: #666;
+		color: var(--color-gray-500);
 		margin: 0;
 		font-size: 1.1rem;
 	}
@@ -384,16 +384,16 @@ Remember: Your goal is to create transformative learning experiences that empowe
 	.label {
 		display: block;
 		font-weight: 600;
-		margin-bottom: 12px;
-		color: #333;
+		margin-bottom: var(--spacing-3);
+		color: var(--color-gray-800);
 		font-size: 1.1rem;
 	}
 
 	.prompt-input {
 		width: 100%;
-		border: 2px solid #e0e0e0;
-		border-radius: 8px;
-		padding: 16px;
+		border: 2px solid var(--color-gray-300);
+		border-radius: var(--radius-lg);
+		padding: var(--spacing-4);
 		font-family: inherit;
 		font-size: 14px;
 		line-height: 1.5;
@@ -403,31 +403,31 @@ Remember: Your goal is to create transformative learning experiences that empowe
 
 	.prompt-input:focus {
 		outline: none;
-		border-color: #007bff;
-		box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+		border-color: var(--color-primary);
+		box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.1);
 	}
 
 	.prompt-input:disabled {
-		background: #f8f9fa;
+		background: var(--color-gray-50);
 		cursor: not-allowed;
 	}
 
 	.error-message {
-		background: #f8d7da;
-		color: #721c24;
-		padding: 12px;
-		border-radius: 6px;
-		margin: 16px 0;
-		border: 1px solid #f5c6cb;
+		background: var(--color-error-light);
+		color: var(--color-error-text);
+		padding: var(--spacing-3);
+		border-radius: var(--radius-md);
+		margin: var(--spacing-4) 0;
+		border: 1px solid var(--color-error);
 	}
 
 	.create-button {
 		width: 100%;
-		background: #007bff;
+		background: var(--color-primary);
 		color: white;
 		border: none;
-		padding: 16px 24px;
-		border-radius: 8px;
+		padding: var(--spacing-4) var(--spacing-6);
+		border-radius: var(--radius-lg);
 		font-size: 16px;
 		font-weight: 600;
 		cursor: pointer;
@@ -435,16 +435,16 @@ Remember: Your goal is to create transformative learning experiences that empowe
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		gap: 8px;
-		margin-top: 20px;
+		gap: var(--spacing-2);
+		margin-top: var(--spacing-5);
 	}
 
 	.create-button:hover:not(:disabled) {
-		background: #0056b3;
+		background: var(--color-primary-dark);
 	}
 
 	.create-button:disabled {
-		background: #ccc;
+		background: var(--color-gray-400);
 		cursor: not-allowed;
 	}
 
