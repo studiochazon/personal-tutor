@@ -140,22 +140,37 @@
 			<div class="courses-grid">
 				{#each courses as course}
 					<article class="course-card">
-						<div class="course-header">
-							<h3 class="course-title">{course.title}</h3>
-							<span class="difficulty-badge {getDifficultyColor(course.difficulty)}">
+						<div class="course-thumbnail">
+							<img 
+								src={course.thumbnail_url || '/images/default-course-thumbnail.svg'} 
+								alt="{course.title} thumbnail"
+								class="thumbnail-image"
+								on:error={(e) => {
+									const target = e.target as HTMLImageElement;
+									if (target) {
+										target.src = '/images/default-course-thumbnail.svg';
+									}
+								}}
+							/>
+							<div class="difficulty-badge {getDifficultyColor(course.difficulty)}">
 								{course.difficulty}
-							</span>
+							</div>
 						</div>
-						<p class="course-description">
-							{course.description ? (course.description.length > 120 ? course.description.substring(0, 120) + '...' : course.description) : 'No description available'}
-						</p>
-						<div class="course-footer">
-							<span class="course-duration">
-								⏱️ {formatDuration(course.estimated_duration)}
-							</span>
-							<a href="/courses/{course.id}" class="btn-secondary">
-								View Course
-							</a>
+						<div class="course-content">
+							<div class="course-header">
+								<h3 class="course-title">{course.title}</h3>
+							</div>
+							<p class="course-description">
+								{course.description ? (course.description.length > 120 ? course.description.substring(0, 120) + '...' : course.description) : 'No description available'}
+							</p>
+							<div class="course-footer">
+								<span class="course-duration">
+									⏱️ {formatDuration(course.estimated_duration)}
+								</span>
+								<a href="/courses/{course.id}" class="btn-secondary">
+									View Course
+								</a>
+							</div>
 						</div>
 					</article>
 				{/each}
@@ -355,40 +370,79 @@
 	/* Course Card */
 	.course-card {
 		background-color: white;
-		border-radius: 0.75rem;
-		padding: 1.25rem;
-		box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-		border: 1px solid #E5E7EB;
+		border-radius: var(--radius-xl);
+		overflow: hidden;
+		box-shadow: var(--shadow-base);
+		border: 1px solid var(--color-gray-200);
 		transition: all 0.2s ease;
 		display: flex;
 		flex-direction: column;
 	}
 
 	.course-card:hover {
-		box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+		box-shadow: var(--shadow-lg);
 		transform: translateY(-2px);
 	}
 
-	.course-header {
+	/* Course Thumbnail */
+	.course-thumbnail {
+		position: relative;
+		width: 100%;
+		height: 200px;
+		overflow: hidden;
+		background: linear-gradient(135deg, var(--color-gray-100) 0%, var(--color-gray-200) 100%);
+	}
+
+	.thumbnail-image {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		transition: transform 0.3s ease;
+	}
+
+	.course-card:hover .thumbnail-image {
+		transform: scale(1.05);
+	}
+
+	.difficulty-badge {
+		position: absolute;
+		top: var(--spacing-3);
+		right: var(--spacing-3);
+		padding: var(--spacing-1) var(--spacing-3);
+		border-radius: var(--radius-full);
+		font-size: 0.75rem;
+		font-weight: 500;
+		text-transform: capitalize;
+		white-space: nowrap;
+		backdrop-filter: blur(8px);
+		background-color: rgba(255, 255, 255, 0.9);
+		box-shadow: var(--shadow-sm);
+	}
+
+	/* Course Content */
+	.course-content {
+		padding: var(--spacing-5);
 		display: flex;
-		justify-content: space-between;
-		align-items: flex-start;
-		margin-bottom: 0.75rem;
-		gap: 1rem;
+		flex-direction: column;
+		flex: 1;
+	}
+
+	.course-header {
+		margin-bottom: var(--spacing-3);
 	}
 
 	.course-title {
 		font-size: 1.125rem;
 		font-weight: 600;
-		color: #1F2937;
+		color: var(--color-gray-800);
 		line-height: 1.3;
-		flex: 1;
+		margin: 0;
 	}
 
 	.course-description {
-		color: #6B7280;
+		color: var(--color-gray-500);
 		line-height: 1.5;
-		margin-bottom: 1rem;
+		margin-bottom: var(--spacing-4);
 		flex: 1;
 		font-size: 0.875rem;
 	}
@@ -402,45 +456,36 @@
 
 	.course-duration {
 		font-size: 0.875rem;
-		color: #9CA3AF;
+		color: var(--color-gray-400);
 	}
 
 	/* Difficulty Badges */
-	.difficulty-badge {
-		padding: 0.25rem 0.75rem;
-		border-radius: 9999px;
-		font-size: 0.75rem;
-		font-weight: 500;
-		text-transform: capitalize;
-		white-space: nowrap;
-	}
-
 	.difficulty-beginner {
-		background-color: #D1FAE5;
-		color: #065F46;
+		background-color: var(--color-success-light);
+		color: var(--color-success-text);
 	}
 
 	.difficulty-intermediate {
-		background-color: #FEF3C7;
-		color: #92400E;
+		background-color: var(--color-warning-light);
+		color: var(--color-warning-text);
 	}
 
 	.difficulty-advanced {
-		background-color: #FEE2E2;
-		color: #991B1B;
+		background-color: var(--color-error-light);
+		color: var(--color-error-text);
 	}
 
 	.difficulty-default {
-		background-color: #F3F4F6;
-		color: #374151;
+		background-color: var(--color-gray-100);
+		color: var(--color-gray-700);
 	}
 
 	/* Buttons */
 	.btn-primary {
-		background-color: #0066FF;
+		background-color: var(--color-primary);
 		color: white;
-		padding: 0.75rem 1.5rem;
-		border-radius: 0.5rem;
+		padding: var(--spacing-3) var(--spacing-6);
+		border-radius: var(--radius-lg);
 		font-weight: 600;
 		border: none;
 		transition: all 0.2s ease;
@@ -452,18 +497,18 @@
 	}
 
 	.btn-primary:hover {
-		background-color: #0052CC;
+		background-color: var(--color-primary-dark);
 		transform: translateY(-1px);
 		box-shadow: 0 4px 12px rgba(0, 102, 255, 0.3);
 	}
 
 	.btn-secondary {
 		background-color: white;
-		color: #0066FF;
-		padding: 0.75rem 1.5rem;
-		border-radius: 0.5rem;
+		color: var(--color-primary);
+		padding: var(--spacing-3) var(--spacing-6);
+		border-radius: var(--radius-lg);
 		font-weight: 600;
-		border: 2px solid #0066FF;
+		border: 2px solid var(--color-primary);
 		transition: all 0.2s ease;
 		text-decoration: none;
 		display: inline-flex;
@@ -473,16 +518,16 @@
 	}
 
 	.btn-secondary:hover {
-		background-color: #0066FF;
+		background-color: var(--color-primary);
 		color: white;
 	}
 
 	/* Results Count */
 	.results-count {
 		text-align: center;
-		color: #6B7280;
+		color: var(--color-gray-500);
 		font-size: 0.875rem;
-		margin-top: 2rem;
+		margin-top: var(--spacing-8);
 	}
 
 	/* Responsive Design */

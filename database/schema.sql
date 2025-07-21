@@ -78,13 +78,13 @@ INSERT INTO users (email, password_hash, name) VALUES
 ('teacher@example.com', '$2b$10$example.hash.here', 'Teacher User'),
 ('instructor@example.com', '$2b$10$example.hash.here', 'Course Instructor');
 
-INSERT INTO courses (title, description, difficulty, estimated_duration, user_id, is_published) VALUES
-('Introduction to SvelteKit', 'Learn the basics of SvelteKit framework and build your first application. Perfect for beginners who want to create modern web applications.', 'beginner', 120, 1, TRUE),
-('Advanced SvelteKit Patterns', 'Master advanced patterns and best practices for building scalable applications with SvelteKit.', 'intermediate', 180, 1, TRUE),
-('Building APIs with SvelteKit', 'Create robust APIs using SvelteKit server-side capabilities and database integration.', 'intermediate', 150, 2, TRUE),
-('Full-Stack Development with SvelteKit', 'Complete guide to building full-stack applications with SvelteKit, including authentication and deployment.', 'advanced', 240, 2, TRUE),
-('SvelteKit Performance Optimization', 'Learn techniques to optimize your SvelteKit applications for speed and efficiency.', 'advanced', 90, 3, TRUE),
-('SvelteKit Testing Strategies', 'Comprehensive testing strategies for SvelteKit applications including unit, integration, and E2E tests.', 'intermediate', 120, 3, TRUE);
+INSERT INTO courses (title, description, thumbnail_url, difficulty, estimated_duration, user_id, is_published) VALUES
+('Introduction to SvelteKit', 'Learn the basics of SvelteKit framework and build your first application. Perfect for beginners who want to create modern web applications.', 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&h=200&fit=crop&crop=center', 'beginner', 120, 1, TRUE),
+('Advanced SvelteKit Patterns', 'Master advanced patterns and best practices for building scalable applications with SvelteKit.', 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=400&h=200&fit=crop&crop=center', 'intermediate', 180, 1, TRUE),
+('Building APIs with SvelteKit', 'Create robust APIs using SvelteKit server-side capabilities and database integration.', 'https://images.unsplash.com/photo-1551650975-87deedd944c3?w=400&h=200&fit=crop&crop=center', 'intermediate', 150, 2, TRUE),
+('Full-Stack Development with SvelteKit', 'Complete guide to building full-stack applications with SvelteKit, including authentication and deployment.', 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=400&h=200&fit=crop&crop=center', 'advanced', 240, 2, TRUE),
+('SvelteKit Performance Optimization', 'Learn techniques to optimize your SvelteKit applications for speed and efficiency.', 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&h=200&fit=crop&crop=center', 'advanced', 90, 3, TRUE),
+('SvelteKit Testing Strategies', 'Comprehensive testing strategies for SvelteKit applications including unit, integration, and E2E tests.', 'https://images.unsplash.com/photo-1573164713714-d95e436ab8d6?w=400&h=200&fit=crop&crop=center', 'intermediate', 120, 3, TRUE);
 
 INSERT INTO lessons (course_id, title, content, order_index, estimated_duration) VALUES
 -- Course 1: Introduction to SvelteKit

@@ -150,22 +150,37 @@
 			<div class="courses-grid">
 				{#each featuredCourses as course}
 					<article class="course-card">
-						<div class="course-header">
-							<h3 class="course-title">{course.title}</h3>
-							<span class="difficulty-badge {getDifficultyColor(course.difficulty)}">
+						<div class="course-thumbnail">
+							<img 
+								src={course.thumbnail_url || '/images/default-course-thumbnail.svg'} 
+								alt="{course.title} thumbnail"
+								class="thumbnail-image"
+								on:error={(e) => {
+									const target = e.target as HTMLImageElement;
+									if (target) {
+										target.src = '/images/default-course-thumbnail.svg';
+									}
+								}}
+							/>
+							<div class="difficulty-badge {getDifficultyColor(course.difficulty)}">
 								{course.difficulty}
-							</span>
+							</div>
 						</div>
-						<p class="course-description">
-							{course.description ? (course.description.length > 120 ? course.description.substring(0, 120) + '...' : course.description) : 'No description available'}
-						</p>
-						<div class="course-footer">
-							<span class="course-duration">
-								⏱️ {formatDuration(course.estimated_duration)}
-							</span>
-							<a href="/courses/{course.id}" class="btn-secondary">
-								Start Course
-							</a>
+						<div class="course-content">
+							<div class="course-header">
+								<h3 class="course-title">{course.title}</h3>
+							</div>
+							<p class="course-description">
+								{course.description ? (course.description.length > 120 ? course.description.substring(0, 120) + '...' : course.description) : 'No description available'}
+							</p>
+							<div class="course-footer">
+								<span class="course-duration">
+									⏱️ {formatDuration(course.estimated_duration)}
+								</span>
+								<a href="/courses/{course.id}" class="btn-secondary">
+									Start Course
+								</a>
+							</div>
 						</div>
 					</article>
 				{/each}
@@ -356,7 +371,7 @@
 	.course-card {
 		background-color: white;
 		border-radius: 0.75rem;
-		padding: 1.25rem;
+		overflow: hidden;
 		box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
 		border: 1px solid #E5E7EB;
 		transition: all 0.2s ease;
@@ -369,12 +384,71 @@
 		transform: translateY(-2px);
 	}
 
-	.course-header {
+	/* Course Thumbnail */
+	.course-thumbnail {
+		position: relative;
+		width: 100%;
+		height: 200px;
+		overflow: hidden;
+		background: linear-gradient(135deg, #F3F4F6 0%, #E5E7EB 100%);
+	}
+
+	.thumbnail-image {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		transition: transform 0.3s ease;
+	}
+
+	.course-card:hover .thumbnail-image {
+		transform: scale(1.05);
+	}
+
+	.difficulty-badge {
+		position: absolute;
+		top: 0.75rem;
+		right: 0.75rem;
+		padding: 0.25rem 0.75rem;
+		border-radius: 9999px;
+		font-size: 0.75rem;
+		font-weight: 500;
+		text-transform: capitalize;
+		white-space: nowrap;
+		backdrop-filter: blur(8px);
+		background-color: rgba(255, 255, 255, 0.9);
+		box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+	}
+
+	.difficulty-beginner {
+		color: #059669;
+		background-color: rgba(16, 185, 129, 0.1);
+	}
+
+	.difficulty-intermediate {
+		color: #D97706;
+		background-color: rgba(245, 158, 11, 0.1);
+	}
+
+	.difficulty-advanced {
+		color: #DC2626;
+		background-color: rgba(239, 68, 68, 0.1);
+	}
+
+	.difficulty-default {
+		color: #6B7280;
+		background-color: rgba(107, 114, 128, 0.1);
+	}
+
+	/* Course Content */
+	.course-content {
+		padding: 1.25rem;
 		display: flex;
-		justify-content: space-between;
-		align-items: flex-start;
+		flex-direction: column;
+		flex: 1;
+	}
+
+	.course-header {
 		margin-bottom: 0.75rem;
-		gap: 1rem;
 	}
 
 	.course-title {
@@ -382,15 +456,15 @@
 		font-weight: 600;
 		color: #1F2937;
 		line-height: 1.3;
-		flex: 1;
+		margin-bottom: 0.5rem;
 	}
 
 	.course-description {
 		color: #6B7280;
 		line-height: 1.5;
 		margin-bottom: 1rem;
-		flex: 1;
 		font-size: 0.875rem;
+		flex: 1;
 	}
 
 	.course-footer {
