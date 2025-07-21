@@ -2,38 +2,38 @@
 
 ## Design Philosophy
 
-Our design system emphasizes **clarity, accessibility, and modern minimalism**. We prioritize clean typography, ample white space, and intuitive user interactions over flashy visual effects.
+Our design system emphasizes **clarity, accessibility, and modern minimalism**. We prioritize clean typography, ample white space, and intuitive user interactions over flashy visual effects. Our color palette is inspired by the clean, professional aesthetics of Stripe, Notion, Apple, and Airbnb.
 
 ## Color Palette
 
 ### Primary Colors
-- **Primary Blue**: `#2563eb` (Blue 600)
-- **Primary Blue Dark**: `#1d4ed8` (Blue 700)
-- **Primary Blue Light**: `#3b82f6` (Blue 500)
+- **Primary Blue**: `#0066FF` (Stripe-inspired vibrant blue)
+- **Primary Blue Dark**: `#0052CC` (Darker variant for hover states)
+- **Primary Blue Light**: `#4D94FF` (Lighter variant for backgrounds)
 
 ### Secondary Colors
-- **Secondary Teal**: `#0d9488` (Teal 600)
-- **Secondary Teal Dark**: `#0f766e` (Teal 700)
-- **Secondary Teal Light**: `#14b8a6` (Teal 500)
+- **Secondary Gray**: `#6B7280` (Notion-inspired neutral gray)
+- **Secondary Gray Dark**: `#4B5563` (Darker variant)
+- **Secondary Gray Light**: `#9CA3AF` (Lighter variant)
 
 ### Neutral Colors
-- **White**: `#ffffff`
-- **Gray 50**: `#f8fafc`
-- **Gray 100**: `#f1f5f9`
-- **Gray 200**: `#e2e8f0`
-- **Gray 300**: `#cbd5e1`
-- **Gray 400**: `#94a3b8`
-- **Gray 500**: `#64748b`
-- **Gray 600**: `#475569`
-- **Gray 700**: `#334155`
-- **Gray 800**: `#1e293b`
-- **Gray 900**: `#0f172a`
+- **White**: `#FFFFFF`
+- **Gray 50**: `#F9FAFB` (Very light background)
+- **Gray 100**: `#F3F4F6` (Light background)
+- **Gray 200**: `#E5E7EB` (Border color)
+- **Gray 300**: `#D1D5DB` (Light border)
+- **Gray 400**: `#9CA3AF` (Medium gray)
+- **Gray 500**: `#6B7280` (Text gray)
+- **Gray 600**: `#4B5563` (Dark text)
+- **Gray 700**: `#374151` (Very dark text)
+- **Gray 800**: `#1F2937` (Heading color)
+- **Gray 900**: `#111827` (Darkest text)
 
 ### Semantic Colors
-- **Success**: `#059669` (Emerald 600)
-- **Warning**: `#d97706` (Amber 600)
-- **Error**: `#dc2626` (Red 600)
-- **Info**: `#2563eb` (Blue 600)
+- **Success**: `#10B981` (Emerald green - Apple-inspired)
+- **Warning**: `#F59E0B` (Amber - Airbnb-inspired)
+- **Error**: `#EF4444` (Red - Stripe-inspired)
+- **Info**: `#0066FF` (Primary blue)
 
 ## Typography
 
@@ -114,7 +114,7 @@ Our design system emphasizes **clarity, accessibility, and modern minimalism**. 
 #### Primary Button
 ```css
 .btn-primary {
-  background-color: #2563eb;
+  background-color: #0066FF;
   color: white;
   padding: 0.75rem 1.5rem;
   border-radius: 0.5rem;
@@ -124,9 +124,9 @@ Our design system emphasizes **clarity, accessibility, and modern minimalism**. 
 }
 
 .btn-primary:hover {
-  background-color: #1d4ed8;
+  background-color: #0052CC;
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 102, 255, 0.3);
 }
 ```
 
@@ -134,16 +134,16 @@ Our design system emphasizes **clarity, accessibility, and modern minimalism**. 
 ```css
 .btn-secondary {
   background-color: white;
-  color: #2563eb;
+  color: #0066FF;
   padding: 0.75rem 1.5rem;
   border-radius: 0.5rem;
   font-weight: 600;
-  border: 2px solid #2563eb;
+  border: 2px solid #0066FF;
   transition: all 0.2s ease;
 }
 
 .btn-secondary:hover {
-  background-color: #2563eb;
+  background-color: #0066FF;
   color: white;
 }
 ```
@@ -152,7 +152,7 @@ Our design system emphasizes **clarity, accessibility, and modern minimalism**. 
 ```css
 .btn-ghost {
   background-color: transparent;
-  color: #64748b;
+  color: #6B7280;
   padding: 0.75rem 1.5rem;
   border-radius: 0.5rem;
   font-weight: 500;
@@ -161,8 +161,8 @@ Our design system emphasizes **clarity, accessibility, and modern minimalism**. 
 }
 
 .btn-ghost:hover {
-  background-color: #f1f5f9;
-  color: #334155;
+  background-color: #F3F4F6;
+  color: #374151;
 }
 ```
 
@@ -175,7 +175,7 @@ Our design system emphasizes **clarity, accessibility, and modern minimalism**. 
   border-radius: 0.75rem;
   padding: 1.5rem;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-  border: 1px solid #e2e8f0;
+  border: 1px solid #E5E7EB;
   transition: all 0.2s ease;
 }
 
@@ -203,7 +203,7 @@ Our design system emphasizes **clarity, accessibility, and modern minimalism**. 
 .input {
   width: 100%;
   padding: 0.75rem 1rem;
-  border: 1px solid #d1d5db;
+  border: 1px solid #D1D5DB;
   border-radius: 0.5rem;
   font-size: 1rem;
   transition: all 0.2s ease;
@@ -212,13 +212,13 @@ Our design system emphasizes **clarity, accessibility, and modern minimalism**. 
 
 .input:focus {
   outline: none;
-  border-color: #2563eb;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  border-color: #0066FF;
+  box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.1);
 }
 
 .input:disabled {
-  background-color: #f9fafb;
-  color: #6b7280;
+  background-color: #F9FAFB;
+  color: #9CA3AF;
   cursor: not-allowed;
 }
 ```
@@ -228,7 +228,7 @@ Our design system emphasizes **clarity, accessibility, and modern minimalism**. 
 .textarea {
   width: 100%;
   padding: 0.75rem 1rem;
-  border: 1px solid #d1d5db;
+  border: 1px solid #D1D5DB;
   border-radius: 0.5rem;
   font-size: 1rem;
   font-family: inherit;
@@ -239,8 +239,8 @@ Our design system emphasizes **clarity, accessibility, and modern minimalism**. 
 
 .textarea:focus {
   outline: none;
-  border-color: #2563eb;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  border-color: #0066FF;
+  box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.1);
 }
 ```
 
@@ -250,7 +250,7 @@ Our design system emphasizes **clarity, accessibility, and modern minimalism**. 
 ```css
 .header {
   background-color: white;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid #E5E7EB;
   padding: 1rem 0;
   position: sticky;
   top: 0;
@@ -263,7 +263,7 @@ Our design system emphasizes **clarity, accessibility, and modern minimalism**. 
 #### Navigation Links
 ```css
 .nav-link {
-  color: #64748b;
+  color: #6B7280;
   text-decoration: none;
   font-weight: 500;
   padding: 0.5rem 1rem;
@@ -272,13 +272,13 @@ Our design system emphasizes **clarity, accessibility, and modern minimalism**. 
 }
 
 .nav-link:hover {
-  color: #2563eb;
-  background-color: #f8fafc;
+  color: #0066FF;
+  background-color: #F9FAFB;
 }
 
 .nav-link.active {
-  color: #2563eb;
-  background-color: #eff6ff;
+  color: #0066FF;
+  background-color: #EFF6FF;
 }
 ```
 
@@ -400,22 +400,26 @@ Use CSS custom properties for consistent theming:
 
 ```css
 :root {
-  --color-primary: #2563eb;
-  --color-primary-dark: #1d4ed8;
-  --color-primary-light: #3b82f6;
-  --color-secondary: #0d9488;
-  --color-secondary-dark: #0f766e;
-  --color-secondary-light: #14b8a6;
-  --color-gray-50: #f8fafc;
-  --color-gray-100: #f1f5f9;
-  --color-gray-200: #e2e8f0;
-  --color-gray-300: #cbd5e1;
-  --color-gray-400: #94a3b8;
-  --color-gray-500: #64748b;
-  --color-gray-600: #475569;
-  --color-gray-700: #334155;
-  --color-gray-800: #1e293b;
-  --color-gray-900: #0f172a;
+  --color-primary: #0066FF;
+  --color-primary-dark: #0052CC;
+  --color-primary-light: #4D94FF;
+  --color-secondary: #6B7280;
+  --color-secondary-dark: #4B5563;
+  --color-secondary-light: #9CA3AF;
+  --color-gray-50: #F9FAFB;
+  --color-gray-100: #F3F4F6;
+  --color-gray-200: #E5E7EB;
+  --color-gray-300: #D1D5DB;
+  --color-gray-400: #9CA3AF;
+  --color-gray-500: #6B7280;
+  --color-gray-600: #4B5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1F2937;
+  --color-gray-900: #111827;
+  --color-success: #10B981;
+  --color-warning: #F59E0B;
+  --color-error: #EF4444;
+  --color-info: #0066FF;
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   --shadow-base: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
