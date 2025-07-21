@@ -1,0 +1,108 @@
+=== LLM Response Log ===
+Timestamp: 2025-07-21T05:00:55.183Z
+Model: gpt-4-0613
+
+=== User Prompt ===
+I want to learn programming in C
+
+=== AI Response ===
+{
+  "title": "Mastering C Programming: From Beginner to Pro",
+  "description": "This course provides a comprehensive introduction to the C programming language, covering everything from basic syntax to advanced concepts. By the end of this course, you will be able to write, compile, and debug your own C programs.",
+  "difficulty": "beginner",
+  "estimated_duration": 240,
+  "lessons": [
+    {
+      "title": "Introduction to C Programming",
+      "content": "Learn about the history of C, its importance in today's world, and the basic structure of a C program. Practice writing your first 'Hello, World!' program in C.",
+      "order_index": 1,
+      "estimated_duration": 20,
+      "video_url": "https://www.youtube.com/watch?v=KJgsSFOSQv0",
+      "video_title": "C Programming Tutorial for Beginners",
+      "video_duration": 600
+    },
+    {
+      "title": "Variables and Data Types in C",
+      "content": "Understand the different data types in C, how to declare variables, and how to use them in your programs.",
+      "order_index": 2,
+      "estimated_duration": 30,
+      "video_url": "https://www.youtube.com/watch?v=_yTX4xynFvk",
+      "video_title": "Variables & Data Types - C Programming Tutorial",
+      "video_duration": 900
+    },
+    {
+      "title": "Operators in C",
+      "content": "Learn about the different operators in C, including arithmetic, relational, logical, and bitwise operators, and how to use them in your programs.",
+      "order_index": 3,
+      "estimated_duration": 30,
+      "video_url": "https://www.youtube.com/watch?v=Rub-JsjMhWY",
+      "video_title": "C Programming Tutorial - 9 - Using the Math Operators",
+      "video_duration": 600
+    },
+    {
+      "title": "Control Structures in C",
+      "content": "Understand how to use control structures like if, else, for, while, and switch-case in your C programs.",
+      "order_index": 4,
+      "estimated_duration": 30,
+      "video_url": "https://www.youtube.com/watch?v=3Vcy34bHvaM",
+      "video_title": "C Programming Tutorial - 12 - If Statement",
+      "video_duration": 600
+    },
+    {
+      "title": "Functions in C",
+      "content": "Learn about the concept of functions in C, how to declare and define them, and how to use them in your programs.",
+      "order_index": 5,
+      "estimated_duration": 30,
+      "video_url": "https://www.youtube.com/watch?v=1MXhGTL_FNA",
+      "video_title": "C Programming Tutorial - 15 - Functions",
+      "video_duration": 600
+    },
+    {
+      "title": "Arrays and Strings in C",
+      "content": "Understand how to declare, initialize, and manipulate arrays and strings in C.",
+      "order_index": 6,
+      "estimated_duration": 30,
+      "video_url": "https://www.youtube.com/watch?v=EN6Dx22cPRI",
+      "video_title": "C Programming Tutorial - 18 - Arrays",
+      "video_duration": 600
+    },
+    {
+      "title": "Pointers in C",
+      "content": "Learn about the concept of pointers in C, how to declare and use them, and their importance in memory management.",
+      "order_index": 7,
+      "estimated_duration": 30,
+      "video_url": "https://www.youtube.com/watch?v=h-HBipu_1P0",
+      "video_title": "C Programming Tutorial - 39 - Introduction to Pointers",
+      "video_duration": 600
+    },
+    {
+      "title": "Structures and Unions in C",
+      "content": "Understand how to use structures and unions in C to group related data together.",
+      "order_index": 8,
+      "estimated_duration": 20,
+      "video_url": "https://www.youtube.com/watch?v=JyZSZTp3muk",
+      "video_title": "C Programming Tutorial - 45 - Structures",
+      "video_duration": 600
+    },
+    {
+      "title": "File Handling in C",
+      "content": "Learn about the different operations you can perform on files in C, including creating, opening, closing, reading, and writing to files.",
+      "order_index": 9,
+      "estimated_duration": 20,
+      "video_url": "https://www.youtube.com/watch?v=43IbCeI88ww",
+      "video_title": "C Programming Tutorial - 60 - Writing Files in C",
+      "video_duration": 600
+    },
+    {
+      "title": "Dynamic Memory Allocation in C",
+      "content": "Understand how to dynamically allocate and deallocate memory in C using malloc, calloc, realloc, and free.",
+      "order_index": 10,
+      "estimated_duration": 20,
+      "video_url": "https://www.youtube.com/watch?v=_8-ht2AKyH4",
+      "video_title": "C Programming Tutorial - 67 - malloc",
+      "video_duration": 600
+    }
+  ]
+}
+
+=== End Response ===

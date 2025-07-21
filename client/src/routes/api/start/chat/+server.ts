@@ -1,6 +1,7 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { OPENAI_API_KEY } from '$env/static/private';
+import { logOpenAIRequest } from '$lib/llm-logger';
 
 interface ChatMessage {
 	role: 'system' | 'user' | 'assistant';
@@ -26,33 +27,46 @@ export const POST: RequestHandler = async ({ request }) => {
 			return json({ error: 'Invalid messages format' }, { status: 400 });
 		}
 
-		// Call OpenAI API
-		const response = await fetch('https://api.openai.com/v1/chat/completions', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				'Authorization': `Bearer ${OPENAI_API_KEY}`
-			},
-			body: JSON.stringify({
-				model: 'gpt-4',
-				messages: messages,
-				max_tokens: 2000,
-				temperature: 0.7,
-				stream: false
-			})
-		});
+		// Get the user's message for logging
+		const userMessage = messages.find(msg => msg.role === 'user')?.content || '';
+
+		// Call OpenAI API with logging
+		const openAIRequest = {
+			model: 'gpt-4',
+			messages: messages,
+			max_tokens: 2000,
+			temperature: 0.7,
+			stream: false
+		};
+
+		const response = await logOpenAIRequest(
+			openAIRequest,
+			userMessage,
+			async () => {
+				return fetch('https://api.openai.com/v1/chat/completions', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+						'Authorization': `Bearer ${OPENAI_API_KEY}`
+					},
+					body: JSON.stringify(openAIRequest)
+				});
+			}
+		);
 
 		if (!response.ok) {
-			const errorData = await response.json();
-			console.error('OpenAI API error:', errorData);
+			const errorText = await response.text();
+			console.error('OpenAI API error:', response.status, errorText);
 			return json(
-				{ error: 'Failed to get response from OpenAI API' },
+				{ error: `Failed to get response from OpenAI API: ${response.status}` },
 				{ status: response.status }
 			);
 		}
 
 		const data = await response.json();
-		const assistantMessage = data.choices[0]?.message?.content;
+		console.log('OpenAI chat response data:', JSON.stringify(data, null, 2));
+		
+		const assistantMessage = data?.choices?.[0]?.message?.content;
 
 		if (!assistantMessage) {
 			return json({ error: 'No response from OpenAI' }, { status: 500 });

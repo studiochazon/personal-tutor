@@ -3,6 +3,7 @@ import type { RequestHandler } from './$types';
 import { getConnection } from '$lib/database';
 import { OPENAI_API_KEY } from '$env/static/private';
 import { videoLogger } from '$lib/video-logger';
+import { logOpenAIRequest } from '$lib/llm-logger';
 
 interface ChatMessage {
 	role: 'system' | 'user' | 'assistant';
@@ -161,38 +162,52 @@ Guidelines:
 - Choose high-quality educational videos from YouTube, Vimeo, or other reputable platforms
 - Video duration should be appropriate (2-15 minutes for most lessons)`;
 
-		const response = await fetch('https://api.openai.com/v1/chat/completions', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				'Authorization': `Bearer ${OPENAI_API_KEY}`
-			},
-			body: JSON.stringify({
-				model: 'gpt-4',
-				messages: [
-					{
-						role: 'system',
-						content: 'You are a course generation assistant. You must respond with ONLY valid JSON. Do not include any explanatory text, markdown formatting, or additional content outside the JSON object.'
+		const openAIRequest = {
+			model: 'gpt-4',
+			messages: [
+				{
+					role: 'system',
+					content: 'You are a course generation assistant. You must respond with ONLY valid JSON. Do not include any explanatory text, markdown formatting, or additional content outside the JSON object.'
+				},
+				{
+					role: 'user',
+					content: extractionPrompt
+				}
+			],
+			max_tokens: 3000,
+			temperature: 0.3
+		};
+
+		const data = await logOpenAIRequest(
+			openAIRequest,
+			userMessage,
+			async () => {
+				const response = await fetch('https://api.openai.com/v1/chat/completions', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+						'Authorization': `Bearer ${OPENAI_API_KEY}`
 					},
-					{
-						role: 'user',
-						content: extractionPrompt
-					}
-				],
-				max_tokens: 3000,
-				temperature: 0.3
-			})
-		});
+					body: JSON.stringify(openAIRequest)
+				});
 
-		if (!response.ok) {
-			throw new Error('Failed to extract course data');
-		}
+				if (!response.ok) {
+					const errorText = await response.text();
+					console.error('OpenAI API error:', response.status, errorText);
+					throw new Error(`Failed to extract course data: ${response.status}`);
+				}
 
-		const data = await response.json();
-		const content = data.choices[0]?.message?.content;
+				return response;
+			}
+		);
+
+		console.log('OpenAI response data:', JSON.stringify(data, null, 2));
+		
+		const content = data?.choices?.[0]?.message?.content;
 
 		if (!content) {
-			throw new Error('No response from OpenAI');
+			console.error('No content in OpenAI response:', data);
+			throw new Error('No response content from OpenAI');
 		}
 
 		// Clean the content to extract JSON
