@@ -60,13 +60,13 @@
 	function getDifficultyColor(difficulty: string): string {
 		switch (difficulty) {
 			case 'beginner':
-				return 'bg-green-100 text-green-800';
+				return 'difficulty-beginner';
 			case 'intermediate':
-				return 'bg-yellow-100 text-yellow-800';
+				return 'difficulty-intermediate';
 			case 'advanced':
-				return 'bg-red-100 text-red-800';
+				return 'difficulty-advanced';
 			default:
-				return 'bg-gray-100 text-gray-800';
+				return 'difficulty-default';
 		}
 	}
 
@@ -86,28 +86,21 @@
 	<meta name="description" content="Create personalized learning paths with AI-powered recommendations. Learn at your own pace with interactive lessons and progress tracking." />
 </svelte:head>
 
-<!-- Test div to verify CSS is working -->
-<div style="background: red; color: white; padding: 10px; text-align: center; display: none;">
-	CSS Test - If you see this, CSS is not loading properly
-</div>
-
 <!-- Hero Section -->
-<section class="hero" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); text-align: center; padding: 6rem 0;">
-	<div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 1rem;">
-		<h1 class="hero-title" style="font-size: 3.5rem; font-weight: 700; color: white; margin-bottom: 1.5rem; line-height: 1.2;">
-			Your Personal AI Tutor
-		</h1>
-		<p class="hero-subtitle" style="font-size: 1.25rem; color: rgba(255, 255, 255, 0.9); margin-bottom: 2rem; max-width: 600px; margin-left: auto; margin-right: auto;">
+<section class="hero-section">
+	<div class="hero-container">
+		<h1 class="hero-title">Your Personal AI Tutor</h1>
+		<p class="hero-subtitle">
 			Create custom learning paths tailored to your goals. Learn smarter, not harder, with AI-powered recommendations and interactive lessons.
 		</p>
-		<div class="flex gap-6 justify-center" style="display: flex; gap: 1.5rem; justify-content: center;">
-			<a href="/courses" class="btn btn-primary btn-lg" style="display: inline-flex; align-items: center; justify-content: center; padding: 1rem 2rem; border-radius: 0.5rem; font-weight: 600; text-decoration: none; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; font-size: 1.125rem;">
+		<div class="hero-buttons">
+			<a href="/courses" class="btn-primary btn-large">
 				Start Learning
 			</a>
-			<a href="/start" class="btn btn-secondary btn-lg" style="display: inline-flex; align-items: center; justify-content: center; padding: 1rem 2rem; border-radius: 0.5rem; font-weight: 600; text-decoration: none; background: rgba(255, 255, 255, 0.1); color: white; border: 2px solid rgba(255, 255, 255, 0.2); font-size: 1.125rem;">
+			<a href="/start" class="btn-secondary btn-large">
 				Create Course
 			</a>
-			<a href="/auth/register" class="btn btn-secondary btn-lg" style="display: inline-flex; align-items: center; justify-content: center; padding: 1rem 2rem; border-radius: 0.5rem; font-weight: 600; text-decoration: none; background: rgba(255, 255, 255, 0.1); color: white; border: 2px solid rgba(255, 255, 255, 0.2); font-size: 1.125rem;">
+			<a href="/auth/register" class="btn-ghost btn-large">
 				Get Started Free
 			</a>
 		</div>
@@ -115,29 +108,23 @@
 </section>
 
 <!-- Features Section -->
-<section class="features" style="padding: 5rem 0; background: white;">
-	<div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 1rem;">
-		<div class="text-center mb-12" style="text-align: center; margin-bottom: 3rem;">
-			<h2 class="text-4xl font-bold text-gray-800 mb-4" style="font-size: 2.25rem; font-weight: 700; color: #1f2937; margin-bottom: 1rem;">
-				Why Choose Personal Tutor AI?
-			</h2>
-			<p class="text-xl text-gray-600 max-w-3xl mx-auto" style="font-size: 1.25rem; color: #4b5563; max-width: 48rem; margin-left: auto; margin-right: auto;">
+<section class="features-section">
+	<div class="container">
+		<div class="section-header">
+			<h2 class="section-title">Why Choose Personal Tutor AI?</h2>
+			<p class="section-subtitle">
 				Experience the future of learning with our AI-powered platform designed to adapt to your unique learning style.
 			</p>
 		</div>
 		
-		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" style="display: grid; grid-template-columns: repeat(1, minmax(0, 1fr)); gap: 2rem;">
+		<div class="features-grid">
 			{#each features as feature}
-				<div class="feature-card card" style="text-align: center; padding: 2rem; background: white; border-radius: 1rem; padding: 2rem; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);">
-					<div class="feature-icon" style="width: 64px; height: 64px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 1rem; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; color: white; font-size: 1.5rem;">
+				<div class="feature-card">
+					<div class="feature-icon">
 						{feature.icon}
 					</div>
-					<h3 class="text-xl font-semibold text-gray-800 mb-3" style="font-size: 1.25rem; font-weight: 600; color: #1f2937; margin-bottom: 0.75rem;">
-						{feature.title}
-					</h3>
-					<p class="text-gray-600 leading-relaxed" style="color: #4b5563; line-height: 1.625;">
-						{feature.description}
-					</p>
+					<h3 class="feature-title">{feature.title}</h3>
+					<p class="feature-description">{feature.description}</p>
 				</div>
 			{/each}
 		</div>
@@ -145,67 +132,476 @@
 </section>
 
 <!-- Featured Courses Section -->
-<section class="py-20 bg-gray-50" style="padding: 5rem 0; background: #f9fafb;">
-	<div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 1rem;">
-		<div class="text-center mb-12" style="text-align: center; margin-bottom: 3rem;">
-			<h2 class="text-4xl font-bold text-gray-800 mb-4" style="font-size: 2.25rem; font-weight: 700; color: #1f2937; margin-bottom: 1rem;">
-				Featured Courses
-			</h2>
-			<p class="text-xl text-gray-600 max-w-3xl mx-auto" style="font-size: 1.25rem; color: #4b5563; max-width: 48rem; margin-left: auto; margin-right: auto;">
+<section class="courses-section">
+	<div class="container">
+		<div class="section-header">
+			<h2 class="section-title">Featured Courses</h2>
+			<p class="section-subtitle">
 				Explore our curated selection of courses designed to help you master new skills.
 			</p>
 		</div>
 		
-		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" style="display: grid; grid-template-columns: repeat(1, minmax(0, 1fr)); gap: 2rem;">
-			{#each featuredCourses as course}
-				<div class="card hover:shadow-xl transition-shadow" style="background: white; border-radius: 1rem; padding: 2rem; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);">
-					<div class="flex justify-between items-start mb-4" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
-						<h3 class="text-xl font-semibold text-gray-800" style="font-size: 1.25rem; font-weight: 600; color: #1f2937;">
-							{course.title}
-						</h3>
-						<span class="px-2 py-1 rounded-full text-xs font-medium {getDifficultyColor(course.difficulty)}" style="padding: 0.25rem 0.5rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 500;">
-							{course.difficulty}
-						</span>
-					</div>
-					<p class="text-gray-600 mb-4" style="color: #4b5563; margin-bottom: 1rem;">
-						{course.description}
-					</p>
-					<div class="flex justify-between items-center" style="display: flex; justify-content: space-between; align-items: center;">
-						<span class="text-sm text-gray-500" style="font-size: 0.875rem; color: #6b7280;">
-							⏱️ {formatDuration(course.estimated_duration)}
-						</span>
-						<a href="/courses/{course.id}" class="btn btn-primary" style="display: inline-flex; align-items: center; justify-content: center; padding: 0.75rem 1.5rem; border-radius: 0.5rem; font-weight: 600; text-decoration: none; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
-							Start Course
-						</a>
-					</div>
-				</div>
-			{/each}
-		</div>
-		
-		<div class="text-center mt-12" style="text-align: center; margin-top: 3rem;">
-			<a href="/courses" class="btn btn-secondary btn-lg" style="display: inline-flex; align-items: center; justify-content: center; padding: 1rem 2rem; border-radius: 0.5rem; font-weight: 600; text-decoration: none; background: rgba(255, 255, 255, 0.1); color: white; border: 2px solid rgba(255, 255, 255, 0.2); font-size: 1.125rem;">
-				View All Courses
-			</a>
-		</div>
+		{#if loading}
+			<div class="loading-state">
+				<div class="loading-spinner"></div>
+				<p class="loading-text">Loading featured courses...</p>
+			</div>
+		{:else}
+			<div class="courses-grid">
+				{#each featuredCourses as course}
+					<article class="course-card">
+						<div class="course-header">
+							<h3 class="course-title">{course.title}</h3>
+							<span class="difficulty-badge {getDifficultyColor(course.difficulty)}">
+								{course.difficulty}
+							</span>
+						</div>
+						<p class="course-description">
+							{course.description ? (course.description.length > 120 ? course.description.substring(0, 120) + '...' : course.description) : 'No description available'}
+						</p>
+						<div class="course-footer">
+							<span class="course-duration">
+								⏱️ {formatDuration(course.estimated_duration)}
+							</span>
+							<a href="/courses/{course.id}" class="btn-secondary">
+								Start Course
+							</a>
+						</div>
+					</article>
+				{/each}
+			</div>
+			
+			<div class="section-footer">
+				<a href="/courses" class="btn-primary btn-large">
+					View All Courses
+				</a>
+			</div>
+		{/if}
 	</div>
 </section>
 
 <!-- CTA Section -->
-<section class="py-20 bg-gradient-purple" style="padding: 5rem 0; background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);">
-	<div class="container text-center" style="max-width: 1200px; margin: 0 auto; padding: 0 1rem; text-align: center;">
-		<h2 class="text-4xl font-bold text-white mb-4" style="font-size: 2.25rem; font-weight: 700; color: white; margin-bottom: 1rem;">
-			Ready to Transform Your Learning?
-		</h2>
-		<p class="text-xl text-gray-100 mb-8 max-w-2xl mx-auto" style="font-size: 1.25rem; color: #f3f4f6; margin-bottom: 2rem; max-width: 42rem; margin-left: auto; margin-right: auto;">
+<section class="cta-section">
+	<div class="container">
+		<h2 class="cta-title">Ready to Transform Your Learning?</h2>
+		<p class="cta-subtitle">
 			Join thousands of learners who are already accelerating their growth with Personal Tutor AI.
 		</p>
-		<div class="flex gap-6 justify-center" style="display: flex; gap: 1.5rem; justify-content: center;">
-			<a href="/auth/register" class="btn btn-primary btn-lg" style="display: inline-flex; align-items: center; justify-content: center; padding: 1rem 2rem; border-radius: 0.5rem; font-weight: 600; text-decoration: none; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; font-size: 1.125rem;">
+		<div class="cta-buttons">
+			<a href="/auth/register" class="btn-primary btn-large">
 				Create Free Account
 			</a>
-			<a href="/courses" class="btn btn-secondary btn-lg" style="display: inline-flex; align-items: center; justify-content: center; padding: 1rem 2rem; border-radius: 0.5rem; font-weight: 600; text-decoration: none; background: rgba(255, 255, 255, 0.1); color: white; border: 2px solid rgba(255, 255, 255, 0.2); font-size: 1.125rem;">
+			<a href="/courses" class="btn-secondary btn-large">
 				Browse Courses
 			</a>
 		</div>
 	</div>
 </section>
+
+<style>
+	/* Container */
+	.container {
+		max-width: 1200px;
+		margin: 0 auto;
+		padding: 0 1rem;
+	}
+
+	/* Hero Section */
+	.hero-section {
+		background: linear-gradient(135deg, #0066FF 0%, #4D94FF 100%);
+		padding: 6rem 0;
+		text-align: center;
+		color: white;
+	}
+
+	.hero-container {
+		max-width: 1200px;
+		margin: 0 auto;
+		padding: 0 1rem;
+	}
+
+	.hero-title {
+		font-size: 3.5rem;
+		font-weight: 700;
+		margin-bottom: 1.5rem;
+		line-height: 1.2;
+	}
+
+	.hero-subtitle {
+		font-size: 1.25rem;
+		opacity: 0.9;
+		margin-bottom: 3rem;
+		max-width: 48rem;
+		margin-left: auto;
+		margin-right: auto;
+		line-height: 1.6;
+	}
+
+	.hero-buttons {
+		display: flex;
+		gap: 1.5rem;
+		justify-content: center;
+		flex-wrap: wrap;
+	}
+
+	/* Features Section */
+	.features-section {
+		padding: 5rem 0;
+		background-color: white;
+	}
+
+	.section-header {
+		text-align: center;
+		margin-bottom: 3rem;
+	}
+
+	.section-title {
+		font-size: 2.25rem;
+		font-weight: 700;
+		color: #1F2937;
+		margin-bottom: 1rem;
+	}
+
+	.section-subtitle {
+		font-size: 1.25rem;
+		color: #6B7280;
+		max-width: 48rem;
+		margin: 0 auto;
+		line-height: 1.6;
+	}
+
+	.features-grid {
+		display: grid;
+		grid-template-columns: repeat(1, 1fr);
+		gap: 2rem;
+	}
+
+	@media (min-width: 768px) {
+		.features-grid {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+
+	@media (min-width: 1024px) {
+		.features-grid {
+			grid-template-columns: repeat(3, 1fr);
+		}
+	}
+
+	.feature-card {
+		text-align: center;
+		padding: 2rem;
+		background: white;
+		border-radius: 0.75rem;
+		box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+		border: 1px solid #E5E7EB;
+		transition: all 0.2s ease;
+	}
+
+	.feature-card:hover {
+		box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+		transform: translateY(-2px);
+	}
+
+	.feature-icon {
+		width: 64px;
+		height: 64px;
+		background: linear-gradient(135deg, #0066FF 0%, #4D94FF 100%);
+		border-radius: 1rem;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin: 0 auto 1.5rem;
+		color: white;
+		font-size: 1.5rem;
+	}
+
+	.feature-title {
+		font-size: 1.25rem;
+		font-weight: 600;
+		color: #1F2937;
+		margin-bottom: 0.75rem;
+	}
+
+	.feature-description {
+		color: #6B7280;
+		line-height: 1.6;
+	}
+
+	/* Courses Section */
+	.courses-section {
+		padding: 5rem 0;
+		background-color: #F9FAFB;
+	}
+
+	.courses-grid {
+		display: grid;
+		grid-template-columns: repeat(1, 1fr);
+		gap: 2rem;
+		margin-bottom: 3rem;
+	}
+
+	@media (min-width: 768px) {
+		.courses-grid {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+
+	@media (min-width: 1024px) {
+		.courses-grid {
+			grid-template-columns: repeat(3, 1fr);
+		}
+	}
+
+	.course-card {
+		background-color: white;
+		border-radius: 0.75rem;
+		padding: 1.25rem;
+		box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+		border: 1px solid #E5E7EB;
+		transition: all 0.2s ease;
+		display: flex;
+		flex-direction: column;
+	}
+
+	.course-card:hover {
+		box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+		transform: translateY(-2px);
+	}
+
+	.course-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-start;
+		margin-bottom: 0.75rem;
+		gap: 1rem;
+	}
+
+	.course-title {
+		font-size: 1.125rem;
+		font-weight: 600;
+		color: #1F2937;
+		line-height: 1.3;
+		flex: 1;
+	}
+
+	.course-description {
+		color: #6B7280;
+		line-height: 1.5;
+		margin-bottom: 1rem;
+		flex: 1;
+		font-size: 0.875rem;
+	}
+
+	.course-footer {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-top: auto;
+	}
+
+	.course-duration {
+		font-size: 0.875rem;
+		color: #9CA3AF;
+	}
+
+	.section-footer {
+		text-align: center;
+	}
+
+	/* CTA Section */
+	.cta-section {
+		padding: 5rem 0;
+		background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%);
+		text-align: center;
+		color: white;
+	}
+
+	.cta-title {
+		font-size: 2.25rem;
+		font-weight: 700;
+		margin-bottom: 1rem;
+	}
+
+	.cta-subtitle {
+		font-size: 1.25rem;
+		opacity: 0.9;
+		margin-bottom: 2rem;
+		max-width: 42rem;
+		margin-left: auto;
+		margin-right: auto;
+		line-height: 1.6;
+	}
+
+	.cta-buttons {
+		display: flex;
+		gap: 1.5rem;
+		justify-content: center;
+		flex-wrap: wrap;
+	}
+
+	/* Difficulty Badges */
+	.difficulty-badge {
+		padding: 0.25rem 0.75rem;
+		border-radius: 9999px;
+		font-size: 0.75rem;
+		font-weight: 500;
+		text-transform: capitalize;
+		white-space: nowrap;
+	}
+
+	.difficulty-beginner {
+		background-color: #D1FAE5;
+		color: #065F46;
+	}
+
+	.difficulty-intermediate {
+		background-color: #FEF3C7;
+		color: #92400E;
+	}
+
+	.difficulty-advanced {
+		background-color: #FEE2E2;
+		color: #991B1B;
+	}
+
+	.difficulty-default {
+		background-color: #F3F4F6;
+		color: #374151;
+	}
+
+	/* Buttons */
+	.btn-primary {
+		background-color: #0066FF;
+		color: white;
+		padding: 0.75rem 1.5rem;
+		border-radius: 0.5rem;
+		font-weight: 600;
+		border: none;
+		transition: all 0.2s ease;
+		text-decoration: none;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		cursor: pointer;
+	}
+
+	.btn-primary:hover {
+		background-color: #0052CC;
+		transform: translateY(-1px);
+		box-shadow: 0 4px 12px rgba(0, 102, 255, 0.3);
+	}
+
+	.btn-secondary {
+		background-color: white;
+		color: #0066FF;
+		padding: 0.75rem 1.5rem;
+		border-radius: 0.5rem;
+		font-weight: 600;
+		border: 2px solid #0066FF;
+		transition: all 0.2s ease;
+		text-decoration: none;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		cursor: pointer;
+	}
+
+	.btn-secondary:hover {
+		background-color: #0066FF;
+		color: white;
+	}
+
+	.btn-ghost {
+		background-color: transparent;
+		color: white;
+		padding: 0.75rem 1.5rem;
+		border-radius: 0.5rem;
+		font-weight: 500;
+		border: 2px solid rgba(255, 255, 255, 0.2);
+		transition: all 0.2s ease;
+		text-decoration: none;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		cursor: pointer;
+	}
+
+	.btn-ghost:hover {
+		background-color: rgba(255, 255, 255, 0.1);
+		border-color: rgba(255, 255, 255, 0.3);
+	}
+
+	.btn-large {
+		padding: 1rem 2rem;
+		font-size: 1.125rem;
+	}
+
+	/* Loading State */
+	.loading-state {
+		text-align: center;
+		padding: 4rem 0;
+	}
+
+	.loading-spinner {
+		display: inline-block;
+		width: 2rem;
+		height: 2rem;
+		border: 2px solid #E5E7EB;
+		border-top: 2px solid #0066FF;
+		border-radius: 50%;
+		animation: spin 1s linear infinite;
+		margin-bottom: 1rem;
+	}
+
+	.loading-text {
+		color: #6B7280;
+		font-size: 1rem;
+	}
+
+	@keyframes spin {
+		from { transform: rotate(0deg); }
+		to { transform: rotate(360deg); }
+	}
+
+	/* Responsive Design */
+	@media (max-width: 768px) {
+		.hero-title {
+			font-size: 2.5rem;
+		}
+
+		.hero-subtitle {
+			font-size: 1.125rem;
+		}
+
+		.section-title {
+			font-size: 1.875rem;
+		}
+
+		.section-subtitle {
+			font-size: 1.125rem;
+		}
+
+		.hero-buttons,
+		.cta-buttons {
+			flex-direction: column;
+			align-items: center;
+		}
+
+		.course-header {
+			flex-direction: column;
+			align-items: flex-start;
+			gap: 0.5rem;
+		}
+
+		.course-footer {
+			flex-direction: column;
+			align-items: stretch;
+			gap: 1rem;
+		}
+
+		.btn-secondary {
+			text-align: center;
+		}
+	}
+</style>

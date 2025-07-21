@@ -35,13 +35,13 @@
 	function getDifficultyColor(difficulty: string): string {
 		switch (difficulty) {
 			case 'beginner':
-				return 'bg-green-100 text-green-800';
+				return 'difficulty-beginner';
 			case 'intermediate':
-				return 'bg-yellow-100 text-yellow-800';
+				return 'difficulty-intermediate';
 			case 'advanced':
-				return 'bg-red-100 text-red-800';
+				return 'difficulty-advanced';
 			default:
-				return 'bg-gray-100 text-gray-800';
+				return 'difficulty-default';
 		}
 	}
 	
@@ -65,173 +65,449 @@
 	<meta name="description" content={course ? course.description : 'Course details'} />
 </svelte:head>
 
-<div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 1rem;">
+<div class="page-container">
 	<!-- Loading State -->
 	{#if loading}
-		<div class="text-center py-12" style="text-align: center; padding: 3rem 0;">
-			<div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" style="display: inline-block; animation: spin 1s linear infinite; border-radius: 50%; height: 2rem; width: 2rem; border-bottom: 2px solid #2563eb;"></div>
-			<p class="mt-4 text-gray-600" style="margin-top: 1rem; color: #4b5563;">Loading course...</p>
+		<div class="loading-state">
+			<div class="loading-spinner"></div>
+			<p class="loading-text">Loading course...</p>
 		</div>
 	{:else if error}
 		<!-- Error State -->
-		<div class="text-center py-12" style="text-align: center; padding: 3rem 0;">
-			<div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded" style="background: #fee2e2; border: 1px solid #f87171; color: #dc2626; padding: 0.75rem 1rem; border-radius: 0.25rem;">
-				<strong class="font-bold" style="font-weight: 700;">Error:</strong>
-				<span class="block sm:inline" style="display: block;">{error}</span>
+		<div class="error-state">
+			<div class="error-message">
+				<strong>Error:</strong>
+				<span>{error}</span>
 			</div>
-			<button
-				on:click={loadCourse}
-				class="mt-4 btn btn-primary"
-				style="margin-top: 1rem; display: inline-flex; align-items: center; justify-content: center; padding: 0.75rem 1.5rem; border-radius: 0.5rem; font-weight: 600; text-decoration: none; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;"
-			>
+			<button on:click={loadCourse} class="btn-primary">
 				Try Again
 			</button>
 		</div>
 	{:else if course}
-		<!-- Course Header -->
-		<div class="bg-white rounded-lg shadow-lg p-8 mb-8" style="background: white; border-radius: 0.5rem; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); padding: 2rem; margin-bottom: 2rem;">
-			<div class="flex justify-between items-start mb-6" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem;">
-				<div class="flex-1">
-					<h1 class="text-3xl font-bold text-gray-800 mb-4" style="font-size: 1.875rem; font-weight: 700; color: #1f2937; margin-bottom: 1rem;">
-						{course.title}
-					</h1>
-					<p class="text-lg text-gray-600 mb-4" style="font-size: 1.125rem; color: #4b5563; margin-bottom: 1rem;">
-						{course.description}
-					</p>
-					<div class="flex gap-4 items-center" style="display: flex; gap: 1rem; align-items: center;">
-						<span class="px-3 py-1 rounded-full text-sm font-medium {getDifficultyColor(course.difficulty)}" style="padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 500;">
+		<div class="container">
+			<!-- Course Header -->
+			<header class="course-header">
+				<div class="course-info">
+					<h1 class="course-title">{course.title}</h1>
+					<p class="course-description">{course.description}</p>
+					<div class="course-meta">
+						<span class="difficulty-badge {getDifficultyColor(course.difficulty)}">
 							{course.difficulty}
 						</span>
-						<span class="text-gray-500" style="color: #6b7280;">
+						<span class="meta-item">
 							⏱️ {formatDuration(course.estimated_duration)}
 						</span>
-						<span class="text-gray-500" style="color: #6b7280;">
+						<span class="meta-item">
 							📚 {lessons.length} lesson{lessons.length !== 1 ? 's' : ''}
 						</span>
 					</div>
 				</div>
-			</div>
-			
+			</header>
+
 			<!-- Success Message for New Courses -->
-			<div class="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg mb-6" style="background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; padding: 0.75rem 1rem; border-radius: 0.5rem; margin-bottom: 1.5rem;">
-				<strong class="font-bold" style="font-weight: 700;">🎉 Course Created Successfully!</strong>
-				<p class="mt-1" style="margin-top: 0.25rem;">
+			<div class="success-message">
+				<strong>🎉 Course Created Successfully!</strong>
+				<p>
 					Your course has been generated and is ready to use. You can now view the lessons below or start customizing the content.
 				</p>
 			</div>
-		</div>
 
-		<!-- Lessons Section -->
-		<div class="bg-white rounded-lg shadow-lg p-8" style="background: white; border-radius: 0.5rem; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); padding: 2rem;">
-			<h2 class="text-2xl font-bold text-gray-800 mb-6" style="font-size: 1.5rem; font-weight: 700; color: #1f2937; margin-bottom: 1.5rem;">
-				Course Lessons
-			</h2>
-			
-			{#if lessons.length === 0}
-				<div class="text-center py-8" style="text-align: center; padding: 2rem 0;">
-					<div class="text-gray-400 text-4xl mb-4" style="color: #9ca3af; font-size: 2.25rem; margin-bottom: 1rem;">📝</div>
-					<p class="text-gray-600" style="color: #4b5563;">No lessons available yet.</p>
-				</div>
-			{:else}
-				<div class="space-y-4" style="display: flex; flex-direction: column; gap: 1rem;">
-					{#each lessons as lesson, index}
-						<div class="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow" style="border: 1px solid #e5e7eb; border-radius: 0.5rem; padding: 1.5rem; transition: box-shadow 0.2s;">
-							<div class="flex justify-between items-start mb-4" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
-								<div class="flex items-center gap-3" style="display: flex; align-items: center; gap: 0.75rem;">
-									<span class="bg-blue-100 text-blue-800 rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold" style="background: #dbeafe; color: #1e40af; border-radius: 50%; width: 2rem; height: 2rem; display: flex; align-items: center; justify-content: center; font-size: 0.875rem; font-weight: 700;">
-										{index + 1}
-									</span>
-									<h3 class="text-xl font-semibold text-gray-800" style="font-size: 1.25rem; font-weight: 600; color: #1f2937;">
-										{lesson.title}
-									</h3>
+			<!-- Lessons Section -->
+			<main class="lessons-section">
+				<h2 class="section-title">Course Lessons</h2>
+				
+				{#if lessons.length === 0}
+					<div class="empty-state">
+						<div class="empty-icon">📝</div>
+						<p class="empty-text">No lessons available yet.</p>
+					</div>
+				{:else}
+					<div class="lessons-list">
+						{#each lessons as lesson, index}
+							<article class="lesson-card">
+								<div class="lesson-header">
+									<div class="lesson-number">
+										<span class="lesson-index">{index + 1}</span>
+									</div>
+									<div class="lesson-info">
+										<h3 class="lesson-title">{lesson.title}</h3>
+										<span class="lesson-duration">
+											⏱️ {formatDuration(lesson.estimated_duration)}
+										</span>
+									</div>
 								</div>
-								<span class="text-sm text-gray-500" style="font-size: 0.875rem; color: #6b7280;">
-									⏱️ {formatDuration(lesson.estimated_duration)}
-								</span>
-							</div>
-							
-							<div class="prose max-w-none" style="max-width: none;">
-								<div class="text-gray-600 leading-relaxed" style="color: #4b5563; line-height: 1.625;">
+								
+								<div class="lesson-content">
 									{lesson.content}
 								</div>
-							</div>
-							
-							<div class="mt-4 pt-4 border-t border-gray-100" style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #f3f4f6;">
-								<a href="/courses/{courseId}/lessons/{lesson.id}" class="btn btn-primary" style="display: inline-flex; align-items: center; justify-content: center; padding: 0.75rem 1.5rem; border-radius: 0.5rem; font-weight: 600; text-decoration: none; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
-									Start Lesson
-								</a>
-							</div>
-						</div>
-					{/each}
-				</div>
-			{/if}
-		</div>
-		
-		<!-- Action Buttons -->
-		<div class="flex justify-center gap-4 mt-8" style="display: flex; justify-content: center; gap: 1rem; margin-top: 2rem;">
-			<a href="/courses" class="btn btn-secondary" style="display: inline-flex; align-items: center; justify-content: center; padding: 0.75rem 1.5rem; border-radius: 0.5rem; font-weight: 600; text-decoration: none; background: #f3f4f6; color: #374151; border: 1px solid #d1d5db;">
-				← Back to Courses
-			</a>
-			<a href="/start" class="btn btn-primary" style="display: inline-flex; align-items: center; justify-content: center; padding: 0.75rem 1.5rem; border-radius: 0.5rem; font-weight: 600; text-decoration: none; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
-				Create Another Course
-			</a>
+								
+								<div class="lesson-footer">
+									<a href="/courses/{courseId}/lessons/{lesson.id}" class="btn-primary">
+										Start Lesson
+									</a>
+								</div>
+							</article>
+						{/each}
+					</div>
+				{/if}
+			</main>
+			
+			<!-- Action Buttons -->
+			<footer class="action-buttons">
+				<a href="/courses" class="btn-secondary">
+					← Back to Courses
+				</a>
+				<a href="/start" class="btn-primary">
+					Create Another Course
+				</a>
+			</footer>
 		</div>
 	{/if}
 </div>
 
 <style>
+	/* Page Layout */
+	.page-container {
+		min-height: 100vh;
+		background-color: #F9FAFB;
+		padding: 2rem 0;
+	}
+
+	.container {
+		max-width: 1200px;
+		margin: 0 auto;
+		padding: 0 1rem;
+	}
+
+	/* Loading State */
+	.loading-state {
+		text-align: center;
+		padding: 4rem 0;
+	}
+
+	.loading-spinner {
+		display: inline-block;
+		width: 2rem;
+		height: 2rem;
+		border: 2px solid #E5E7EB;
+		border-top: 2px solid #0066FF;
+		border-radius: 50%;
+		animation: spin 1s linear infinite;
+		margin-bottom: 1rem;
+	}
+
+	.loading-text {
+		color: #6B7280;
+		font-size: 1rem;
+	}
+
 	@keyframes spin {
-		from {
-			transform: rotate(0deg);
-		}
-		to {
-			transform: rotate(360deg);
-		}
+		from { transform: rotate(0deg); }
+		to { transform: rotate(360deg); }
 	}
-	
-	.prose {
-		color: #374151;
+
+	/* Error State */
+	.error-state {
+		text-align: center;
+		padding: 4rem 0;
 	}
-	
-	.prose p {
+
+	.error-message {
+		background-color: #FEF2F2;
+		border: 1px solid #FECACA;
+		color: #DC2626;
+		padding: 1rem 1.5rem;
+		border-radius: 0.5rem;
+		margin-bottom: 1.5rem;
+		display: inline-block;
+	}
+
+	/* Course Header */
+	.course-header {
+		background-color: white;
+		border-radius: 0.75rem;
+		padding: 2rem;
+		box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+		border: 1px solid #E5E7EB;
+		margin-bottom: 2rem;
+	}
+
+	.course-title {
+		font-size: 2.25rem;
+		font-weight: 700;
+		color: #1F2937;
 		margin-bottom: 1rem;
+		line-height: 1.2;
 	}
-	
-	.prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
-		color: #111827;
-		font-weight: 600;
-		margin-top: 1.5rem;
-		margin-bottom: 0.75rem;
+
+	.course-description {
+		font-size: 1.125rem;
+		color: #6B7280;
+		margin-bottom: 1.5rem;
+		line-height: 1.6;
 	}
-	
-	.prose ul, .prose ol {
-		margin-bottom: 1rem;
-		padding-left: 1.5rem;
+
+	.course-meta {
+		display: flex;
+		gap: 1rem;
+		align-items: center;
+		flex-wrap: wrap;
 	}
-	
-	.prose li {
+
+	.meta-item {
+		color: #6B7280;
+		font-size: 0.875rem;
+	}
+
+	/* Success Message */
+	.success-message {
+		background-color: #F0FDF4;
+		border: 1px solid #BBF7D0;
+		color: #166534;
+		padding: 1rem 1.5rem;
+		border-radius: 0.5rem;
+		margin-bottom: 2rem;
+	}
+
+	.success-message strong {
+		font-weight: 700;
+		display: block;
 		margin-bottom: 0.25rem;
 	}
-	
-	.prose code {
-		background: #f3f4f6;
-		padding: 0.125rem 0.25rem;
-		border-radius: 0.25rem;
-		font-size: 0.875em;
+
+	.success-message p {
+		margin: 0;
+		line-height: 1.5;
 	}
-	
-	.prose pre {
-		background: #1f2937;
-		color: #f9fafb;
-		padding: 1rem;
+
+	/* Lessons Section */
+	.lessons-section {
+		background-color: white;
+		border-radius: 0.75rem;
+		padding: 2rem;
+		box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+		border: 1px solid #E5E7EB;
+		margin-bottom: 2rem;
+	}
+
+	.section-title {
+		font-size: 1.5rem;
+		font-weight: 700;
+		color: #1F2937;
+		margin-bottom: 1.5rem;
+	}
+
+	/* Empty State */
+	.empty-state {
+		text-align: center;
+		padding: 3rem 0;
+	}
+
+	.empty-icon {
+		font-size: 3rem;
+		margin-bottom: 1rem;
+		opacity: 0.5;
+	}
+
+	.empty-text {
+		color: #6B7280;
+		font-size: 1rem;
+	}
+
+	/* Lessons List */
+	.lessons-list {
+		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
+	}
+
+	.lesson-card {
+		border: 1px solid #E5E7EB;
 		border-radius: 0.5rem;
-		overflow-x: auto;
+		padding: 1.5rem;
+		transition: all 0.2s ease;
+	}
+
+	.lesson-card:hover {
+		box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+	}
+
+	.lesson-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-start;
+		margin-bottom: 1rem;
+		gap: 1rem;
+	}
+
+	.lesson-number {
+		flex-shrink: 0;
+	}
+
+	.lesson-index {
+		background-color: #DBEAFE;
+		color: #1E40AF;
+		border-radius: 50%;
+		width: 2rem;
+		height: 2rem;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 0.875rem;
+		font-weight: 700;
+	}
+
+	.lesson-info {
+		flex: 1;
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-start;
+		gap: 1rem;
+	}
+
+	.lesson-title {
+		font-size: 1.25rem;
+		font-weight: 600;
+		color: #1F2937;
+		margin: 0;
+		line-height: 1.3;
+	}
+
+	.lesson-duration {
+		font-size: 0.875rem;
+		color: #6B7280;
+		white-space: nowrap;
+	}
+
+	.lesson-content {
+		color: #6B7280;
+		line-height: 1.6;
 		margin-bottom: 1rem;
 	}
-	
-	.prose pre code {
-		background: none;
-		padding: 0;
-		color: inherit;
+
+	.lesson-footer {
+		padding-top: 1rem;
+		border-top: 1px solid #F3F4F6;
+	}
+
+	/* Action Buttons */
+	.action-buttons {
+		display: flex;
+		justify-content: center;
+		gap: 1rem;
+		margin-top: 2rem;
+	}
+
+	/* Difficulty Badges */
+	.difficulty-badge {
+		padding: 0.25rem 0.75rem;
+		border-radius: 9999px;
+		font-size: 0.75rem;
+		font-weight: 500;
+		text-transform: capitalize;
+		white-space: nowrap;
+	}
+
+	.difficulty-beginner {
+		background-color: #D1FAE5;
+		color: #065F46;
+	}
+
+	.difficulty-intermediate {
+		background-color: #FEF3C7;
+		color: #92400E;
+	}
+
+	.difficulty-advanced {
+		background-color: #FEE2E2;
+		color: #991B1B;
+	}
+
+	.difficulty-default {
+		background-color: #F3F4F6;
+		color: #374151;
+	}
+
+	/* Buttons */
+	.btn-primary {
+		background-color: #0066FF;
+		color: white;
+		padding: 0.75rem 1.5rem;
+		border-radius: 0.5rem;
+		font-weight: 600;
+		border: none;
+		transition: all 0.2s ease;
+		text-decoration: none;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		cursor: pointer;
+	}
+
+	.btn-primary:hover {
+		background-color: #0052CC;
+		transform: translateY(-1px);
+		box-shadow: 0 4px 12px rgba(0, 102, 255, 0.3);
+	}
+
+	.btn-secondary {
+		background-color: white;
+		color: #0066FF;
+		padding: 0.75rem 1.5rem;
+		border-radius: 0.5rem;
+		font-weight: 600;
+		border: 2px solid #0066FF;
+		transition: all 0.2s ease;
+		text-decoration: none;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		cursor: pointer;
+	}
+
+	.btn-secondary:hover {
+		background-color: #0066FF;
+		color: white;
+	}
+
+	/* Responsive Design */
+	@media (max-width: 768px) {
+		.course-title {
+			font-size: 1.875rem;
+		}
+
+		.course-description {
+			font-size: 1rem;
+		}
+
+		.course-meta {
+			flex-direction: column;
+			align-items: flex-start;
+			gap: 0.5rem;
+		}
+
+		.lesson-header {
+			flex-direction: column;
+			align-items: flex-start;
+			gap: 0.75rem;
+		}
+
+		.lesson-info {
+			flex-direction: column;
+			align-items: flex-start;
+			gap: 0.5rem;
+		}
+
+		.action-buttons {
+			flex-direction: column;
+			align-items: center;
+		}
+
+		.btn-secondary,
+		.btn-primary {
+			width: 100%;
+			max-width: 300px;
+			text-align: center;
+		}
 	}
 </style> 
