@@ -140,6 +140,24 @@
             "frontend_type": "string",
             "description": "Lesson content (markdown supported)"
           },
+          "video_url": {
+            "type": "VARCHAR(500)",
+            "constraints": "NULL",
+            "frontend_type": "string | null",
+            "description": "URL to video content (YouTube, Vimeo, etc.)"
+          },
+          "video_duration": {
+            "type": "INT",
+            "constraints": "NULL",
+            "frontend_type": "number | null",
+            "description": "Video duration in seconds"
+          },
+          "video_title": {
+            "type": "VARCHAR(255)",
+            "constraints": "NULL",
+            "frontend_type": "string | null",
+            "description": "Title of the video content"
+          },
           "order_index": {
             "type": "INT",
             "constraints": "NOT NULL",
@@ -326,6 +344,9 @@
           "body": {
             "title": "string",
             "content": "string",
+            "video_url": "string (optional)",
+            "video_duration": "number (optional)",
+            "video_title": "string (optional)",
             "order_index": "number"
           },
           "response": {
@@ -337,6 +358,9 @@
           "body": {
             "title": "string (optional)",
             "content": "string (optional)",
+            "video_url": "string (optional)",
+            "video_duration": "number (optional)",
+            "video_title": "string (optional)",
             "order_index": "number (optional)"
           },
           "response": {
@@ -407,6 +431,9 @@
         "course_id": "number",
         "title": "string",
         "content": "string",
+        "video_url": "string | null",
+        "video_duration": "number | null",
+        "video_title": "string | null",
         "order_index": "number",
         "estimated_duration": "number | null",
         "created_at": "string",

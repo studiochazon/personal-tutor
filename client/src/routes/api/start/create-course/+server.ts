@@ -2,6 +2,7 @@ import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { getConnection } from '$lib/database';
 import { OPENAI_API_KEY } from '$env/static/private';
+import { videoLogger } from '$lib/video-logger';
 
 interface ChatMessage {
 	role: 'system' | 'user' | 'assistant';
@@ -58,17 +59,35 @@ export const POST: RequestHandler = async ({ request }) => {
 
 		// Insert lessons
 		for (const lesson of courseData.lessons) {
-			await connection.execute(
-				`INSERT INTO lessons (course_id, title, content, order_index, estimated_duration, created_at, updated_at) 
-				 VALUES (?, ?, ?, ?, ?, NOW(), NOW())`,
+			const [lessonResult] = await connection.execute(
+				`INSERT INTO lessons (course_id, title, content, video_url, video_title, video_duration, order_index, estimated_duration, created_at, updated_at) 
+				 VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())`,
 				[
 					courseId,
 					lesson.title,
 					lesson.content,
+					lesson.video_url || null,
+					lesson.video_title || null,
+					lesson.video_duration || null,
 					lesson.order_index,
 					lesson.estimated_duration || null
 				]
 			);
+
+			const lessonId = (lessonResult as any).insertId;
+			
+			// Log video source if present
+			if (lesson.video_url) {
+				videoLogger.logVideoSource(
+					lessonId,
+					lesson.title,
+					courseId,
+					courseData.title,
+					lesson.video_url,
+					lesson.video_title,
+					lesson.video_duration
+				);
+			}
 		}
 
 		// Get the created course with lessons
@@ -123,7 +142,10 @@ Generate a course with the following JSON structure (respond ONLY with valid JSO
       "title": "Clear lesson title",
       "content": "Comprehensive lesson content with clear structure, examples, and practical exercises. Use markdown formatting for better readability.",
       "order_index": number,
-      "estimated_duration": number in minutes
+      "estimated_duration": number in minutes,
+      "video_url": "URL to relevant video content (YouTube, Vimeo, etc.)",
+      "video_title": "Title of the video content",
+      "video_duration": number in seconds
     }
   ]
 }
@@ -134,7 +156,10 @@ Guidelines:
 - Include practical examples and exercises
 - Use clear, engaging language
 - Structure content logically from basic to advanced concepts
-- Ensure the difficulty level matches the content`;
+- Ensure the difficulty level matches the content
+- **IMPORTANT**: Include relevant video sources for each lesson when they would enhance learning
+- Choose high-quality educational videos from YouTube, Vimeo, or other reputable platforms
+- Video duration should be appropriate (2-15 minutes for most lessons)`;
 
 		const response = await fetch('https://api.openai.com/v1/chat/completions', {
 			method: 'POST',
@@ -199,12 +224,18 @@ Guidelines:
 				lessons: courseData.lessons && Array.isArray(courseData.lessons) ? courseData.lessons.map((lesson: any, index: number) => ({
 					title: lesson.title || `Lesson ${index + 1}`,
 					content: lesson.content || 'Lesson content will be added here.',
+					video_url: lesson.video_url || null,
+					video_title: lesson.video_title || null,
+					video_duration: lesson.video_duration || null,
 					order_index: lesson.order_index || index + 1,
 					estimated_duration: lesson.estimated_duration || 15
 				})) : [
 					{
 						title: 'Introduction',
 						content: 'Welcome to your AI-generated course! This lesson will introduce you to the key concepts.',
+						video_url: null,
+						video_title: null,
+						video_duration: null,
 						order_index: 1,
 						estimated_duration: 10
 					}
@@ -228,24 +259,36 @@ Guidelines:
 					{
 						title: 'Introduction',
 						content: `Welcome to your course about ${userMessage}! In this lesson, we'll introduce you to the fundamental concepts and what you can expect to learn throughout this course.`,
+						video_url: null,
+						video_title: null,
+						video_duration: null,
 						order_index: 1,
 						estimated_duration: 10
 					},
 					{
 						title: 'Getting Started',
 						content: `Let's dive into the basics of ${userMessage}. This lesson will cover the essential foundations you need to understand before moving forward.`,
+						video_url: null,
+						video_title: null,
+						video_duration: null,
 						order_index: 2,
 						estimated_duration: 15
 					},
 					{
 						title: 'Core Concepts',
 						content: `Now we'll explore the core concepts and principles related to ${userMessage}. This is where the real learning begins!`,
+						video_url: null,
+						video_title: null,
+						video_duration: null,
 						order_index: 3,
 						estimated_duration: 20
 					},
 					{
 						title: 'Practical Application',
 						content: `Let's put what you've learned into practice. This lesson will show you how to apply the concepts of ${userMessage} in real-world scenarios.`,
+						video_url: null,
+						video_title: null,
+						video_duration: null,
 						order_index: 4,
 						estimated_duration: 15
 					}

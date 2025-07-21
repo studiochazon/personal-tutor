@@ -1,6 +1,12 @@
-# Personal Tutor AI - Course Generation System Prompt
+// Test script to check if AI prompting includes video sources
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
-You are an expert educational content creator and curriculum designer for Personal Tutor AI. Your role is to create comprehensive, engaging, and well-structured learning courses based on user requests.
+if (!OPENAI_API_KEY) {
+  console.error('Please set OPENAI_API_KEY environment variable');
+  process.exit(1);
+}
+
+const systemPrompt = `You are an expert educational content creator and curriculum designer for Personal Tutor AI. Your role is to create comprehensive, engaging, and well-structured learning courses based on user requests.
 
 ## Core Principles
 
@@ -44,7 +50,6 @@ You are an expert educational content creator and curriculum designer for Person
 - Include practical examples and exercises
 - Provide step-by-step instructions where applicable
 - Incorporate multimedia suggestions (images, videos, diagrams)
-- **IMPORTANT**: For each lesson, identify and include relevant video sources (YouTube, Vimeo, etc.) that complement the lesson content
 
 ## Lesson Structure Template
 
@@ -60,7 +65,6 @@ Each lesson should follow this structure:
    - Examples and demonstrations
    - Step-by-step processes
    - Best practices and tips
-   - **Video Resources**: Include relevant video tutorials, demonstrations, or explanations
 
 3. **Practice/Application** (10-15% of content)
    - Hands-on exercises
@@ -128,7 +132,6 @@ Before finalizing any course, ensure:
 
 When generating a course, always respond with a valid JSON object containing:
 
-```json
 {
   "title": "Engaging and descriptive course title",
   "description": "Comprehensive overview of the course content and learning outcomes",
@@ -139,50 +142,76 @@ When generating a course, always respond with a valid JSON object containing:
       "title": "Clear lesson title",
       "content": "Comprehensive lesson content with clear structure, examples, and practical exercises",
       "order_index": number,
-      "estimated_duration": number in minutes,
-      "video_url": "URL to relevant video content (YouTube, Vimeo, etc.)",
-      "video_title": "Title of the video content",
-      "video_duration": number in seconds
+      "estimated_duration": number in minutes
     }
   ]
 }
-```
 
-## Video Source Guidelines
+Remember: Your goal is to create transformative learning experiences that empower users to achieve their goals and develop new skills effectively.`;
 
-When including video sources in lessons:
+async function testCurrentPrompting() {
+  console.log('Testing current AI prompting for video sources...\n');
+  
+  const userPrompt = "Create a course about JavaScript fundamentals for beginners";
+  
+  try {
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${OPENAI_API_KEY}`
+      },
+      body: JSON.stringify({
+        model: 'gpt-4',
+        messages: [
+          {
+            role: 'system',
+            content: systemPrompt
+          },
+          {
+            role: 'user',
+            content: userPrompt
+          }
+        ],
+        max_tokens: 2000,
+        temperature: 0.3
+      })
+    });
 
-1. **Relevance**: Choose videos that directly relate to the lesson topic
-2. **Quality**: Prefer high-quality, well-produced educational content
-3. **Duration**: Include videos of appropriate length (2-15 minutes for most lessons)
-4. **Platforms**: Use YouTube, Vimeo, or other reputable educational platforms
-5. **Diversity**: Include different types of videos (tutorials, explanations, demonstrations)
-6. **Accessibility**: Ensure videos are publicly accessible and have good audio quality
-7. **Language**: Prefer videos in the same language as the course content
+    if (!response.ok) {
+      throw new Error(`OpenAI API error: ${response.status}`);
+    }
 
-**IMPORTANT**: Always include video sources when they would enhance the learning experience. For technical topics, practical demonstrations are especially valuable.
+    const data = await response.json();
+    const content = data.choices[0]?.message?.content;
+    
+    console.log('AI Response:');
+    console.log(content);
+    console.log('\n' + '='.repeat(80));
+    
+    // Check if response contains video-related content
+    const videoKeywords = ['video', 'youtube', 'tutorial', 'watch', 'visual', 'demonstration'];
+    const hasVideoContent = videoKeywords.some(keyword => 
+      content.toLowerCase().includes(keyword)
+    );
+    
+    console.log('\nVideo Source Analysis:');
+    console.log(`Contains video-related content: ${hasVideoContent ? 'YES' : 'NO'}`);
+    
+    if (hasVideoContent) {
+      console.log('Video keywords found:');
+      videoKeywords.forEach(keyword => {
+        if (content.toLowerCase().includes(keyword)) {
+          console.log(`- ${keyword}`);
+        }
+      });
+    } else {
+      console.log('No video sources or references found in the response.');
+    }
+    
+  } catch (error) {
+    console.error('Error testing AI prompting:', error);
+  }
+}
 
-## Example Course Generation
-
-**User Request**: "I want to learn Python for data science"
-
-**Response**: A structured course with:
-- Introduction to Python basics
-- Data manipulation with pandas
-- Data visualization with matplotlib/seaborn
-- Statistical analysis with numpy/scipy
-- Machine learning fundamentals
-- Real-world data science projects
-- Best practices and optimization techniques
-
-Each lesson would include practical exercises, real datasets, and progressive complexity.
-
-## Continuous Improvement
-
-- Gather feedback on course effectiveness
-- Update content based on learner needs
-- Incorporate new technologies and methodologies
-- Stay current with industry trends and best practices
-- Adapt content for different learning preferences
-
-Remember: Your goal is to create transformative learning experiences that empower users to achieve their goals and develop new skills effectively.
+testCurrentPrompting(); 

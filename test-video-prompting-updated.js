@@ -1,6 +1,12 @@
-# Personal Tutor AI - Course Generation System Prompt
+// Test script to check if updated AI prompting includes video sources
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
-You are an expert educational content creator and curriculum designer for Personal Tutor AI. Your role is to create comprehensive, engaging, and well-structured learning courses based on user requests.
+if (!OPENAI_API_KEY) {
+  console.error('Please set OPENAI_API_KEY environment variable');
+  process.exit(1);
+}
+
+const updatedSystemPrompt = `You are an expert educational content creator and curriculum designer for Personal Tutor AI. Your role is to create comprehensive, engaging, and well-structured learning courses based on user requests.
 
 ## Core Principles
 
@@ -128,7 +134,6 @@ Before finalizing any course, ensure:
 
 When generating a course, always respond with a valid JSON object containing:
 
-```json
 {
   "title": "Engaging and descriptive course title",
   "description": "Comprehensive overview of the course content and learning outcomes",
@@ -146,7 +151,6 @@ When generating a course, always respond with a valid JSON object containing:
     }
   ]
 }
-```
 
 ## Video Source Guidelines
 
@@ -162,27 +166,114 @@ When including video sources in lessons:
 
 **IMPORTANT**: Always include video sources when they would enhance the learning experience. For technical topics, practical demonstrations are especially valuable.
 
-## Example Course Generation
+Remember: Your goal is to create transformative learning experiences that empower users to achieve their goals and develop new skills effectively.`;
 
-**User Request**: "I want to learn Python for data science"
+async function testUpdatedPrompting() {
+  console.log('Testing updated AI prompting for video sources...\n');
+  
+  const userPrompt = "Create a course about JavaScript fundamentals for beginners";
+  
+  try {
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${OPENAI_API_KEY}`
+      },
+      body: JSON.stringify({
+        model: 'gpt-4',
+        messages: [
+          {
+            role: 'system',
+            content: updatedSystemPrompt
+          },
+          {
+            role: 'user',
+            content: userPrompt
+          }
+        ],
+        max_tokens: 3000,
+        temperature: 0.3
+      })
+    });
 
-**Response**: A structured course with:
-- Introduction to Python basics
-- Data manipulation with pandas
-- Data visualization with matplotlib/seaborn
-- Statistical analysis with numpy/scipy
-- Machine learning fundamentals
-- Real-world data science projects
-- Best practices and optimization techniques
+    if (!response.ok) {
+      throw new Error(`OpenAI API error: ${response.status}`);
+    }
 
-Each lesson would include practical exercises, real datasets, and progressive complexity.
+    const data = await response.json();
+    const content = data.choices[0]?.message?.content;
+    
+    console.log('AI Response:');
+    console.log(content);
+    console.log('\n' + '='.repeat(80));
+    
+    // Check if response contains video-related content
+    const videoKeywords = ['video', 'youtube', 'tutorial', 'watch', 'visual', 'demonstration'];
+    const hasVideoContent = videoKeywords.some(keyword => 
+      content.toLowerCase().includes(keyword)
+    );
+    
+    console.log('\nVideo Source Analysis:');
+    console.log(`Contains video-related content: ${hasVideoContent ? 'YES' : 'NO'}`);
+    
+    if (hasVideoContent) {
+      console.log('Video keywords found:');
+      videoKeywords.forEach(keyword => {
+        if (content.toLowerCase().includes(keyword)) {
+          console.log(`- ${keyword}`);
+        }
+      });
+    } else {
+      console.log('No video sources or references found in the response.');
+    }
+    
+    // Try to parse JSON and check for video_url fields
+    try {
+      let jsonContent = content.trim();
+      
+      // Remove any markdown code blocks
+      if (jsonContent.startsWith('```json')) {
+        jsonContent = jsonContent.replace(/^```json\s*/, '').replace(/\s*```$/, '');
+      } else if (jsonContent.startsWith('```')) {
+        jsonContent = jsonContent.replace(/^```\s*/, '').replace(/\s*```$/, '');
+      }
+      
+      // Try to find JSON object in the response
+      const jsonMatch = jsonContent.match(/\{[\s\S]*\}/);
+      if (jsonMatch) {
+        jsonContent = jsonMatch[0];
+      }
+      
+      const courseData = JSON.parse(jsonContent);
+      
+      console.log('\nJSON Structure Analysis:');
+      console.log(`Course has lessons: ${courseData.lessons ? 'YES' : 'NO'}`);
+      
+      if (courseData.lessons && Array.isArray(courseData.lessons)) {
+        console.log(`Number of lessons: ${courseData.lessons.length}`);
+        
+        let lessonsWithVideo = 0;
+        courseData.lessons.forEach((lesson, index) => {
+          if (lesson.video_url) {
+            lessonsWithVideo++;
+            console.log(`Lesson ${index + 1} (${lesson.title}):`);
+            console.log(`  - Video URL: ${lesson.video_url}`);
+            console.log(`  - Video Title: ${lesson.video_title || 'N/A'}`);
+            console.log(`  - Video Duration: ${lesson.video_duration || 'N/A'} seconds`);
+          }
+        });
+        
+        console.log(`\nLessons with video sources: ${lessonsWithVideo}/${courseData.lessons.length}`);
+        console.log(`Video inclusion rate: ${((lessonsWithVideo / courseData.lessons.length) * 100).toFixed(1)}%`);
+      }
+    } catch (parseError) {
+      console.log('\nCould not parse JSON response for detailed analysis');
+    }
+    
+  } catch (error) {
+    console.error('Error testing updated AI prompting:', error);
+  }
+}
 
-## Continuous Improvement
-
-- Gather feedback on course effectiveness
-- Update content based on learner needs
-- Incorporate new technologies and methodologies
-- Stay current with industry trends and best practices
-- Adapt content for different learning preferences
-
-Remember: Your goal is to create transformative learning experiences that empower users to achieve their goals and develop new skills effectively.
+testUpdatedPrompting(); 

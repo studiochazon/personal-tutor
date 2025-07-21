@@ -23,14 +23,17 @@ export interface Course {
 }
 
 export interface Lesson {
-  id: number;
-  course_id: number;
-  title: string;
-  content: string;
-  order_index: number;
-  estimated_duration: number | null;
-  created_at: string;
-  updated_at: string;
+	id: number;
+	course_id: number;
+	title: string;
+	content: string;
+	video_url: string | null;
+	video_duration: number | null;
+	video_title: string | null;
+	order_index: number;
+	estimated_duration: number | null;
+	created_at: string;
+	updated_at: string;
 }
 
 export interface Progress {
@@ -103,6 +106,9 @@ export interface UpdateCourseRequest {
 export interface CreateLessonRequest {
   title: string;
   content: string;
+  video_url?: string;
+  video_title?: string;
+  video_duration?: number;
   order_index: number;
 }
 
