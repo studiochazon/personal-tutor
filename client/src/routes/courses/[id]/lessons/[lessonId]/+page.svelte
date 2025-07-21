@@ -66,6 +66,57 @@
 		return `${mins}m`;
 	}
 	
+	function formatVideoDuration(seconds: number | null): string {
+		if (!seconds) return '';
+		const hours = Math.floor(seconds / 3600);
+		const minutes = Math.floor((seconds % 3600) / 60);
+		const secs = seconds % 60;
+		
+		if (hours > 0) {
+			return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+		}
+		return `${minutes}:${secs.toString().padStart(2, '0')}`;
+	}
+	
+	function getEmbedUrl(url: string): string {
+		if (!url) return '';
+		
+		// YouTube URL transformations
+		if (url.includes('youtube.com/watch') || url.includes('youtu.be/')) {
+			let videoId = '';
+			
+			// Handle youtu.be URLs
+			if (url.includes('youtu.be/')) {
+				videoId = url.split('youtu.be/')[1]?.split('?')[0] || '';
+			}
+			// Handle youtube.com/watch URLs
+			else if (url.includes('youtube.com/watch')) {
+				const urlParams = new URLSearchParams(url.split('?')[1] || '');
+				videoId = urlParams.get('v') || '';
+			}
+			
+			if (videoId) {
+				return `https://www.youtube.com/embed/${videoId}`;
+			}
+		}
+		
+		// Vimeo URL transformations
+		if (url.includes('vimeo.com/')) {
+			const videoId = url.split('vimeo.com/')[1]?.split('?')[0] || '';
+			if (videoId) {
+				return `https://player.vimeo.com/video/${videoId}`;
+			}
+		}
+		
+		// If it's already an embed URL, return as is
+		if (url.includes('/embed/') || url.includes('player.')) {
+			return url;
+		}
+		
+		// For other URLs, return as is (they might be direct video files)
+		return url;
+	}
+	
 	function getPreviousLesson() {
 		if (currentLessonIndex > 0) {
 			return allLessons[currentLessonIndex - 1];
@@ -143,6 +194,11 @@
 						<span class="text-gray-500" style="color: #6b7280;">
 							📚 Lesson {currentLessonIndex + 1} of {allLessons.length}
 						</span>
+						{#if lesson.video_url}
+							<span class="text-blue-600" style="color: #2563eb;">
+								🎥 Video Available
+							</span>
+						{/if}
 					</div>
 				</div>
 			</div>
@@ -161,6 +217,47 @@
 
 		<!-- Lesson Content -->
 		<div class="bg-white rounded-lg shadow-lg p-8 mb-6" style="background: white; border-radius: 0.5rem; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); padding: 2rem; margin-bottom: 1.5rem;">
+			<!-- Video Section -->
+			{#if lesson && lesson.video_url}
+				<div class="mb-8" style="margin-bottom: 2rem;">
+					<div class="bg-gray-900 rounded-lg overflow-hidden" style="background: #111827; border-radius: 0.5rem; overflow: hidden;">
+						<div class="relative" style="position: relative;">
+							<iframe
+								src="{getEmbedUrl(lesson.video_url)}"
+								title="{lesson.video_title || lesson.title}"
+								class="w-full aspect-video"
+								style="width: 100%; aspect-ratio: 16 / 9;"
+								frameborder="0"
+								allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+								allowfullscreen
+							></iframe>
+						</div>
+					</div>
+					
+					<!-- Video Info -->
+					<div class="mt-4 flex items-center justify-between" style="margin-top: 1rem; display: flex; align-items: center; justify-content: space-between;">
+						<div>
+							{#if lesson.video_title}
+								<h3 class="text-lg font-semibold text-gray-800" style="font-size: 1.125rem; font-weight: 600; color: #1f2937;">
+									{lesson.video_title}
+								</h3>
+							{/if}
+							{#if lesson.video_duration}
+								<p class="text-sm text-gray-600 mt-1" style="font-size: 0.875rem; color: #4b5563; margin-top: 0.25rem;">
+									⏱️ Duration: {formatVideoDuration(lesson.video_duration)}
+								</p>
+							{/if}
+						</div>
+						<div class="flex items-center gap-2" style="display: flex; align-items: center; gap: 0.5rem;">
+							<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800" style="display: inline-flex; align-items: center; padding: 0.125rem 0.625rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 500; background: #dbeafe; color: #1e40af;">
+								🎥 Video Lesson
+							</span>
+						</div>
+					</div>
+				</div>
+			{/if}
+			
+			<!-- Lesson Content -->
 			<div class="prose max-w-none" style="max-width: none;">
 				{@html lesson.content.replace(/\n/g, '<br>').replace(/^# (.*$)/gm, '<h1>$1</h1>').replace(/^## (.*$)/gm, '<h2>$1</h2>').replace(/^### (.*$)/gm, '<h3>$1</h3>').replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>').replace(/`([^`]+)`/g, '<code>$1</code>')}
 			</div>
@@ -216,9 +313,14 @@
 						<span class="flex-1 text-sm {lessonItem.id === lesson.id ? 'font-semibold text-blue-800' : 'text-gray-700'}" style="flex: 1; font-size: 0.875rem; {lessonItem.id === lesson.id ? 'font-weight: 600; color: #1e40af;' : 'color: #374151;'}">
 							{lessonItem.title}
 						</span>
-						{#if lessonItem.id === lesson.id}
-							<span class="text-blue-600 text-xs" style="color: #2563eb; font-size: 0.75rem;">Current</span>
-						{/if}
+						<div class="flex items-center gap-2" style="display: flex; align-items: center; gap: 0.5rem;">
+							{#if lessonItem.video_url}
+								<span class="text-blue-600 text-xs" style="color: #2563eb; font-size: 0.75rem;">🎥</span>
+							{/if}
+							{#if lessonItem.id === lesson.id}
+								<span class="text-blue-600 text-xs" style="color: #2563eb; font-size: 0.75rem;">Current</span>
+							{/if}
+						</div>
 					</a>
 				{/each}
 			</div>
