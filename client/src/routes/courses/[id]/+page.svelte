@@ -429,26 +429,6 @@
 	}
 
 	/* Buttons */
-	.btn-primary {
-		background-color: #0066FF;
-		color: white;
-		padding: 0.75rem 1.5rem;
-		border-radius: 0.5rem;
-		font-weight: 600;
-		border: none;
-		transition: all 0.2s ease;
-		text-decoration: none;
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		cursor: pointer;
-	}
-
-	.btn-primary:hover {
-		background-color: #0052CC;
-		transform: translateY(-1px);
-		box-shadow: 0 4px 12px rgba(0, 102, 255, 0.3);
-	}
 
 	.btn-secondary {
 		background-color: white;
@@ -503,8 +483,7 @@
 			align-items: center;
 		}
 
-		.btn-secondary,
-		.btn-primary {
+		.btn-secondary {
 			width: 100%;
 			max-width: 300px;
 			text-align: center;

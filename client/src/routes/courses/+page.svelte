@@ -481,26 +481,6 @@
 	}
 
 	/* Buttons */
-	.btn-primary {
-		background-color: var(--color-primary);
-		color: white;
-		padding: var(--spacing-3) var(--spacing-6);
-		border-radius: var(--radius-lg);
-		font-weight: 600;
-		border: none;
-		transition: all 0.2s ease;
-		text-decoration: none;
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		cursor: pointer;
-	}
-
-	.btn-primary:hover {
-		background-color: var(--color-primary-dark);
-		transform: translateY(-1px);
-		box-shadow: 0 4px 12px rgba(0, 102, 255, 0.3);
-	}
 
 	.btn-secondary {
 		background-color: white;

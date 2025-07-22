@@ -1,5 +1,5 @@
 <script lang="ts">
-	import '../app.css';
+	import '../minimal.css';
 	import '../styles/design-system.css';
 </script>
 
@@ -7,8 +7,8 @@
 	<div class="container">
 		<nav class="nav">
 			<a href="/" class="nav-brand">
-				<span class="brand-icon">🎓</span>
-				<span class="brand-text">Personal Tutor AI</span>
+				<!-- <span class="brand-icon">🎓</span> -->
+				<span class="brand-text">NovotioAI</span>
 			</a>
 			<ul class="nav-links">
 				<li><a href="/courses" class="nav-link">Courses</a></li>
