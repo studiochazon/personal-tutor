@@ -11,6 +11,7 @@
 				<span class="brand-text">NovotioAI</span>
 			</a>
 			<ul class="nav-links">
+				<li><a href="/home" class="nav-link">Home</a></li>
 				<li><a href="/courses" class="nav-link">Courses</a></li>
 				<li><a href="/start" class="nav-link">Create Course</a></li>
 				<li><a href="/auth/login" class="nav-link">Login</a></li>
