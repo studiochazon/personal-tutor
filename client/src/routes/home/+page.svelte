@@ -185,7 +185,7 @@ Each lesson should follow this structure:
 	<!-- In-Progress Courses Section -->
 	<section class="mb-12">
 		<div class="flex items-center justify-between mb-6">
-			<h2 class="text-2xl font-bold text-gray-800">In-Progress Courses</h2>
+			<h2 class="text-2xl font-bold text-gray-800">Continue your learning journey</h2>
 			{#if inProgressCourses.length > 0}
 				<a href="/courses" class="text-primary hover:text-primary-dark transition-colors">
 					View All →
