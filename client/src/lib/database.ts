@@ -1,6 +1,6 @@
 import mysql from 'mysql2/promise';
 import type { Course, Lesson, User, Progress } from './types';
-import { dbConfig } from './config';
+import { dbConfig } from './server-config';
 
 // Database configuration with connection pool settings
 const poolConfig = {
@@ -81,7 +81,7 @@ export async function getLessonById(id: number): Promise<Lesson | null> {
 export async function getUserById(id: number): Promise<User | null> {
 	const connection = await getConnection();
 	const [rows] = await connection.execute(
-		'SELECT id, email, name, created_at, updated_at FROM users WHERE id = ?',
+		'SELECT id, email, name, google_id, avatar_url, email_verified, given_name, family_name, last_login, created_at, updated_at FROM users WHERE id = ?',
 		[id]
 	);
 	const users = rows as User[];
@@ -91,11 +91,78 @@ export async function getUserById(id: number): Promise<User | null> {
 export async function getUserByEmail(email: string): Promise<User | null> {
 	const connection = await getConnection();
 	const [rows] = await connection.execute(
-		'SELECT id, email, name, created_at, updated_at FROM users WHERE email = ?',
+		'SELECT id, email, name, google_id, avatar_url, email_verified, given_name, family_name, last_login, created_at, updated_at FROM users WHERE email = ?',
 		[email]
 	);
 	const users = rows as User[];
 	return users.length > 0 ? users[0] : null;
+}
+
+export async function getUserByGoogleId(googleId: string): Promise<User | null> {
+	const connection = await getConnection();
+	const [rows] = await connection.execute(
+		'SELECT id, email, name, google_id, avatar_url, email_verified, given_name, family_name, last_login, created_at, updated_at FROM users WHERE google_id = ?',
+		[googleId]
+	);
+	const users = rows as User[];
+	return users.length > 0 ? users[0] : null;
+}
+
+export async function createOrUpdateGoogleUser(googleUser: any): Promise<User> {
+	const connection = await getConnection();
+	const now = new Date().toISOString().slice(0, 19).replace('T', ' ');
+	
+	// Try to find existing user by Google ID first
+	let user = await getUserByGoogleId(googleUser.sub);
+	
+	if (user) {
+		// Update existing user
+		await connection.execute(
+			`UPDATE users SET 
+				name = ?, 
+				email = ?, 
+				avatar_url = ?, 
+				email_verified = ?, 
+				given_name = ?, 
+				family_name = ?, 
+				last_login = ?, 
+				updated_at = NOW() 
+			 WHERE google_id = ?`,
+			[googleUser.name, googleUser.email, googleUser.picture, googleUser.email_verified, 
+			 googleUser.given_name, googleUser.family_name, now, googleUser.sub]
+		);
+	} else {
+		// Check if user exists by email
+		user = await getUserByEmail(googleUser.email);
+		
+		if (user) {
+			// Link existing email user to Google account
+			await connection.execute(
+				`UPDATE users SET 
+					google_id = ?, 
+					avatar_url = ?, 
+					email_verified = ?, 
+					given_name = ?, 
+					family_name = ?, 
+					last_login = ?, 
+					updated_at = NOW() 
+				 WHERE email = ?`,
+				[googleUser.sub, googleUser.picture, googleUser.email_verified, 
+				 googleUser.given_name, googleUser.family_name, now, googleUser.email]
+			);
+		} else {
+			// Create new user (password_hash will be NULL for Google users)
+			await connection.execute(
+				`INSERT INTO users (email, name, google_id, avatar_url, email_verified, given_name, family_name, last_login, password_hash) 
+				 VALUES (?, ?, ?, ?, ?, ?, ?, ?, NULL)`,
+				[googleUser.email, googleUser.name, googleUser.sub, googleUser.picture, 
+				 googleUser.email_verified, googleUser.given_name, googleUser.family_name, now]
+			);
+		}
+	}
+	
+	// Return the updated/created user
+	return await getUserByGoogleId(googleUser.sub) as User;
 }
 
 // Progress functions

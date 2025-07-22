@@ -1,8 +1,8 @@
-// Database configuration
-export const dbConfig = {
-	host: process.env.DB_HOST || 'localhost',
-	user: process.env.DB_USER || 'root',
-	password: process.env.DB_PASSWORD || '12345678',
-	database: process.env.DB_NAME || 'personal_tutor_ai',
-	port: parseInt(process.env.DB_PORT || '3306')
-}; 
+import { dev } from '$app/environment';
+
+// Client-side safe configuration
+export const GOOGLE_CLIENT_ID = '98375891181-n3p0te6cavre6972u795scah5gabctse.apps.googleusercontent.com';
+
+// Environment configuration
+export const isDev = dev;
+export const BASE_URL = 'http://localhost:5175'; 

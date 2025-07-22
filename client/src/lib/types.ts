@@ -5,6 +5,12 @@ export interface User {
   id: number;
   email: string;
   name: string;
+  google_id?: string;
+  avatar_url?: string;
+  email_verified: boolean;
+  given_name?: string;
+  family_name?: string;
+  last_login?: string;
   created_at: string;
   updated_at: string;
 }
@@ -47,11 +53,33 @@ export interface Progress {
   updated_at: string;
 }
 
+// Google Identity Services types
+export interface GoogleUser {
+  sub: string; // Google ID
+  name: string;
+  given_name: string;
+  family_name: string;
+  picture: string;
+  email: string;
+  email_verified: boolean;
+}
+
+export interface GoogleAuthRequest {
+  credential: string;
+}
+
 // API Response types
 export interface AuthResponse {
   success: boolean;
   user: User;
   token: string;
+}
+
+export interface GoogleAuthResponse {
+  success: boolean;
+  user: User;
+  token: string;
+  message?: string;
 }
 
 export interface CoursesResponse {
