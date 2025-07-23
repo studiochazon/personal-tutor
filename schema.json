@@ -186,6 +186,62 @@
         "indexes": ["course_id", "order_index"],
         "relationships": ["belongs_to: course", "has_many: progress"]
       },
+      "enrollments": {
+        "description": "User course enrollments",
+        "columns": {
+          "id": {
+            "type": "INT",
+            "constraints": "PRIMARY KEY, AUTO_INCREMENT",
+            "frontend_type": "number",
+            "description": "Unique enrollment identifier"
+          },
+          "user_id": {
+            "type": "INT",
+            "constraints": "FOREIGN KEY REFERENCES users(id) ON DELETE CASCADE",
+            "frontend_type": "number",
+            "description": "User who enrolled"
+          },
+          "course_id": {
+            "type": "INT",
+            "constraints": "FOREIGN KEY REFERENCES courses(id) ON DELETE CASCADE",
+            "frontend_type": "number",
+            "description": "Course that was enrolled in"
+          },
+          "enrolled_at": {
+            "type": "TIMESTAMP",
+            "constraints": "DEFAULT CURRENT_TIMESTAMP",
+            "frontend_type": "string",
+            "description": "When user enrolled"
+          },
+          "status": {
+            "type": "ENUM('active', 'completed', 'paused', 'dropped')",
+            "constraints": "DEFAULT 'active'",
+            "frontend_type": "'active' | 'completed' | 'paused' | 'dropped'",
+            "description": "Enrollment status"
+          },
+          "completed_at": {
+            "type": "TIMESTAMP",
+            "constraints": "NULL",
+            "frontend_type": "string | null",
+            "description": "When course was completed"
+          },
+          "created_at": {
+            "type": "TIMESTAMP",
+            "constraints": "DEFAULT CURRENT_TIMESTAMP",
+            "frontend_type": "string",
+            "description": "Enrollment creation timestamp"
+          },
+          "updated_at": {
+            "type": "TIMESTAMP",
+            "constraints": "DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP",
+            "frontend_type": "string",
+            "description": "Last update timestamp"
+          }
+        },
+        "indexes": ["user_id", "course_id", "status"],
+        "unique_constraints": ["user_id, course_id"],
+        "relationships": ["belongs_to: user", "belongs_to: course"]
+      },
       "progress": {
         "description": "User progress tracking for lessons",
         "columns": {
@@ -374,6 +430,44 @@
           }
         }
       },
+      "enrollments": {
+        "GET /api/enrollments": {
+          "description": "Get user enrollments (authenticated)",
+          "response": {
+            "enrollments": "Enrollment[]"
+          }
+        },
+        "POST /api/enrollments": {
+          "description": "Enroll in a course (authenticated)",
+          "body": {
+            "course_id": "number"
+          },
+          "response": {
+            "enrollment": "Enrollment"
+          }
+        },
+        "PUT /api/enrollments/:id": {
+          "description": "Update enrollment status (authenticated)",
+          "body": {
+            "status": "'active' | 'completed' | 'paused' | 'dropped'"
+          },
+          "response": {
+            "enrollment": "Enrollment"
+          }
+        },
+        "DELETE /api/enrollments/:id": {
+          "description": "Drop enrollment (authenticated)",
+          "response": {
+            "success": "boolean"
+          }
+        },
+        "GET /api/courses/:courseId/enrollment": {
+          "description": "Get enrollment status for specific course (authenticated)",
+          "response": {
+            "enrollment": "Enrollment | null"
+          }
+        }
+      },
       "progress": {
         "GET /api/progress": {
           "description": "Get user progress (authenticated)",
@@ -436,6 +530,16 @@
         "video_title": "string | null",
         "order_index": "number",
         "estimated_duration": "number | null",
+        "created_at": "string",
+        "updated_at": "string"
+      },
+      "Enrollment": {
+        "id": "number",
+        "user_id": "number",
+        "course_id": "number",
+        "enrolled_at": "string",
+        "status": "'active' | 'completed' | 'paused' | 'dropped'",
+        "completed_at": "string | null",
         "created_at": "string",
         "updated_at": "string"
       },

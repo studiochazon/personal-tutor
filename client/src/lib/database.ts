@@ -1,5 +1,5 @@
 import mysql from 'mysql2/promise';
-import type { Course, Lesson, User, Progress } from './types';
+import type { Course, Lesson, User, Progress, Enrollment } from './types';
 import { dbConfig } from './server-config';
 
 // Database configuration with connection pool settings
@@ -163,6 +163,78 @@ export async function createOrUpdateGoogleUser(googleUser: any): Promise<User> {
 	
 	// Return the updated/created user
 	return await getUserByGoogleId(googleUser.sub) as User;
+}
+
+// Enrollment functions
+export async function getUserEnrollments(userId: number): Promise<Enrollment[]> {
+	const connection = await getConnection();
+	const [rows] = await connection.execute(
+		'SELECT * FROM enrollments WHERE user_id = ? ORDER BY enrolled_at DESC',
+		[userId]
+	);
+	return rows as Enrollment[];
+}
+
+export async function getCourseEnrollment(userId: number, courseId: number): Promise<Enrollment | null> {
+	const connection = await getConnection();
+	const [rows] = await connection.execute(
+		'SELECT * FROM enrollments WHERE user_id = ? AND course_id = ?',
+		[userId, courseId]
+	);
+	const enrollments = rows as Enrollment[];
+	return enrollments.length > 0 ? enrollments[0] : null;
+}
+
+export async function createEnrollment(userId: number, courseId: number): Promise<Enrollment> {
+	const connection = await getConnection();
+	
+	const [result] = await connection.execute(
+		'INSERT INTO enrollments (user_id, course_id) VALUES (?, ?)',
+		[userId, courseId]
+	);
+	
+	// Return the created enrollment
+	const [rows] = await connection.execute(
+		'SELECT * FROM enrollments WHERE user_id = ? AND course_id = ?',
+		[userId, courseId]
+	);
+	const enrollments = rows as Enrollment[];
+	return enrollments[0];
+}
+
+export async function updateEnrollmentStatus(enrollmentId: number, status: string): Promise<Enrollment> {
+	const connection = await getConnection();
+	
+	const now = new Date().toISOString().slice(0, 19).replace('T', ' ');
+	
+	if (status === 'completed') {
+		await connection.execute(
+			'UPDATE enrollments SET status = ?, completed_at = ?, updated_at = NOW() WHERE id = ?',
+			[status, now, enrollmentId]
+		);
+	} else {
+		await connection.execute(
+			'UPDATE enrollments SET status = ?, completed_at = NULL, updated_at = NOW() WHERE id = ?',
+			[status, enrollmentId]
+		);
+	}
+	
+	// Return the updated enrollment
+	const [rows] = await connection.execute(
+		'SELECT * FROM enrollments WHERE id = ?',
+		[enrollmentId]
+	);
+	const enrollments = rows as Enrollment[];
+	return enrollments[0];
+}
+
+export async function deleteEnrollment(enrollmentId: number): Promise<boolean> {
+	const connection = await getConnection();
+	const [result] = await connection.execute(
+		'DELETE FROM enrollments WHERE id = ?',
+		[enrollmentId]
+	);
+	return true;
 }
 
 // Progress functions

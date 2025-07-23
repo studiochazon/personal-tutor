@@ -42,6 +42,17 @@ export interface Lesson {
 	updated_at: string;
 }
 
+export interface Enrollment {
+  id: number;
+  user_id: number;
+  course_id: number;
+  enrolled_at: string;
+  status: 'active' | 'completed' | 'paused' | 'dropped';
+  completed_at: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface Progress {
   id: number;
   user_id: number;
@@ -144,6 +155,22 @@ export interface UpdateLessonRequest {
   title?: string;
   content?: string;
   order_index?: number;
+}
+
+export interface CreateEnrollmentRequest {
+  course_id: number;
+}
+
+export interface UpdateEnrollmentRequest {
+  status: 'active' | 'completed' | 'paused' | 'dropped';
+}
+
+export interface EnrollmentsResponse {
+  enrollments: Enrollment[];
+}
+
+export interface EnrollmentResponse {
+  enrollment: Enrollment;
 }
 
 export interface UpdateProgressRequest {

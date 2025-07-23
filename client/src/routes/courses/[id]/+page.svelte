@@ -2,13 +2,16 @@
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
 	import { requireAuth } from '$lib/auth-guard';
-	import type { Course, Lesson } from '$lib/types';
+	import { getAuthToken } from '$lib/auth';
+	import type { Course, Lesson, Enrollment } from '$lib/types';
 	
 	let course: Course | null = null;
 	let lessons: Lesson[] = [];
+	let enrollment: Enrollment | null = null;
 	let loading = true;
 	let error: string | null = null;
 	let isAuthenticated = false;
+	let enrolling = false;
 	
 	$: courseId = $page.params.id;
 	
@@ -33,6 +36,9 @@
 			if (response.ok) {
 				course = data.course;
 				lessons = data.lessons || [];
+				
+				// Load enrollment status
+				await loadEnrollment();
 			} else {
 				error = data.error || 'Failed to load course';
 			}
@@ -41,6 +47,60 @@
 			console.error('Error loading course:', err);
 		} finally {
 			loading = false;
+		}
+	}
+	
+	async function loadEnrollment() {
+		try {
+			const token = getAuthToken();
+			if (!token) return;
+			
+			const response = await fetch(`/api/courses/${courseId}/enrollment`, {
+				headers: {
+					'Authorization': `Bearer ${token}`
+				}
+			});
+			
+			if (response.ok) {
+				const data = await response.json();
+				enrollment = data.enrollment;
+			}
+		} catch (err) {
+			console.error('Error loading enrollment:', err);
+		}
+	}
+	
+	async function enrollInCourse() {
+		try {
+			enrolling = true;
+			const token = getAuthToken();
+			if (!token) {
+				error = 'Please log in to enroll in courses';
+				return;
+			}
+			
+			const response = await fetch('/api/enrollments', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': `Bearer ${token}`
+				},
+				body: JSON.stringify({ course_id: parseInt(courseId) })
+			});
+			
+			if (response.ok) {
+				const data = await response.json();
+				enrollment = data.enrollment;
+				error = null; // Clear any previous errors
+			} else {
+				const errorData = await response.json();
+				error = errorData.error || 'Failed to enroll in course';
+			}
+		} catch (err) {
+			error = 'Failed to enroll in course';
+			console.error('Error enrolling in course:', err);
+		} finally {
+			enrolling = false;
 		}
 	}
 	
@@ -122,6 +182,32 @@
 								📚 {lessons.length} lesson{lessons.length !== 1 ? 's' : ''}
 							</span>
 						</div>
+					</div>
+					
+					<!-- Enrollment Section -->
+					<div class="enrollment-section">
+						{#if enrollment}
+							<div class="enrollment-status">
+								<span class="status-badge status-{enrollment.status}">
+									{enrollment.status === 'active' ? '📚 Enrolled' : 
+									 enrollment.status === 'completed' ? '✅ Completed' :
+									 enrollment.status === 'paused' ? '⏸️ Paused' : '❌ Dropped'}
+								</span>
+								{#if enrollment.status === 'active'}
+									<a href="/courses/{courseId}/lessons/{lessons[0]?.id}" class="btn-primary">
+										Continue Learning
+									</a>
+								{/if}
+							</div>
+						{:else}
+							<button 
+								on:click={enrollInCourse} 
+								disabled={enrolling}
+								class="btn-primary"
+							>
+								{enrolling ? 'Enrolling...' : 'Enroll in Course'}
+							</button>
+						{/if}
 					</div>
 				</header>
 
@@ -252,6 +338,57 @@
 		box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
 		border: 1px solid #E5E7EB;
 		margin-bottom: 2rem;
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-start;
+		gap: 2rem;
+	}
+	
+	.course-info {
+		flex: 1;
+	}
+	
+	.enrollment-section {
+		flex-shrink: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+		align-items: flex-end;
+	}
+	
+	.enrollment-status {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+		align-items: flex-end;
+	}
+	
+	.status-badge {
+		padding: 0.5rem 1rem;
+		border-radius: 9999px;
+		font-size: 0.875rem;
+		font-weight: 600;
+		text-transform: capitalize;
+	}
+	
+	.status-active {
+		background-color: #dbeafe;
+		color: #1e40af;
+	}
+	
+	.status-completed {
+		background-color: #dcfce7;
+		color: #166534;
+	}
+	
+	.status-paused {
+		background-color: #fef3c7;
+		color: #92400e;
+	}
+	
+	.status-dropped {
+		background-color: #fee2e2;
+		color: #991b1b;
 	}
 
 	.course-title {

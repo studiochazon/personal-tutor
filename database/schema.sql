@@ -54,6 +54,24 @@ CREATE TABLE lessons (
     UNIQUE KEY unique_course_order (course_id, order_index)
 );
 
+-- Enrollments table
+CREATE TABLE enrollments (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    course_id INT NOT NULL,
+    enrolled_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    status ENUM('active', 'completed', 'paused', 'dropped') DEFAULT 'active',
+    completed_at TIMESTAMP NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE,
+    UNIQUE KEY unique_user_course (user_id, course_id),
+    INDEX idx_user_id (user_id),
+    INDEX idx_course_id (course_id),
+    INDEX idx_status (status)
+);
+
 -- Progress table
 CREATE TABLE progress (
     id INT PRIMARY KEY AUTO_INCREMENT,

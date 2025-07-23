@@ -1,9 +1,11 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { requireAuth } from '$lib/auth-guard';
+	import { getAuthToken } from '$lib/auth';
 	import type { Course } from '$lib/types';
 	
 	let inProgressCourses: Course[] = [];
+	let courseProgress: { [key: number]: number } = {};
 	let loading = true;
 	let creatingCourse = false;
 	let promptText = '';
@@ -48,6 +50,11 @@
 				inProgressCourses = data.courses
 					.filter((course: Course) => !course.is_published)
 					.slice(0, 5); // Max 5 courses
+				
+				// Calculate progress for each course
+				for (const course of inProgressCourses) {
+					courseProgress[course.id] = await calculateProgress(course);
+				}
 			}
 		} catch (error) {
 			console.error('Error loading in-progress courses:', error);
@@ -170,10 +177,31 @@ Each lesson should follow this structure:
 		}
 	}
 	
-	function calculateProgress(course: Course): number {
-		// For now, return a random progress between 10-90%
-		// In the future, this should be calculated based on actual lesson completion
-		return Math.floor(Math.random() * 80) + 10;
+	async function calculateProgress(course: Course): Promise<number> {
+		try {
+			const token = getAuthToken();
+			if (!token) return 0;
+			
+			const response = await fetch(`/api/courses/${course.id}/progress`, {
+				headers: {
+					'Authorization': `Bearer ${token}`
+				}
+			});
+			
+			if (response.ok) {
+				const data = await response.json();
+				const { lessons, progress } = data.course_progress;
+				
+				if (lessons.length === 0) return 0;
+				
+				const completedLessons = progress.filter((p: any) => p.completed).length;
+				return Math.round((completedLessons / lessons.length) * 100);
+			}
+		} catch (err) {
+			console.error('Error calculating progress:', err);
+		}
+		
+		return 0;
 	}
 	
 	function handleKeyPress(event: KeyboardEvent) {
@@ -244,12 +272,12 @@ Each lesson should follow this structure:
 							<div class="mb-4">
 								<div class="flex justify-between text-sm text-gray-600 mb-1">
 									<span>Progress</span>
-									<span>{calculateProgress(course)}%</span>
+									<span>{courseProgress[course.id] || 0}%</span>
 								</div>
 								<div class="w-full bg-gray-200 rounded-full h-2">
 									<div 
 										class="bg-primary h-2 rounded-full transition-all duration-300"
-										style="width: {calculateProgress(course)}%"
+										style="width: {courseProgress[course.id] || 0}%"
 									></div>
 								</div>
 							</div>

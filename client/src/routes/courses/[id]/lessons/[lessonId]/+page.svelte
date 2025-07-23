@@ -2,7 +2,8 @@
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
 	import { requireAuth } from '$lib/auth-guard';
-	import type { Course, Lesson } from '$lib/types';
+	import { getAuthToken } from '$lib/auth';
+	import type { Course, Lesson, Progress } from '$lib/types';
 	
 	let course: Course | null = null;
 	let lesson: Lesson | null = null;
@@ -11,6 +12,8 @@
 	let loading = true;
 	let error: string | null = null;
 	let isAuthenticated = false;
+	let lessonProgress: Progress | null = null;
+	let markingComplete = false;
 	
 	$: courseId = $page.params.id;
 	$: lessonId = $page.params.lessonId;
@@ -47,11 +50,72 @@
 				currentLessonIndex = 0;
 			}
 			
+			// Load progress for this lesson
+			await loadLessonProgress();
+			
 		} catch (err) {
 			error = err instanceof Error ? err.message : 'Failed to load lesson';
 			console.error('Error loading lesson:', err);
 		} finally {
 			loading = false;
+		}
+	}
+	
+	async function loadLessonProgress() {
+		try {
+			const token = getAuthToken();
+			if (!token || !lesson) return;
+			
+			const response = await fetch('/api/progress', {
+				headers: {
+					'Authorization': `Bearer ${token}`
+				}
+			});
+			
+			if (response.ok) {
+				const data = await response.json();
+				lessonProgress = data.progress.find((p: Progress) => p.lesson_id === lesson!.id) || null;
+			}
+		} catch (err) {
+			console.error('Error loading lesson progress:', err);
+		}
+	}
+	
+	async function markLessonComplete() {
+		try {
+			markingComplete = true;
+			const token = getAuthToken();
+			if (!token || !lesson) {
+				error = 'Please log in to track progress';
+				return;
+			}
+			
+			const response = await fetch('/api/progress', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': `Bearer ${token}`
+				},
+				body: JSON.stringify({ 
+					lesson_id: lesson.id, 
+					completed: true,
+					time_spent: 300 // 5 minutes default, could be calculated from actual time spent
+				})
+			});
+			
+			if (response.ok) {
+				const data = await response.json();
+				lessonProgress = data.progress;
+				error = null; // Clear any previous errors
+			} else {
+				const errorData = await response.json();
+				error = errorData.error || 'Failed to mark lesson complete';
+			}
+		} catch (err) {
+			error = 'Failed to mark lesson complete';
+			console.error('Error marking lesson complete:', err);
+		} finally {
+			markingComplete = false;
 		}
 	}
 	
@@ -277,6 +341,40 @@
 				<!-- Lesson Content -->
 				<div class="prose max-w-none" style="max-width: none;">
 					{@html lesson.content.replace(/\n/g, '<br>').replace(/^# (.*$)/gm, '<h1>$1</h1>').replace(/^## (.*$)/gm, '<h2>$1</h2>').replace(/^### (.*$)/gm, '<h3>$1</h3>').replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>').replace(/`([^`]+)`/g, '<code>$1</code>')}
+				</div>
+				
+				<!-- Progress Section -->
+				<div class="mt-8 p-4 bg-gray-50 rounded-lg" style="margin-top: 2rem; padding: 1rem; background: #f9fafb; border-radius: 0.5rem;">
+					<div class="flex items-center justify-between">
+						<div>
+							<h4 class="text-lg font-semibold text-gray-800" style="font-size: 1.125rem; font-weight: 600; color: #1f2937;">
+								Lesson Progress
+							</h4>
+							{#if lessonProgress?.completed}
+								<p class="text-green-600 text-sm mt-1" style="color: #059669; font-size: 0.875rem; margin-top: 0.25rem;">
+									✅ Completed on {new Date(lessonProgress.completed_at!).toLocaleDateString()}
+								</p>
+							{:else}
+								<p class="text-gray-600 text-sm mt-1" style="color: #4b5563; font-size: 0.875rem; margin-top: 0.25rem;">
+									📖 Not completed yet
+								</p>
+							{/if}
+						</div>
+						{#if !lessonProgress?.completed}
+							<button 
+								on:click={markLessonComplete}
+								disabled={markingComplete}
+								class="btn btn-success flex items-center gap-2"
+								style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; border-radius: 0.5rem; font-weight: 600; text-decoration: none; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; border: none; cursor: pointer;"
+							>
+								{markingComplete ? 'Marking...' : '✅ Mark Complete'}
+							</button>
+						{:else}
+							<span class="inline-flex items-center px-3 py-2 rounded-full text-sm font-medium bg-green-100 text-green-800" style="display: inline-flex; align-items: center; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 500; background: #dcfce7; color: #166534;">
+								✅ Completed
+							</span>
+						{/if}
+					</div>
 				</div>
 			</div>
 			
