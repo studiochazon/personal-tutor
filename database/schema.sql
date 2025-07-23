@@ -24,12 +24,12 @@ CREATE TABLE courses (
     thumbnail_url VARCHAR(500),
     difficulty ENUM('beginner', 'intermediate', 'advanced') DEFAULT 'beginner',
     estimated_duration INT,
-    user_id INT NOT NULL,
+    owned_by INT NOT NULL,
     is_published BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-    INDEX idx_user_id (user_id),
+    FOREIGN KEY (owned_by) REFERENCES users(id) ON DELETE CASCADE,
+    INDEX idx_owned_by (owned_by),
     INDEX idx_is_published (is_published),
     INDEX idx_difficulty (difficulty),
     INDEX idx_title (title)
@@ -78,7 +78,7 @@ INSERT INTO users (email, password_hash, name) VALUES
 ('teacher@example.com', '$2b$10$example.hash.here', 'Teacher User'),
 ('instructor@example.com', '$2b$10$example.hash.here', 'Course Instructor');
 
-INSERT INTO courses (title, description, thumbnail_url, difficulty, estimated_duration, user_id, is_published) VALUES
+INSERT INTO courses (title, description, thumbnail_url, difficulty, estimated_duration, owned_by, is_published) VALUES
 ('Introduction to SvelteKit', 'Learn the basics of SvelteKit framework and build your first application. Perfect for beginners who want to create modern web applications.', 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&h=200&fit=crop&crop=center', 'beginner', 120, 1, TRUE),
 ('Advanced SvelteKit Patterns', 'Master advanced patterns and best practices for building scalable applications with SvelteKit.', 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=400&h=200&fit=crop&crop=center', 'intermediate', 180, 1, TRUE),
 ('Building APIs with SvelteKit', 'Create robust APIs using SvelteKit server-side capabilities and database integration.', 'https://images.unsplash.com/photo-1551650975-87deedd944c3?w=400&h=200&fit=crop&crop=center', 'intermediate', 150, 2, TRUE),

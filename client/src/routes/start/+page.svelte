@@ -1,12 +1,27 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
+	import { authStore, initAuth, getAuthToken } from '$lib/auth';
 	import type { CreateCourseRequest } from '$lib/types';
 
 	let userPrompt = '';
 	let isLoading = false;
 	let errorMessage = '';
 	let testResult = '';
+	let user: any = null;
+
+	onMount(() => {
+		initAuth();
+		
+		authStore.subscribe(state => {
+			user = state.user;
+			
+			// Redirect to login if not authenticated
+			if (!state.user && !state.isLoading) {
+				goto('/auth/login');
+			}
+		});
+	});
 
 	// System prompt for course creation - this should match the content from system-prompt.md
 	const systemPrompt = `You are an expert educational content creator and curriculum designer for Personal Tutor AI. Your role is to create comprehensive, engaging, and well-structured learning courses based on user requests.
@@ -155,10 +170,23 @@ Remember: Your goal is to create transformative learning experiences that empowe
 	async function createCourse() {
 		if (!userPrompt.trim() || isLoading) return;
 
+		// Check authentication
+		if (!user) {
+			errorMessage = 'Please log in to create courses';
+			goto('/auth/login');
+			return;
+		}
+
 		isLoading = true;
 		errorMessage = '';
 
 		try {
+			// Get auth token
+			const token = getAuthToken();
+			if (!token) {
+				throw new Error('Authentication token not found');
+			}
+
 			// Create messages array with system prompt and user input
 			const messages = [
 				{ role: 'system', content: systemPrompt },
@@ -168,13 +196,19 @@ Remember: Your goal is to create transformative learning experiences that empowe
 			const response = await fetch('/api/start/create-course', {
 				method: 'POST',
 				headers: {
-					'Content-Type': 'application/json'
+					'Content-Type': 'application/json',
+					'Authorization': `Bearer ${token}`
 				},
 				body: JSON.stringify({ messages })
 			});
 
 			if (!response.ok) {
 				const errorData = await response.json();
+				if (response.status === 401) {
+					// Authentication error - redirect to login
+					goto('/auth/login');
+					return;
+				}
 				throw new Error(errorData.error || 'Failed to create course');
 			}
 

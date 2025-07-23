@@ -16,7 +16,7 @@ export interface Course {
   thumbnail_url: string | null;
   difficulty: 'beginner' | 'intermediate' | 'advanced';
   estimated_duration: number | null;
-  user_id: number;
+  owned_by: number;
   is_published: boolean;
   created_at: string;
   updated_at: string;

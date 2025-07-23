@@ -85,7 +85,7 @@
             "frontend_type": "number",
             "description": "Estimated completion time in minutes"
           },
-          "user_id": {
+          "owned_by": {
             "type": "INT",
             "constraints": "FOREIGN KEY REFERENCES users(id)",
             "frontend_type": "number",
@@ -110,7 +110,7 @@
             "description": "Last update timestamp"
           }
         },
-        "indexes": ["user_id", "is_published", "difficulty"],
+        "indexes": ["owned_by", "is_published", "difficulty"],
         "relationships": ["belongs_to: user", "has_many: lessons"]
       },
       "lessons": {

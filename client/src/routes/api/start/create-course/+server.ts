@@ -4,6 +4,10 @@ import { getConnection } from '$lib/database';
 import { OPENAI_API_KEY } from '$env/static/private';
 import { videoLogger } from '$lib/video-logger';
 import { logOpenAIRequest } from '$lib/llm-logger';
+import jwt from 'jsonwebtoken';
+
+// JWT secret - in production, use environment variable
+const JWT_SECRET = 'your-super-secret-jwt-key-change-this-in-production';
 
 interface ChatMessage {
 	role: 'system' | 'user' | 'assistant';
@@ -14,8 +18,43 @@ interface CreateCourseRequest {
 	messages: ChatMessage[];
 }
 
+// Helper function to verify JWT token and get user ID
+function verifyAuthToken(request: Request): { userId: number; email: string } | null {
+	try {
+		const authHeader = request.headers.get('Authorization');
+		
+		if (!authHeader || !authHeader.startsWith('Bearer ')) {
+			return null;
+		}
+
+		const token = authHeader.substring(7);
+		const decoded = jwt.verify(token, JWT_SECRET) as any;
+		
+		if (decoded && decoded.userId && decoded.email) {
+			return {
+				userId: decoded.userId,
+				email: decoded.email
+			};
+		}
+		
+		return null;
+	} catch (error) {
+		console.error('JWT verification error:', error);
+		return null;
+	}
+}
+
 export const POST: RequestHandler = async ({ request }) => {
 	try {
+		// Verify authentication
+		const authData = verifyAuthToken(request);
+		if (!authData) {
+			return json(
+				{ error: 'Authentication required' },
+				{ status: 401 }
+			);
+		}
+
 		if (!OPENAI_API_KEY) {
 			return json(
 				{ error: 'OpenAI API key not configured' },
@@ -39,12 +78,12 @@ export const POST: RequestHandler = async ({ request }) => {
 		// Save course to database
 		const connection = await getConnection();
 		
-		// For now, we'll use a default user ID (1) - in a real app, you'd get this from authentication
-		const userId = 1;
+		// Use the authenticated user's ID
+		const userId = authData.userId;
 
 		// Insert course
 		const [courseResult] = await connection.execute(
-			`INSERT INTO courses (title, description, difficulty, estimated_duration, user_id, is_published, created_at, updated_at) 
+			`INSERT INTO courses (title, description, difficulty, estimated_duration, owned_by, is_published, created_at, updated_at) 
 			 VALUES (?, ?, ?, ?, ?, ?, NOW(), NOW())`,
 			[
 				courseData.title,

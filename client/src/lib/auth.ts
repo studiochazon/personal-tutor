@@ -153,4 +153,26 @@ export async function verifyToken(): Promise<boolean> {
 		logout();
 		return false;
 	}
+}
+
+// Server-side JWT verification utility
+export function verifyJWTToken(token: string): { userId: number; email: string } | null {
+	try {
+		const jwt = require('jsonwebtoken');
+		const JWT_SECRET = 'your-super-secret-jwt-key-change-this-in-production';
+		
+		const decoded = jwt.verify(token, JWT_SECRET) as any;
+		
+		if (decoded && decoded.userId && decoded.email) {
+			return {
+				userId: decoded.userId,
+				email: decoded.email
+			};
+		}
+		
+		return null;
+	} catch (error) {
+		console.error('JWT verification error:', error);
+		return null;
+	}
 } 
