@@ -1,10 +1,11 @@
-const fetch = require('node-fetch');
+const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 
 // Test the enrollment API endpoints
 async function testEnrollmentAPI() {
   console.log('🧪 Testing Enrollment API Endpoints\n');
   
   const baseUrl = 'http://localhost:5173';
+  let firstCourse;
   
   try {
     // Test 1: Get all courses (should work without auth)
@@ -14,7 +15,7 @@ async function testEnrollmentAPI() {
     
     if (coursesResponse.ok && coursesData.courses && coursesData.courses.length > 0) {
       console.log(`✅ Found ${coursesData.courses.length} courses`);
-      const firstCourse = coursesData.courses[0];
+      firstCourse = coursesData.courses[0];
       console.log(`   First course: ${firstCourse.title} (ID: ${firstCourse.id})`);
     } else {
       console.log('❌ Failed to get courses');
