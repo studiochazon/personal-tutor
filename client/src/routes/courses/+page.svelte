@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { requireAuth } from '$lib/auth-guard';
 	import type { Course } from '$lib/types';
 	
 	let courses: Course[] = [];
@@ -8,6 +9,17 @@
 	let searchTerm = '';
 	let selectedDifficulty = '';
 	let difficulties = ['beginner', 'intermediate', 'advanced'];
+	let isAuthenticated = false;
+	
+	onMount(async () => {
+		// Check authentication first
+		isAuthenticated = await requireAuth();
+		
+		if (isAuthenticated) {
+			// Only load data if authenticated
+			await loadCourses();
+		}
+	});
 	
 	async function loadCourses() {
 		try {
@@ -65,9 +77,7 @@
 		loadCourses();
 	}
 	
-	onMount(() => {
-		loadCourses();
-	});
+	// Removed old onMount - now handled in the new onMount with auth check
 </script>
 
 <svelte:head>
@@ -75,113 +85,125 @@
 	<meta name="description" content="Browse all available courses on Personal Tutor AI" />
 </svelte:head>
 
-<div class="page-container">
-	<!-- Header Section -->
-	<header class="hero-header">
-		<div class="hero-header-content">
-			<h1 class="hero-title">All Courses</h1>
-			<p class="hero-subtitle">
-				Explore our comprehensive collection of courses designed to help you master new skills and advance your career.
-			</p>
+{#if !isAuthenticated}
+	<!-- Loading state while checking authentication -->
+	<div class="page-container">
+		<div class="flex justify-center items-center min-h-[400px]">
+			<div class="text-center">
+				<div class="loading-spinner mx-auto mb-4"></div>
+				<p class="loading-text">Checking authentication...</p>
+			</div>
 		</div>
-	</header>
-	
-	<!-- Search and Filter Section -->
-	<section class="filters-section">
-		<div class="filters-container">
-			<div class="search-container">
-				<input
-					type="text"
-					placeholder="Search courses..."
-					bind:value={searchTerm}
-					on:input={handleSearch}
-					class="search-input"
-				/>
-			</div>
-			<select
-				bind:value={selectedDifficulty}
-				on:change={handleDifficultyChange}
-				class="difficulty-select"
-			>
-				<option value="">All Difficulties</option>
-				{#each difficulties as difficulty}
-					<option value={difficulty}>{difficulty.charAt(0).toUpperCase() + difficulty.slice(1)}</option>
-				{/each}
-			</select>
-		</div>
-	</section>
-	
-	<!-- Content Section -->
-	<main class="content-section">
-		{#if loading}
-			<div class="loading-state">
-				<div class="loading-spinner"></div>
-				<p class="loading-text">Loading courses...</p>
-			</div>
-		{:else if error}
-			<div class="error-state">
-				<div class="error-message">
-					<strong>Error:</strong>
-					<span>{error}</span>
-				</div>
-				<button on:click={loadCourses} class="btn-primary">
-					Try Again
-				</button>
-			</div>
-		{:else if courses.length === 0}
-			<div class="empty-state">
-				<div class="empty-icon">📚</div>
-				<h3 class="empty-title">No courses found</h3>
-				<p class="empty-description">
-					Try adjusting your search criteria or check back later for new courses.
+	</div>
+{:else}
+	<div class="page-container">
+		<!-- Header Section -->
+		<header class="hero-header">
+			<div class="hero-header-content">
+				<h1 class="hero-title">All Courses</h1>
+				<p class="hero-subtitle">
+					Explore our comprehensive collection of courses designed to help you master new skills and advance your career.
 				</p>
 			</div>
-		{:else}
-			<div class="courses-grid">
-				{#each courses as course}
-					<article class="course-card">
-						<div class="course-thumbnail">
-							<img 
-								src={course.thumbnail_url || '/images/default-course-thumbnail.svg'} 
-								alt="{course.title} thumbnail"
-								class="thumbnail-image"
-								on:error={(e) => {
-									const target = e.target as HTMLImageElement;
-									if (target) {
-										target.src = '/images/default-course-thumbnail.svg';
-									}
-								}}
-							/>
-							<div class="difficulty-badge {getDifficultyColor(course.difficulty)}">
-								{course.difficulty}
-							</div>
-						</div>
-						<div class="course-content">
-							<div class="course-header">
-								<h3 class="course-title">{course.title}</h3>
-							</div>
-							<p class="course-description">
-								{course.description ? (course.description.length > 120 ? course.description.substring(0, 120) + '...' : course.description) : 'No description available'}
-							</p>
-							<div class="course-footer">
-								<span class="course-duration">
-									⏱️ {formatDuration(course.estimated_duration)}
-								</span>
-								<a href="/courses/{course.id}" class="btn-secondary">
-									View Course
-								</a>
-							</div>
-						</div>
-					</article>
-				{/each}
+		</header>
+		
+		<!-- Search and Filter Section -->
+		<section class="filters-section">
+			<div class="filters-container">
+				<div class="search-container">
+					<input
+						type="text"
+						placeholder="Search courses..."
+						bind:value={searchTerm}
+						on:input={handleSearch}
+						class="search-input"
+					/>
+				</div>
+				<select
+					bind:value={selectedDifficulty}
+					on:change={handleDifficultyChange}
+					class="difficulty-select"
+				>
+					<option value="">All Difficulties</option>
+					{#each difficulties as difficulty}
+						<option value={difficulty}>{difficulty.charAt(0).toUpperCase() + difficulty.slice(1)}</option>
+					{/each}
+				</select>
 			</div>
-			
-			<div class="results-count">
-				Found {courses.length} course{courses.length !== 1 ? 's' : ''}
-			</div>
-		{/if}
-	</main>
-</div>
+		</section>
+		
+		<!-- Content Section -->
+		<main class="content-section">
+			{#if loading}
+				<div class="loading-state">
+					<div class="loading-spinner"></div>
+					<p class="loading-text">Loading courses...</p>
+				</div>
+			{:else if error}
+				<div class="error-state">
+					<div class="error-message">
+						<strong>Error:</strong>
+						<span>{error}</span>
+					</div>
+					<button on:click={loadCourses} class="btn-primary">
+						Try Again
+					</button>
+				</div>
+			{:else if courses.length === 0}
+				<div class="empty-state">
+					<div class="empty-icon">📚</div>
+					<h3 class="empty-title">No courses found</h3>
+					<p class="empty-description">
+						Try adjusting your search criteria or check back later for new courses.
+					</p>
+				</div>
+			{:else}
+				<div class="courses-grid">
+					{#each courses as course}
+						<article class="course-card">
+							<div class="course-thumbnail">
+								<img 
+									src={course.thumbnail_url || '/images/default-course-thumbnail.svg'} 
+									alt="{course.title} thumbnail"
+									class="thumbnail-image"
+									on:error={(e) => {
+										const target = e.target as HTMLImageElement;
+										if (target) {
+											target.src = '/images/default-course-thumbnail.svg';
+										}
+									}}
+								/>
+								<div class="difficulty-badge {getDifficultyColor(course.difficulty)}">
+									{course.difficulty}
+								</div>
+							</div>
+							<div class="course-content">
+								<div class="course-header">
+									<h3 class="course-title">{course.title}</h3>
+								</div>
+								<p class="course-description">
+									{course.description ? (course.description.length > 120 ? course.description.substring(0, 120) + '...' : course.description) : 'No description available'}
+								</p>
+								<div class="course-footer">
+									<span class="course-duration">
+										⏱️ {formatDuration(course.estimated_duration)}
+									</span>
+									<a href="/courses/{course.id}" class="btn-secondary">
+										View Course
+									</a>
+								</div>
+							</div>
+						</article>
+					{/each}
+				</div>
+				
+				<div class="results-count">
+					Found {courses.length} course{courses.length !== 1 ? 's' : ''}
+				</div>
+			{/if}
+		</main>
+	</div>
+{/if}
 
 <style>
 	/* Page Layout */

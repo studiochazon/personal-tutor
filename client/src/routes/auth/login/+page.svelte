@@ -18,17 +18,51 @@
 			}
 		});
 
-		// Initialize Google Identity Services
+		// Initialize Google Identity Services with timeout
+		let attempts = 0;
+		const maxAttempts = 50; // 5 seconds max
+		
 		const timer = setInterval(() => {
+			attempts++;
+			
 			if (typeof window !== 'undefined' && (window as any).google) {
-				initializeGoogleIdentity();
+				try {
+					initializeGoogleIdentity();
+					clearInterval(timer);
+				} catch (error) {
+					console.error('Failed to initialize Google Identity:', error);
+					if (attempts >= maxAttempts) {
+						clearInterval(timer);
+						showGoogleError();
+					}
+				}
+			} else if (attempts >= maxAttempts) {
 				clearInterval(timer);
+				showGoogleError();
 			}
 		}, 100);
 
 		// Cleanup
 		return () => clearInterval(timer);
 	});
+
+	function showGoogleError() {
+		const buttonContainer = document.getElementById('google-signin-button');
+		if (buttonContainer) {
+			buttonContainer.innerHTML = `
+				<div style="padding: 16px; border: 1px solid #e5e7eb; border-radius: 8px; text-align: center; background: #f9fafb;">
+					<p style="margin: 0 0 12px 0; color: #6b7280; font-size: 14px;">
+						Google Sign-In is temporarily unavailable
+					</p>
+					<button 
+						onclick="window.location.reload()" 
+						style="background: #0066ff; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 14px;">
+						Try Again
+					</button>
+				</div>
+			`;
+		}
+	}
 
 	// Subscribe to auth store for loading and error states
 	authStore.subscribe(state => {

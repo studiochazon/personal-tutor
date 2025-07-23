@@ -1,14 +1,26 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
+	import { requireAuth } from '$lib/auth-guard';
 	import type { Course, Lesson } from '$lib/types';
 	
 	let course: Course | null = null;
 	let lessons: Lesson[] = [];
 	let loading = true;
 	let error: string | null = null;
+	let isAuthenticated = false;
 	
 	$: courseId = $page.params.id;
+	
+	onMount(async () => {
+		// Check authentication first
+		isAuthenticated = await requireAuth();
+		
+		if (isAuthenticated) {
+			// Only load data if authenticated
+			await loadCourse();
+		}
+	});
 	
 	async function loadCourse() {
 		try {
@@ -55,9 +67,7 @@
 		return `${mins}m`;
 	}
 	
-	onMount(() => {
-		loadCourse();
-	});
+	// Removed old onMount - now handled in the new onMount with auth check
 </script>
 
 <svelte:head>
@@ -65,105 +75,117 @@
 	<meta name="description" content={course ? course.description : 'Course details'} />
 </svelte:head>
 
-<div class="page-container">
-	<!-- Loading State -->
-	{#if loading}
-		<div class="loading-state">
-			<div class="loading-spinner"></div>
-			<p class="loading-text">Loading course...</p>
-		</div>
-	{:else if error}
-		<!-- Error State -->
-		<div class="error-state">
-			<div class="error-message">
-				<strong>Error:</strong>
-				<span>{error}</span>
+{#if !isAuthenticated}
+	<!-- Loading state while checking authentication -->
+	<div class="page-container">
+		<div class="flex justify-center items-center min-h-[400px]">
+			<div class="text-center">
+				<div class="loading-spinner mx-auto mb-4"></div>
+				<p class="loading-text">Checking authentication...</p>
 			</div>
-			<button on:click={loadCourse} class="btn-primary">
-				Try Again
-			</button>
 		</div>
-	{:else if course}
-		<div class="container">
-			<!-- Course Header -->
-			<header class="course-header">
-				<div class="course-info">
-					<h1 class="course-title">{course.title}</h1>
-					<p class="course-description">{course.description}</p>
-					<div class="course-meta">
-						<span class="difficulty-badge {getDifficultyColor(course.difficulty)}">
-							{course.difficulty}
-						</span>
-						<span class="meta-item">
-							⏱️ {formatDuration(course.estimated_duration)}
-						</span>
-						<span class="meta-item">
-							📚 {lessons.length} lesson{lessons.length !== 1 ? 's' : ''}
-						</span>
-					</div>
+	</div>
+{:else}
+	<div class="page-container">
+		<!-- Loading State -->
+		{#if loading}
+			<div class="loading-state">
+				<div class="loading-spinner"></div>
+				<p class="loading-text">Loading course...</p>
+			</div>
+		{:else if error}
+			<!-- Error State -->
+			<div class="error-state">
+				<div class="error-message">
+					<strong>Error:</strong>
+					<span>{error}</span>
 				</div>
-			</header>
-
-			<!-- Success Message for New Courses -->
-			<div class="success-message">
-				<strong>🎉 Course Created Successfully!</strong>
-				<p>
-					Your course has been generated and is ready to use. You can now view the lessons below or start customizing the content.
-				</p>
+				<button on:click={loadCourse} class="btn-primary">
+					Try Again
+				</button>
 			</div>
+		{:else if course}
+			<div class="container">
+				<!-- Course Header -->
+				<header class="course-header">
+					<div class="course-info">
+						<h1 class="course-title">{course.title}</h1>
+						<p class="course-description">{course.description}</p>
+						<div class="course-meta">
+							<span class="difficulty-badge {getDifficultyColor(course.difficulty)}">
+								{course.difficulty}
+							</span>
+							<span class="meta-item">
+								⏱️ {formatDuration(course.estimated_duration)}
+							</span>
+							<span class="meta-item">
+								📚 {lessons.length} lesson{lessons.length !== 1 ? 's' : ''}
+							</span>
+						</div>
+					</div>
+				</header>
 
-			<!-- Lessons Section -->
-			<main class="lessons-section">
-				<h2 class="section-title">Course Lessons</h2>
+				<!-- Success Message for New Courses -->
+				<div class="success-message">
+					<strong>🎉 Course Created Successfully!</strong>
+					<p>
+						Your course has been generated and is ready to use. You can now view the lessons below or start customizing the content.
+					</p>
+				</div>
+
+				<!-- Lessons Section -->
+				<main class="lessons-section">
+					<h2 class="section-title">Course Lessons</h2>
+					
+					{#if lessons.length === 0}
+						<div class="empty-state">
+							<div class="empty-icon">📝</div>
+							<p class="empty-text">No lessons available yet.</p>
+						</div>
+					{:else}
+						<div class="lessons-list">
+							{#each lessons as lesson, index}
+								<article class="lesson-card">
+									<div class="lesson-header">
+										<div class="lesson-number">
+											<span class="lesson-index">{index + 1}</span>
+										</div>
+										<div class="lesson-info">
+											<h3 class="lesson-title">{lesson.title}</h3>
+											<span class="lesson-duration">
+												⏱️ {formatDuration(lesson.estimated_duration)}
+											</span>
+										</div>
+									</div>
+									
+									<div class="lesson-content">
+										{lesson.content}
+									</div>
+									
+									<div class="lesson-footer">
+										<a href="/courses/{courseId}/lessons/{lesson.id}" class="btn-primary">
+											Start Lesson
+										</a>
+									</div>
+								</article>
+							{/each}
+						</div>
+					{/if}
+				</main>
 				
-				{#if lessons.length === 0}
-					<div class="empty-state">
-						<div class="empty-icon">📝</div>
-						<p class="empty-text">No lessons available yet.</p>
-					</div>
-				{:else}
-					<div class="lessons-list">
-						{#each lessons as lesson, index}
-							<article class="lesson-card">
-								<div class="lesson-header">
-									<div class="lesson-number">
-										<span class="lesson-index">{index + 1}</span>
-									</div>
-									<div class="lesson-info">
-										<h3 class="lesson-title">{lesson.title}</h3>
-										<span class="lesson-duration">
-											⏱️ {formatDuration(lesson.estimated_duration)}
-										</span>
-									</div>
-								</div>
-								
-								<div class="lesson-content">
-									{lesson.content}
-								</div>
-								
-								<div class="lesson-footer">
-									<a href="/courses/{courseId}/lessons/{lesson.id}" class="btn-primary">
-										Start Lesson
-									</a>
-								</div>
-							</article>
-						{/each}
-					</div>
-				{/if}
-			</main>
-			
-			<!-- Action Buttons -->
-			<footer class="action-buttons">
-				<a href="/courses" class="btn-secondary">
-					← Back to Courses
-				</a>
-				<a href="/start" class="btn-primary">
-					Create Another Course
-				</a>
-			</footer>
-		</div>
-	{/if}
-</div>
+				<!-- Action Buttons -->
+				<footer class="action-buttons">
+					<a href="/courses" class="btn-secondary">
+						← Back to Courses
+					</a>
+					<a href="/start" class="btn-primary">
+						Create Another Course
+					</a>
+				</footer>
+			</div>
+		{/if}
+	</div>
+{/if}
 
 <style>
 	/* Page Layout */

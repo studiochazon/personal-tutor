@@ -7,14 +7,30 @@
 
 	let user: any = null;
 	let isLoading = true;
+	let isInitialized = false;
+	let showLoginButton = false;
 
 	onMount(() => {
-		initAuth();
+		// Initialize auth from localStorage
+		const hasAuth = initAuth();
 		
-		authStore.subscribe(state => {
+		// Subscribe to auth store changes
+		const unsubscribe = authStore.subscribe(state => {
+			// Update local variables
 			user = state.user;
 			isLoading = state.isLoading;
+			
+			// Mark as initialized after first subscription
+			if (!isInitialized) {
+				isInitialized = true;
+			}
+			
+			// Show login button only when we're sure user is not authenticated
+			showLoginButton = !state.user && !state.token && !state.isLoading && isInitialized;
 		});
+
+		// Cleanup subscription on component destroy
+		return unsubscribe;
 	});
 
 	function handleLogout() {
@@ -56,7 +72,7 @@
 							</div>
 						</div>
 					</li>
-				{:else}
+				{:else if showLoginButton}
 					<li><a href="/auth/login" class="nav-link">Login</a></li>
 					<li><a href="/auth/register" class="nav-link nav-link-primary">Sign Up</a></li>
 				{/if}

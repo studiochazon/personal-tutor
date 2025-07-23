@@ -1,24 +1,25 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
-	import { authStore, initAuth, logout } from '$lib/auth';
+	import { requireAuth } from '$lib/auth-guard';
+	import { authStore, logout } from '$lib/auth';
 	import type { User } from '$lib/types';
 
 	let user: User | null = null;
 	let isLoading = true;
+	let isAuthenticated = false;
 
-	onMount(() => {
-		initAuth();
+	onMount(async () => {
+		// Check authentication first
+		isAuthenticated = await requireAuth();
 		
-		authStore.subscribe(state => {
-			user = state.user;
-			isLoading = state.isLoading;
-			
-			// Redirect if not authenticated
-			if (!state.user && !state.isLoading) {
-				goto('/auth/login');
-			}
-		});
+		if (isAuthenticated) {
+			// Subscribe to auth store for user data
+			authStore.subscribe(state => {
+				user = state.user;
+				isLoading = state.isLoading;
+			});
+		}
 	});
 
 	function handleLogout() {
@@ -32,7 +33,13 @@
 	<meta name="description" content="Your Personal Tutor AI profile" />
 </svelte:head>
 
-{#if isLoading}
+{#if !isAuthenticated}
+	<!-- Loading state while checking authentication -->
+	<div class="loading-container">
+		<div class="spinner"></div>
+		<p>Checking authentication...</p>
+	</div>
+{:else if isLoading}
 	<div class="loading-container">
 		<div class="spinner"></div>
 		<p>Loading profile...</p>

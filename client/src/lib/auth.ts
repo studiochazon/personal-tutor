@@ -24,36 +24,71 @@ export function initAuth() {
 		if (token && userStr) {
 			try {
 				const user = JSON.parse(userStr);
+				// Set the store with the stored data
 				authStore.set({ user, token, isLoading: false, error: null });
+				return true;
 			} catch (error) {
 				console.error('Failed to parse stored user:', error);
 				logout();
+				return false;
 			}
+		} else {
+			// No stored auth data, ensure store is in logged out state
+			authStore.set({ user: null, token: null, isLoading: false, error: null });
+			return false;
 		}
 	}
+	return false;
 }
 
 // Google Identity Services integration
 export function initializeGoogleIdentity() {
 	if (typeof window !== 'undefined' && (window as any).google) {
-		(window as any).google.accounts.id.initialize({
-			client_id: GOOGLE_CLIENT_ID,
-			callback: handleGoogleSignIn
-		});
+		try {
+			(window as any).google.accounts.id.initialize({
+				client_id: GOOGLE_CLIENT_ID,
+				callback: handleGoogleSignIn,
+				auto_select: false,
+				cancel_on_tap_outside: true
+			});
 
-		// Render the sign-in button
-		(window as any).google.accounts.id.renderButton(
-			document.getElementById('google-signin-button'),
-			{ 
-				theme: 'outline', 
-				size: 'large',
-				width: 300,
-				text: 'signin_with'
+			// Render the sign-in button
+			(window as any).google.accounts.id.renderButton(
+				document.getElementById('google-signin-button'),
+				{ 
+					theme: 'outline', 
+					size: 'large',
+					width: 300,
+					text: 'signin_with',
+					shape: 'rectangular'
+				}
+			);
+
+			// Enable One Tap sign-in (optional)
+			try {
+				(window as any).google.accounts.id.prompt((notification: any) => {
+					if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+						// One Tap is not displayed or skipped, this is normal
+						console.log('One Tap sign-in not available:', notification.getNotDisplayedReason());
+					}
+				});
+			} catch (error) {
+				console.log('One Tap sign-in not available:', error);
 			}
-		);
-
-		// Enable One Tap sign-in
-		(window as any).google.accounts.id.prompt();
+		} catch (error) {
+			console.error('Failed to initialize Google Identity:', error);
+			// Show a fallback message to the user
+			const buttonContainer = document.getElementById('google-signin-button');
+			if (buttonContainer) {
+				buttonContainer.innerHTML = `
+					<div style="padding: 12px; border: 1px solid #ccc; border-radius: 4px; text-align: center; color: #666;">
+						Google Sign-In is currently unavailable. Please try again later.
+					</div>
+				`;
+			}
+		}
+	} else {
+		console.error('Google Identity Services not loaded');
 	}
 }
 

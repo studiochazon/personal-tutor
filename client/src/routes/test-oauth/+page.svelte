@@ -2,166 +2,120 @@
 	import { onMount } from 'svelte';
 	import { GOOGLE_CLIENT_ID } from '$lib/config';
 
+	let currentDomain = '';
 	let googleLoaded = false;
-	let error = '';
+	let googleError = '';
 
 	onMount(() => {
-		// Check if Google Identity Services is loaded
-		const checkGoogle = setInterval(() => {
+		// Get current domain
+		currentDomain = window.location.origin;
+		
+		// Check if Google is loaded
+		const checkGoogle = () => {
 			if (typeof window !== 'undefined' && (window as any).google) {
 				googleLoaded = true;
-				clearInterval(checkGoogle);
-				
-				// Initialize Google Identity Services
-				try {
-					(window as any).google.accounts.id.initialize({
-						client_id: GOOGLE_CLIENT_ID,
-						callback: handleCredentialResponse
-					});
-
-					// Render the sign-in button
-					(window as any).google.accounts.id.renderButton(
-						document.getElementById('google-signin-button'),
-						{ 
-							theme: 'outline', 
-							size: 'large',
-							width: 300,
-							text: 'signin_with'
-						}
-					);
-				} catch (err) {
-					error = `Google initialization error: ${err}`;
-				}
+			} else {
+				setTimeout(checkGoogle, 100);
 			}
-		}, 100);
-
-		return () => clearInterval(checkGoogle);
+		};
+		checkGoogle();
 	});
 
-	function handleCredentialResponse(response: any) {
-		console.log('Google response:', response);
-		
-		// Test the API endpoint
-		fetch('/api/auth/google', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({ credential: response.credential })
-		})
-		.then(res => res.json())
-		.then(data => {
-			console.log('API response:', data);
-			if (data.success) {
-				alert('Authentication successful!');
-			} else {
-				alert(`Authentication failed: ${data.error}`);
+	function testGoogleOAuth() {
+		if (typeof window !== 'undefined' && (window as any).google) {
+			try {
+				(window as any).google.accounts.id.initialize({
+					client_id: GOOGLE_CLIENT_ID,
+					callback: (response: any) => {
+						console.log('Google OAuth test successful:', response);
+						alert('Google OAuth is working! Check console for details.');
+					}
+				});
+				alert('Google OAuth initialized successfully');
+			} catch (error) {
+				console.error('Google OAuth test failed:', error);
+				googleError = error instanceof Error ? error.message : 'Unknown error';
 			}
-		})
-		.catch(err => {
-			console.error('API error:', err);
-			alert(`API error: ${err.message}`);
-		});
+		} else {
+			alert('Google Identity Services not loaded');
+		}
 	}
 </script>
 
 <svelte:head>
-	<title>Google OAuth Test - Personal Tutor AI</title>
+	<title>OAuth Test - Personal Tutor AI</title>
 </svelte:head>
 
-<div class="test-container">
-	<h1>Google OAuth Test Page</h1>
+<div class="container mx-auto px-4 py-8">
+	<h1 class="text-2xl font-bold mb-4">Google OAuth Test Page</h1>
 	
-	<div class="status-section">
-		<h2>Status</h2>
-		<p><strong>Google Client ID:</strong> {GOOGLE_CLIENT_ID}</p>
-		<p><strong>Google Loaded:</strong> {googleLoaded ? '✅ Yes' : '❌ No'}</p>
-		<p><strong>Current URL:</strong> {typeof window !== 'undefined' ? window.location.href : 'Unknown'}</p>
-	</div>
-
-	{#if error}
-		<div class="error-section">
-			<h2>Error</h2>
-			<p class="error">{error}</p>
+	<div class="space-y-4">
+		<div class="card p-4">
+			<h2 class="text-lg font-semibold mb-2">Current Configuration</h2>
+			<p><strong>Domain:</strong> {currentDomain}</p>
+			<p><strong>Google Client ID:</strong> {GOOGLE_CLIENT_ID}</p>
+			<p><strong>Google Loaded:</strong> {googleLoaded ? 'Yes' : 'No'}</p>
 		</div>
-	{/if}
-
-	<div class="test-section">
-		<h2>Test Google Sign-In</h2>
-		<div id="google-signin-button"></div>
-		<p class="note">Click the button above to test Google authentication</p>
-	</div>
-
-	<div class="debug-section">
-		<h2>Debug Information</h2>
-		<p>Check the browser console for detailed logs</p>
-		<button on:click={() => console.log('Test button clicked')}>
-			Test Console Log
-		</button>
+		
+		<div class="card p-4">
+			<h2 class="text-lg font-semibold mb-2">Test Actions</h2>
+			<button on:click={testGoogleOAuth} class="btn btn-primary mb-2">
+				Test Google OAuth
+			</button>
+			<button on:click={() => window.location.reload()} class="btn btn-secondary">
+				Reload Page
+			</button>
+		</div>
+		
+		{#if googleError}
+			<div class="card p-4 bg-red-50 border border-red-200">
+				<h2 class="text-lg font-semibold mb-2 text-red-800">Error</h2>
+				<p class="text-red-700">{googleError}</p>
+			</div>
+		{/if}
+		
+		<div class="card p-4">
+			<h2 class="text-lg font-semibold mb-2">Troubleshooting</h2>
+			<ul class="list-disc list-inside space-y-1 text-sm">
+				<li>Make sure the domain is added to Google OAuth console</li>
+				<li>Check that the client ID is correct</li>
+				<li>Ensure Google Identity Services script is loaded</li>
+				<li>Check browser console for detailed errors</li>
+			</ul>
+		</div>
+		
+		<div class="card p-4">
+			<h2 class="text-lg font-semibold mb-2">Navigation</h2>
+			<a href="/auth/login" class="btn btn-secondary mr-2">Go to Login</a>
+			<a href="/test-auth" class="btn btn-secondary">Go to Auth Test</a>
+		</div>
 	</div>
 </div>
 
 <style>
-	.test-container {
-		max-width: 600px;
-		margin: 2rem auto;
-		padding: 2rem;
+	.card {
 		background: white;
-		border-radius: var(--border-radius-lg);
-		box-shadow: var(--shadow-md);
+		border-radius: 0.5rem;
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 	}
-
-	h1 {
-		text-align: center;
-		color: var(--color-gray-900);
-		margin-bottom: 2rem;
-	}
-
-	h2 {
-		color: var(--color-gray-800);
-		margin-bottom: 1rem;
-		border-bottom: 1px solid var(--color-gray-200);
-		padding-bottom: 0.5rem;
-	}
-
-	.status-section, .error-section, .test-section, .debug-section {
-		margin-bottom: 2rem;
-		padding: 1rem;
-		background: var(--color-gray-50);
-		border-radius: var(--border-radius-md);
-	}
-
-	.error {
-		color: var(--color-error-700);
-		background: var(--color-error-50);
-		padding: 0.75rem;
-		border-radius: var(--border-radius-sm);
-		border: 1px solid var(--color-error-200);
-	}
-
-	.note {
-		color: var(--color-gray-600);
-		font-size: var(--text-sm);
-		margin-top: 1rem;
-	}
-
-	#google-signin-button {
-		display: flex;
-		justify-content: center;
-		margin: 1rem 0;
-	}
-
-	button {
-		background: var(--color-primary-600);
-		color: white;
+	
+	.btn {
+		display: inline-block;
+		padding: 0.5rem 1rem;
+		border-radius: 0.25rem;
+		text-decoration: none;
+		font-weight: 500;
 		border: none;
-		padding: 0.75rem 1.5rem;
-		border-radius: var(--border-radius-md);
 		cursor: pointer;
-		font-size: var(--text-sm);
 	}
-
-	button:hover {
-		background: var(--color-primary-700);
+	
+	.btn-primary {
+		background: #0066ff;
+		color: white;
+	}
+	
+	.btn-secondary {
+		background: #6b7280;
+		color: white;
 	}
 </style> 

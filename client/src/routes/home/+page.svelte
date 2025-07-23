@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { requireAuth } from '$lib/auth-guard';
 	import type { Course } from '$lib/types';
 	
 	let inProgressCourses: Course[] = [];
@@ -8,6 +9,17 @@
 	let promptText = '';
 	let selectedAudience = 'beginners';
 	let selectedDepth = 'comprehensive';
+	let isAuthenticated = false;
+	
+	onMount(async () => {
+		// Check authentication first
+		isAuthenticated = await requireAuth();
+		
+		if (isAuthenticated) {
+			// Only load data if authenticated
+			await loadInProgressCourses();
+		}
+	});
 	
 	// Audience options for the dropdown
 	const audienceOptions = [
@@ -171,9 +183,7 @@ Each lesson should follow this structure:
 		}
 	}
 	
-	onMount(() => {
-		loadInProgressCourses();
-	});
+	// Removed old onMount - now handled in the new onMount with auth check
 </script>
 
 <svelte:head>
@@ -181,142 +191,154 @@ Each lesson should follow this structure:
 	<meta name="description" content="Your learning dashboard with in-progress courses and quick course creation." />
 </svelte:head>
 
-<div class="container mx-auto px-4 py-8">
-	<!-- In-Progress Courses Section -->
-	<section class="mb-12">
-		<div class="flex items-center justify-between mb-6">
-			<h2 class="text-2xl font-bold text-gray-800">Continue your learning journey</h2>
-			{#if inProgressCourses.length > 0}
-				<a href="/courses" class="text-primary hover:text-primary-dark transition-colors">
-					View All →
-				</a>
-			{/if}
+{#if !isAuthenticated}
+	<!-- Loading state while checking authentication -->
+	<div class="container mx-auto px-4 py-8">
+		<div class="flex justify-center items-center min-h-[400px]">
+			<div class="text-center">
+				<div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+				<p class="text-gray-600">Checking authentication...</p>
+			</div>
 		</div>
-		
-		{#if loading}
-			<div class="flex justify-center py-8">
-				<div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+	</div>
+{:else}
+	<div class="container mx-auto px-4 py-8">
+		<!-- In-Progress Courses Section -->
+		<section class="mb-12">
+			<div class="flex items-center justify-between mb-6">
+				<h2 class="text-2xl font-bold text-gray-800">Continue your learning journey</h2>
+				{#if inProgressCourses.length > 0}
+					<a href="/courses" class="text-primary hover:text-primary-dark transition-colors">
+						View All →
+					</a>
+				{/if}
 			</div>
-		{:else if inProgressCourses.length === 0}
-			<!-- Empty State -->
-			<div class="card text-center py-12">
-				<div class="text-6xl mb-4">📝</div>
-				<h3 class="text-xl font-semibold text-gray-700 mb-2">You have no drafts yet</h3>
-				<p class="text-gray-500 mb-6">Start creating your first course to begin your teaching journey</p>
-				<a href="/start" class="btn btn-primary">
-					+ Start
-				</a>
-			</div>
-		{:else}
-			<!-- Horizontal Scroll List -->
-			<div class="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
-				{#each inProgressCourses as course}
-					<div class="card min-w-[300px] flex-shrink-0">
-						<div class="flex items-start justify-between mb-3">
-							<h3 class="font-semibold text-gray-800 line-clamp-2">{course.title}</h3>
-							<span class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
-								{formatDate(course.updated_at)}
-							</span>
-						</div>
-						
-						<!-- Progress Bar -->
-						<div class="mb-4">
-							<div class="flex justify-between text-sm text-gray-600 mb-1">
-								<span>Progress</span>
-								<span>{calculateProgress(course)}%</span>
-							</div>
-							<div class="w-full bg-gray-200 rounded-full h-2">
-								<div 
-									class="bg-primary h-2 rounded-full transition-all duration-300"
-									style="width: {calculateProgress(course)}%"
-								></div>
-							</div>
-						</div>
-						
-						<a 
-							href="/courses/{course.id}" 
-							class="btn btn-primary w-full text-center"
-						>
-							Resume
-						</a>
-					</div>
-				{/each}
-			</div>
-		{/if}
-	</section>
-	
-	<!-- Start a New Course Card -->
-	<section class="mb-12">
-		<div class="card-elevated p-8">
-			<h2 class="text-2xl font-bold text-gray-800 mb-6">Start a New Course</h2>
 			
-			<div class="space-y-6">
-				<!-- Textarea -->
-				<div>
-					<textarea
-						bind:value={promptText}
-						on:keypress={handleKeyPress}
-						placeholder="Teach X to Y in Z hours…"
-						class="textarea w-full min-h-[120px] resize-none"
-						disabled={creatingCourse}
-					></textarea>
+			{#if loading}
+				<div class="flex justify-center py-8">
+					<div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
 				</div>
+			{:else if inProgressCourses.length === 0}
+				<!-- Empty State -->
+				<div class="card text-center py-12">
+					<div class="text-6xl mb-4">📝</div>
+					<h3 class="text-xl font-semibold text-gray-700 mb-2">You have no drafts yet</h3>
+					<p class="text-gray-500 mb-6">Start creating your first course to begin your teaching journey</p>
+					<a href="/start" class="btn btn-primary">
+						+ Start
+					</a>
+				</div>
+			{:else}
+				<!-- Horizontal Scroll List -->
+				<div class="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
+					{#each inProgressCourses as course}
+						<div class="card min-w-[300px] flex-shrink-0">
+							<div class="flex items-start justify-between mb-3">
+								<h3 class="font-semibold text-gray-800 line-clamp-2">{course.title}</h3>
+								<span class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
+									{formatDate(course.updated_at)}
+								</span>
+							</div>
+							
+							<!-- Progress Bar -->
+							<div class="mb-4">
+								<div class="flex justify-between text-sm text-gray-600 mb-1">
+									<span>Progress</span>
+									<span>{calculateProgress(course)}%</span>
+								</div>
+								<div class="w-full bg-gray-200 rounded-full h-2">
+									<div 
+										class="bg-primary h-2 rounded-full transition-all duration-300"
+										style="width: {calculateProgress(course)}%"
+									></div>
+								</div>
+							</div>
+							
+							<a 
+								href="/courses/{course.id}" 
+								class="btn btn-primary w-full text-center"
+							>
+								Resume
+							</a>
+						</div>
+					{/each}
+				</div>
+			{/if}
+		</section>
+		
+		<!-- Start a New Course Card -->
+		<section class="mb-12">
+			<div class="card-elevated p-8">
+				<h2 class="text-2xl font-bold text-gray-800 mb-6">Start a New Course</h2>
 				
-				<!-- Dropdowns Row -->
-				<div class="flex gap-4 flex-wrap">
-					<div class="flex-1 min-w-[200px]">
-						<label for="audience" class="block text-sm font-medium text-gray-700 mb-2">
-							Audience
-						</label>
-						<select
-							id="audience"
-							bind:value={selectedAudience}
-							class="input"
+				<div class="space-y-6">
+					<!-- Textarea -->
+					<div>
+						<textarea
+							bind:value={promptText}
+							on:keypress={handleKeyPress}
+							placeholder="Teach X to Y in Z hours…"
+							class="textarea w-full min-h-[120px] resize-none"
 							disabled={creatingCourse}
-						>
-							{#each audienceOptions as option}
-								<option value={option.value}>{option.label}</option>
-							{/each}
-						</select>
+						></textarea>
 					</div>
 					
-					<div class="flex-1 min-w-[200px]">
-						<label for="depth" class="block text-sm font-medium text-gray-700 mb-2">
-							Depth
-						</label>
-						<select
-							id="depth"
-							bind:value={selectedDepth}
-							class="input"
-							disabled={creatingCourse}
+					<!-- Dropdowns Row -->
+					<div class="flex gap-4 flex-wrap">
+						<div class="flex-1 min-w-[200px]">
+							<label for="audience" class="block text-sm font-medium text-gray-700 mb-2">
+								Audience
+							</label>
+							<select
+								id="audience"
+								bind:value={selectedAudience}
+								class="input"
+								disabled={creatingCourse}
+							>
+								{#each audienceOptions as option}
+									<option value={option.value}>{option.label}</option>
+								{/each}
+							</select>
+						</div>
+						
+						<div class="flex-1 min-w-[200px]">
+							<label for="depth" class="block text-sm font-medium text-gray-700 mb-2">
+								Depth
+							</label>
+							<select
+								id="depth"
+								bind:value={selectedDepth}
+								class="input"
+								disabled={creatingCourse}
+							>
+								{#each depthOptions as option}
+									<option value={option.value}>{option.label}</option>
+								{/each}
+							</select>
+						</div>
+					</div>
+					
+					<!-- Create Button -->
+					<div class="flex justify-end">
+						<button
+							on:click={createCourse}
+							class="btn btn-primary btn-lg flex items-center gap-2"
+							disabled={!promptText.trim() || creatingCourse}
 						>
-							{#each depthOptions as option}
-								<option value={option.value}>{option.label}</option>
-							{/each}
-						</select>
+							{#if creatingCourse}
+								<div class="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+								Creating...
+							{:else}
+								<span class="text-lg">•</span>
+								Create Course →
+							{/if}
+						</button>
 					</div>
 				</div>
-				
-				<!-- Create Button -->
-				<div class="flex justify-end">
-					<button
-						on:click={createCourse}
-						class="btn btn-primary btn-lg flex items-center gap-2"
-						disabled={!promptText.trim() || creatingCourse}
-					>
-						{#if creatingCourse}
-							<div class="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-							Creating...
-						{:else}
-							<span class="text-lg">•</span>
-							Create Course →
-						{/if}
-					</button>
-				</div>
 			</div>
-		</div>
-	</section>
-</div>
+		</section>
+	</div>
+{/if}
 
 <style>
 	/* Custom scrollbar hiding for horizontal scroll */

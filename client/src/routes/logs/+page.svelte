@@ -1,11 +1,24 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { requireAuth } from '$lib/auth-guard';
 
 	let stats: any = null;
 	let logs: any[] = [];
 	let loading = false;
 	let error = '';
 	let selectedDate = new Date().toISOString().split('T')[0];
+	let isAuthenticated = false;
+
+	onMount(async () => {
+		// Check authentication first
+		isAuthenticated = await requireAuth();
+		
+		if (isAuthenticated) {
+			// Only load data if authenticated
+			await loadStats();
+			await loadLogs();
+		}
+	});
 
 	async function loadStats() {
 		loading = true;
@@ -79,132 +92,139 @@
 	function formatTimestamp(timestamp: string): string {
 		return new Date(timestamp).toLocaleString();
 	}
-
-	onMount(() => {
-		loadStats();
-		loadLogs();
-	});
 </script>
 
 <svelte:head>
 	<title>LLM Logs - Personal Tutor AI</title>
 </svelte:head>
 
-<div class="container">
-	<div class="page-header">
-		<h1>LLM Response Logs</h1>
-		<p>Monitor and analyze AI responses and usage statistics</p>
-	</div>
-
-	{#if error}
-		<div class="error-message">
-			{error}
+{#if !isAuthenticated}
+	<!-- Loading state while checking authentication -->
+	<div class="container">
+		<div class="flex justify-center items-center min-h-[400px]">
+			<div class="text-center">
+				<div class="loading mx-auto mb-4"></div>
+				<p>Checking authentication...</p>
+			</div>
 		</div>
-	{/if}
+	</div>
+{:else}
+	<div class="container">
+		<div class="page-header">
+			<h1>LLM Response Logs</h1>
+			<p>Monitor and analyze AI responses and usage statistics</p>
+		</div>
 
-	<div class="stats-section">
-		<h2>Today's Statistics</h2>
-		{#if loading && !stats}
-			<div class="loading">Loading stats...</div>
-		{:else if stats}
-			<div class="stats-grid">
-				<div class="stat-card">
-					<div class="stat-value">{stats.totalRequests}</div>
-					<div class="stat-label">Total Requests</div>
+		{#if error}
+			<div class="error-message">
+				{error}
+			</div>
+		{/if}
+
+		<div class="stats-section">
+			<h2>Today's Statistics</h2>
+			{#if loading && !stats}
+				<div class="loading">Loading stats...</div>
+			{:else if stats}
+				<div class="stats-grid">
+					<div class="stat-card">
+						<div class="stat-value">{stats.totalRequests}</div>
+						<div class="stat-label">Total Requests</div>
+					</div>
+					<div class="stat-card">
+						<div class="stat-value success">{stats.successfulRequests}</div>
+						<div class="stat-label">Successful</div>
+					</div>
+					<div class="stat-card">
+						<div class="stat-value error">{stats.failedRequests}</div>
+						<div class="stat-label">Failed</div>
+					</div>
+					<div class="stat-card">
+						<div class="stat-value">{formatDuration(stats.averageResponseTime)}</div>
+						<div class="stat-label">Avg Response Time</div>
+					</div>
+					<div class="stat-card">
+						<div class="stat-value">{formatTokens(stats.totalTokens)}</div>
+						<div class="stat-label">Total Tokens</div>
+					</div>
 				</div>
-				<div class="stat-card">
-					<div class="stat-value success">{stats.successfulRequests}</div>
-					<div class="stat-label">Successful</div>
-				</div>
-				<div class="stat-card">
-					<div class="stat-value error">{stats.failedRequests}</div>
-					<div class="stat-label">Failed</div>
-				</div>
-				<div class="stat-card">
-					<div class="stat-value">{formatDuration(stats.averageResponseTime)}</div>
-					<div class="stat-label">Avg Response Time</div>
-				</div>
-				<div class="stat-card">
-					<div class="stat-value">{formatTokens(stats.totalTokens)}</div>
-					<div class="stat-label">Total Tokens</div>
+
+				{#if Object.keys(stats.models).length > 0}
+					<div class="models-section">
+						<h3>Models Used</h3>
+						<div class="models-list">
+							{#each Object.entries(stats.models) as [model, count]}
+								<div class="model-item">
+									<span class="model-name">{model}</span>
+									<span class="model-count">{count}</span>
+								</div>
+							{/each}
+						</div>
+					</div>
+				{/if}
+			{/if}
+		</div>
+
+		<div class="logs-section">
+			<div class="logs-header">
+				<h2>Response Logs</h2>
+				<div class="logs-controls">
+					<input 
+						type="date" 
+						bind:value={selectedDate} 
+						on:change={loadLogs}
+						class="date-input"
+					/>
+					<button on:click={loadLogs} disabled={loading} class="refresh-btn">
+						{loading ? 'Loading...' : 'Refresh'}
+					</button>
+					<button on:click={exportLogs} class="export-btn">
+						Export All
+					</button>
 				</div>
 			</div>
 
-			{#if Object.keys(stats.models).length > 0}
-				<div class="models-section">
-					<h3>Models Used</h3>
-					<div class="models-list">
-						{#each Object.entries(stats.models) as [model, count]}
-							<div class="model-item">
-								<span class="model-name">{model}</span>
-								<span class="model-count">{count}</span>
+			{#if loading && logs.length === 0}
+				<div class="loading">Loading logs...</div>
+			{:else if logs.length === 0}
+				<div class="no-logs">No logs found for {selectedDate}</div>
+			{:else}
+				<div class="logs-list">
+					{#each logs as log}
+						<div class="log-item">
+							<div class="log-header">
+								<span class="log-time">{formatTimestamp(log.timestamp)}</span>
+								<span class="log-status {log.success ? 'success' : 'error'}">
+									{log.success ? '✅' : '❌'}
+								</span>
+								<span class="log-model">{log.response.model}</span>
+								<span class="log-duration">{formatDuration(log.duration_ms)}</span>
 							</div>
-						{/each}
-					</div>
+							<div class="log-content">
+								<div class="log-prompt">
+									<strong>Prompt:</strong> {log.request.user_prompt.substring(0, 100)}...
+								</div>
+								<div class="log-response">
+									<strong>Response:</strong> {log.response.content.substring(0, 200)}...
+								</div>
+								{#if log.error}
+									<div class="log-error">
+										<strong>Error:</strong> {log.error}
+									</div>
+								{/if}
+								{#if log.response.usage}
+									<div class="log-usage">
+										Tokens: {log.response.usage.prompt_tokens} + {log.response.usage.completion_tokens} = {log.response.usage.total_tokens}
+									</div>
+								{/if}
+							</div>
+						</div>
+					{/each}
 				</div>
 			{/if}
-		{/if}
-	</div>
-
-	<div class="logs-section">
-		<div class="logs-header">
-			<h2>Response Logs</h2>
-			<div class="logs-controls">
-				<input 
-					type="date" 
-					bind:value={selectedDate} 
-					on:change={loadLogs}
-					class="date-input"
-				/>
-				<button on:click={loadLogs} disabled={loading} class="refresh-btn">
-					{loading ? 'Loading...' : 'Refresh'}
-				</button>
-				<button on:click={exportLogs} class="export-btn">
-					Export All
-				</button>
-			</div>
 		</div>
-
-		{#if loading && logs.length === 0}
-			<div class="loading">Loading logs...</div>
-		{:else if logs.length === 0}
-			<div class="no-logs">No logs found for {selectedDate}</div>
-		{:else}
-			<div class="logs-list">
-				{#each logs as log}
-					<div class="log-item">
-						<div class="log-header">
-							<span class="log-time">{formatTimestamp(log.timestamp)}</span>
-							<span class="log-status {log.success ? 'success' : 'error'}">
-								{log.success ? '✅' : '❌'}
-							</span>
-							<span class="log-model">{log.response.model}</span>
-							<span class="log-duration">{formatDuration(log.duration_ms)}</span>
-						</div>
-						<div class="log-content">
-							<div class="log-prompt">
-								<strong>Prompt:</strong> {log.request.user_prompt.substring(0, 100)}...
-							</div>
-							<div class="log-response">
-								<strong>Response:</strong> {log.response.content.substring(0, 200)}...
-							</div>
-							{#if log.error}
-								<div class="log-error">
-									<strong>Error:</strong> {log.error}
-								</div>
-							{/if}
-							{#if log.response.usage}
-								<div class="log-usage">
-									Tokens: {log.response.usage.prompt_tokens} + {log.response.usage.completion_tokens} = {log.response.usage.total_tokens}
-								</div>
-							{/if}
-						</div>
-					</div>
-				{/each}
-			</div>
-		{/if}
 	</div>
-</div>
+{/if}
 
 <style>
 	.container {

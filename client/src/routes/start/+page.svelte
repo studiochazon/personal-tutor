@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
-	import { authStore, initAuth, getAuthToken } from '$lib/auth';
+	import { requireAuth } from '$lib/auth-guard';
+	import { authStore, getAuthToken } from '$lib/auth';
 	import type { CreateCourseRequest } from '$lib/types';
 
 	let userPrompt = '';
@@ -9,18 +10,18 @@
 	let errorMessage = '';
 	let testResult = '';
 	let user: any = null;
+	let isAuthenticated = false;
 
-	onMount(() => {
-		initAuth();
+	onMount(async () => {
+		// Check authentication first
+		isAuthenticated = await requireAuth();
 		
-		authStore.subscribe(state => {
-			user = state.user;
-			
-			// Redirect to login if not authenticated
-			if (!state.user && !state.isLoading) {
-				goto('/auth/login');
-			}
-		});
+		if (isAuthenticated) {
+			// Subscribe to auth store for user data
+			authStore.subscribe(state => {
+				user = state.user;
+			});
+		}
 	});
 
 	// System prompt for course creation - this should match the content from system-prompt.md
@@ -279,102 +280,114 @@ Remember: Your goal is to create transformative learning experiences that empowe
 	<title>Create Course - Personal Tutor AI</title>
 </svelte:head>
 
-<div class="container">
-	<div class="page-header">
-		<h1>Create Your Course</h1>
-		<p>Describe what you want to teach and AI will create a comprehensive course for you</p>
+{#if !isAuthenticated}
+	<!-- Loading state while checking authentication -->
+	<div class="container">
+		<div class="flex justify-center items-center min-h-[400px]">
+			<div class="text-center">
+				<div class="loading mx-auto mb-4"></div>
+				<p>Checking authentication...</p>
+			</div>
+		</div>
 	</div>
+{:else}
+	<div class="container">
+		<div class="page-header">
+			<h1>Create Your Course</h1>
+			<p>Describe what you want to teach and AI will create a comprehensive course for you</p>
+		</div>
 
-	<div class="form-container">
-		<div class="input-section">
-			<label for="course-prompt" class="label">What would you like to teach?</label>
-			<textarea
-				id="course-prompt"
-				bind:value={userPrompt}
-				on:keypress={handleKeyPress}
-				placeholder="e.g., I want to create a course about Python programming for beginners, covering variables, functions, and basic data structures..."
-				disabled={isLoading}
-				rows="6"
-				class="prompt-input"
-			></textarea>
-			
-			{#if errorMessage}
-				<div class="error-message">
-					{errorMessage}
-				</div>
-			{/if}
-
-			<button 
-				on:click={createCourse} 
-				disabled={!userPrompt.trim() || isLoading}
-				class="create-button"
-			>
-				{#if isLoading}
-					<div class="loading-spinner"></div>
-					Creating Course...
-				{:else}
-					Create Course
+		<div class="form-container">
+			<div class="input-section">
+				<label for="course-prompt" class="label">What would you like to teach?</label>
+				<textarea
+					id="course-prompt"
+					bind:value={userPrompt}
+					on:keypress={handleKeyPress}
+					placeholder="e.g., I want to create a course about Python programming for beginners, covering variables, functions, and basic data structures..."
+					disabled={isLoading}
+					rows="6"
+					class="prompt-input"
+				></textarea>
+				
+				{#if errorMessage}
+					<div class="error-message">
+						{errorMessage}
+					</div>
 				{/if}
-			</button>
 
-			<button 
-				on:click={testDbConnection} 
-				class="test-button"
-				style="margin-top: 10px; background-color: #28a745;"
-			>
-				Test DB Connection & Write
-			</button>
+				<button 
+					on:click={createCourse} 
+					disabled={!userPrompt.trim() || isLoading}
+					class="create-button"
+				>
+					{#if isLoading}
+						<div class="loading-spinner"></div>
+						Creating Course...
+					{:else}
+						Create Course
+					{/if}
+				</button>
 
-			{#if testResult}
-				<div class="test-result" style="margin-top: 10px; padding: 10px; border-radius: 5px; background-color: #f8f9fa; border: 1px solid #dee2e6;">
-					{testResult}
-				</div>
-			{/if}
-		</div>
+				<button 
+					on:click={testDbConnection} 
+					class="test-button"
+					style="margin-top: 10px; background-color: #28a745;"
+				>
+					Test DB Connection & Write
+				</button>
 
-		<div class="info-section">
-			<h3>How it works</h3>
-			<div class="steps">
-				<div class="step">
-					<div class="step-number">1</div>
-					<div class="step-content">
-						<h4>Describe Your Topic</h4>
-						<p>Tell us what you want to teach, your target audience, and any specific requirements.</p>
+				{#if testResult}
+					<div class="test-result" style="margin-top: 10px; padding: 10px; border-radius: 5px; background-color: #f8f9fa; border: 1px solid #dee2e6;">
+						{testResult}
 					</div>
-				</div>
-				<div class="step">
-					<div class="step-number">2</div>
-					<div class="step-content">
-						<h4>AI Generates Course</h4>
-						<p>Our AI creates a comprehensive course structure with lessons, examples, and exercises.</p>
-					</div>
-				</div>
-				<div class="step">
-					<div class="step-number">3</div>
-					<div class="step-content">
-						<h4>Review & Customize</h4>
-						<p>Review your course and make any adjustments to fit your needs perfectly.</p>
-					</div>
-				</div>
+				{/if}
 			</div>
 
-			<div class="examples">
-				<h4>Example prompts:</h4>
-				<ul>
-					<li>"Create a beginner-friendly course on JavaScript fundamentals"</li>
-					<li>"Design a course about digital marketing for small business owners"</li>
-					<li>"Make a course teaching photography basics with practical exercises"</li>
-					<li>"Create an advanced course on machine learning algorithms"</li>
-				</ul>
+			<div class="info-section">
+				<h3>How it works</h3>
+				<div class="steps">
+					<div class="step">
+						<div class="step-number">1</div>
+						<div class="step-content">
+							<h4>Describe Your Topic</h4>
+							<p>Tell us what you want to teach, your target audience, and any specific requirements.</p>
+						</div>
+					</div>
+					<div class="step">
+						<div class="step-number">2</div>
+						<div class="step-content">
+							<h4>AI Generates Course</h4>
+							<p>Our AI creates a comprehensive course structure with lessons, examples, and exercises.</p>
+						</div>
+					</div>
+					<div class="step">
+						<div class="step-number">3</div>
+						<div class="step-content">
+							<h4>Review & Customize</h4>
+							<p>Review your course and make any adjustments to fit your needs perfectly.</p>
+						</div>
+					</div>
+				</div>
+
+				<div class="examples">
+					<h4>Example prompts:</h4>
+					<ul>
+						<li>"Create a beginner-friendly course on JavaScript fundamentals"</li>
+						<li>"Design a course about digital marketing for small business owners"</li>
+						<li>"Make a course teaching photography basics with practical exercises"</li>
+						<li>"Create an advanced course on machine learning algorithms"</li>
+					</ul>
+				</div>
 			</div>
 		</div>
-	</div>
 
-	<div class="setup-note">
-		<p><strong>Setup Required:</strong> Make sure to add your OpenAI API key to the <code>.env</code> file in the root directory:</p>
-		<code>OPENAI_API_KEY=your_actual_api_key_here</code>
+		<div class="setup-note">
+			<p><strong>Setup Required:</strong> Make sure to add your OpenAI API key to the <code>.env</code> file in the root directory:</p>
+			<code>OPENAI_API_KEY=your_actual_api_key_here</code>
+		</div>
 	</div>
-</div>
+{/if}
 
 <style>
 	.container {
