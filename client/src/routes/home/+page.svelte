@@ -3,6 +3,7 @@
 	import { requireAuth } from '$lib/auth-guard';
 	import { getAuthToken } from '$lib/auth';
 	import type { Course } from '$lib/types';
+	import { CourseCard, LoadingState, EmptyState } from '$lib/components/ui';
 	
 	let inProgressCourses: Course[] = [];
 	let courseProgress: { [key: number]: number } = {};
@@ -210,8 +211,6 @@ Each lesson should follow this structure:
 			createCourse();
 		}
 	}
-	
-	// Removed old onMount - now handled in the new onMount with auth check
 </script>
 
 <svelte:head>
@@ -222,12 +221,7 @@ Each lesson should follow this structure:
 {#if !isAuthenticated}
 	<!-- Loading state while checking authentication -->
 	<div class="container mx-auto px-4 py-8">
-		<div class="flex justify-center items-center min-h-[400px]">
-			<div class="text-center">
-				<div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-				<p class="text-gray-600">Checking authentication...</p>
-			</div>
-		</div>
+		<LoadingState message="Checking authentication..." />
 	</div>
 {:else}
 	<div class="container mx-auto px-4 py-8">
@@ -243,51 +237,29 @@ Each lesson should follow this structure:
 			</div>
 			
 			{#if loading}
-				<div class="flex justify-center py-8">
-					<div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-				</div>
+				<LoadingState message="Loading your courses..." />
 			{:else if inProgressCourses.length === 0}
 				<!-- Empty State -->
-				<div class="card text-center py-12">
-					<div class="text-6xl mb-4">📝</div>
-					<h3 class="text-xl font-semibold text-gray-700 mb-2">You have no drafts yet</h3>
-					<p class="text-gray-500 mb-6">Start creating your first course to begin your teaching journey</p>
-					<a href="/start" class="btn btn-primary">
-						+ Start
-					</a>
-				</div>
+				<EmptyState 
+					title="You have no drafts yet"
+					description="Start creating your first course to begin your teaching journey"
+					icon="📝"
+					actionText="+ Start"
+					actionHref="/start"
+				/>
 			{:else}
 				<!-- Horizontal Scroll List -->
 				<div class="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
 					{#each inProgressCourses as course}
-						<div class="card min-w-[300px] flex-shrink-0">
-							<div class="flex items-start justify-between mb-3">
-								<h3 class="font-semibold text-gray-800 line-clamp-2">{course.title}</h3>
-								<span class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
-									{formatDate(course.updated_at)}
-								</span>
-							</div>
-							
-							<!-- Progress Bar -->
-							<div class="mb-4">
-								<div class="flex justify-between text-sm text-gray-600 mb-1">
-									<span>Progress</span>
-									<span>{courseProgress[course.id] || 0}%</span>
-								</div>
-								<div class="w-full bg-gray-200 rounded-full h-2">
-									<div 
-										class="bg-primary h-2 rounded-full transition-all duration-300"
-										style="width: {courseProgress[course.id] || 0}%"
-									></div>
-								</div>
-							</div>
-							
-							<a 
-								href="/courses/{course.id}" 
-								class="btn btn-primary w-full text-center"
-							>
-								Resume
-							</a>
+						<div class="min-w-[300px] flex-shrink-0">
+							<CourseCard 
+								{course}
+								showProgress={true}
+								progressPercentage={courseProgress[course.id] || 0}
+								actionText="Resume"
+								actionHref="/courses/{course.id}"
+								variant="compact"
+							/>
 						</div>
 					{/each}
 				</div>
@@ -377,14 +349,6 @@ Each lesson should follow this structure:
 	
 	.scrollbar-hide::-webkit-scrollbar {
 		display: none;
-	}
-	
-	/* Line clamp utility */
-	.line-clamp-2 {
-		display: -webkit-box;
-		-webkit-line-clamp: 2;
-		-webkit-box-orient: vertical;
-		overflow: hidden;
 	}
 	
 	/* Smooth scrolling for horizontal scroll */

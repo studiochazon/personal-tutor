@@ -1,9 +1,13 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { requireAuth } from '$lib/auth-guard';
-	import type { Course } from '$lib/types';
+	import { getAuthToken } from '$lib/auth';
+	import type { Course, Enrollment } from '$lib/types';
+	import { CourseCard, LoadingState, EmptyState } from '$lib/components/ui';
 	
 	let courses: Course[] = [];
+	let enrollments: Map<number, Enrollment> = new Map();
+	let courseProgress: Map<number, any> = new Map();
 	let loading = true;
 	let error: string | null = null;
 	let searchTerm = '';
@@ -35,6 +39,11 @@
 			
 			if (response.ok) {
 				courses = data.courses;
+				// Load enrollment data and progress for each course
+				await Promise.all([
+					loadEnrollments(),
+					loadCourseProgress()
+				]);
 			} else {
 				error = data.error || 'Failed to load courses';
 			}
@@ -46,27 +55,79 @@
 		}
 	}
 	
-	function getDifficultyColor(difficulty: string): string {
-		switch (difficulty) {
-			case 'beginner':
-				return 'difficulty-beginner';
-			case 'intermediate':
-				return 'difficulty-intermediate';
-			case 'advanced':
-				return 'difficulty-advanced';
-			default:
-				return 'difficulty-default';
+	async function loadEnrollments() {
+		try {
+			const token = getAuthToken();
+			if (!token) return;
+			
+			// Load enrollment data for all courses
+			const enrollmentPromises = courses.map(async (course) => {
+				try {
+					const response = await fetch(`/api/courses/${course.id}/enrollment`, {
+						headers: {
+							'Authorization': `Bearer ${token}`
+						}
+					});
+					
+					if (response.ok) {
+						const data = await response.json();
+						if (data.enrollment) {
+							enrollments.set(course.id, data.enrollment);
+						}
+					}
+				} catch (err) {
+					console.error(`Error loading enrollment for course ${course.id}:`, err);
+				}
+			});
+			
+			await Promise.all(enrollmentPromises);
+			enrollments = enrollments; // Trigger reactivity
+		} catch (err) {
+			console.error('Error loading enrollments:', err);
 		}
 	}
 	
-	function formatDuration(minutes: number | null): string {
-		if (!minutes) return 'Self-paced';
-		const hours = Math.floor(minutes / 60);
-		const mins = minutes % 60;
-		if (hours > 0) {
-			return `${hours}h ${mins}m`;
+	async function loadCourseProgress() {
+		try {
+			const token = getAuthToken();
+			if (!token) return;
+			
+			// Load progress data for all courses
+			const progressPromises = courses.map(async (course) => {
+				try {
+					const response = await fetch(`/api/courses/${course.id}/progress`, {
+						headers: {
+							'Authorization': `Bearer ${token}`
+						}
+					});
+					
+					if (response.ok) {
+						const data = await response.json();
+						courseProgress.set(course.id, data.course_progress);
+					}
+				} catch (err) {
+					console.error(`Error loading progress for course ${course.id}:`, err);
+				}
+			});
+			
+			await Promise.all(progressPromises);
+			courseProgress = courseProgress; // Trigger reactivity
+		} catch (err) {
+			console.error('Error loading course progress:', err);
 		}
-		return `${mins}m`;
+	}
+	
+	function getEnrollmentStatus(courseId: number): string | null {
+		const enrollment = enrollments.get(courseId);
+		return enrollment ? enrollment.status : null;
+	}
+	
+	function getCourseProgress(courseId: number): number {
+		const progressData = courseProgress.get(courseId);
+		if (!progressData || !progressData.lessons || progressData.lessons.length === 0) return 0;
+		
+		const completedLessons = progressData.progress.filter((p: any) => p.completed).length;
+		return Math.round((completedLessons / progressData.lessons.length) * 100);
 	}
 	
 	function handleSearch() {
@@ -76,8 +137,6 @@
 	function handleDifficultyChange() {
 		loadCourses();
 	}
-	
-	// Removed old onMount - now handled in the new onMount with auth check
 </script>
 
 <svelte:head>
@@ -88,12 +147,7 @@
 {#if !isAuthenticated}
 	<!-- Loading state while checking authentication -->
 	<div class="page-container">
-		<div class="flex justify-center items-center min-h-[400px]">
-			<div class="text-center">
-				<div class="loading-spinner mx-auto mb-4"></div>
-				<p class="loading-text">Checking authentication...</p>
-			</div>
-		</div>
+		<LoadingState message="Checking authentication..." />
 	</div>
 {:else}
 	<div class="page-container">
@@ -135,10 +189,7 @@
 		<!-- Content Section -->
 		<main class="content-section">
 			{#if loading}
-				<div class="loading-state">
-					<div class="loading-spinner"></div>
-					<p class="loading-text">Loading courses...</p>
-				</div>
+				<LoadingState message="Loading courses..." />
 			{:else if error}
 				<div class="error-state">
 					<div class="error-message">
@@ -150,50 +201,23 @@
 					</button>
 				</div>
 			{:else if courses.length === 0}
-				<div class="empty-state">
-					<div class="empty-icon">📚</div>
-					<h3 class="empty-title">No courses found</h3>
-					<p class="empty-description">
-						Try adjusting your search criteria or check back later for new courses.
-					</p>
-				</div>
+				<EmptyState 
+					title="No courses found"
+					description="Try adjusting your search criteria or check back later for new courses."
+					icon="📚"
+				/>
 			{:else}
 				<div class="courses-grid">
 					{#each courses as course}
-						<article class="course-card">
-							<div class="course-thumbnail">
-								<img 
-									src={course.thumbnail_url || '/images/default-course-thumbnail.svg'} 
-									alt="{course.title} thumbnail"
-									class="thumbnail-image"
-									on:error={(e) => {
-										const target = e.target as HTMLImageElement;
-										if (target) {
-											target.src = '/images/default-course-thumbnail.svg';
-										}
-									}}
-								/>
-								<div class="difficulty-badge {getDifficultyColor(course.difficulty)}">
-									{course.difficulty}
-								</div>
-							</div>
-							<div class="course-content">
-								<div class="course-header">
-									<h3 class="course-title">{course.title}</h3>
-								</div>
-								<p class="course-description">
-									{course.description ? (course.description.length > 120 ? course.description.substring(0, 120) + '...' : course.description) : 'No description available'}
-								</p>
-								<div class="course-footer">
-									<span class="course-duration">
-										⏱️ {formatDuration(course.estimated_duration)}
-									</span>
-									<a href="/courses/{course.id}" class="btn-secondary">
-										View Course
-									</a>
-								</div>
-							</div>
-						</article>
+						<CourseCard 
+							{course}
+							showEnrollmentStatus={true}
+							enrollmentStatus={getEnrollmentStatus(course.id)}
+							showProgress={true}
+							progressPercentage={getCourseProgress(course.id)}
+							actionText="View Course"
+							actionHref="/courses/{course.id}"
+						/>
 					{/each}
 				</div>
 				
@@ -211,8 +235,6 @@
 		min-height: 100vh;
 		background-color: var(--color-gray-50);
 	}
-
-	/* Using consolidated hero header styles from design-system.css */
 
 	/* Filters Section */
 	.filters-section {
@@ -275,33 +297,6 @@
 		padding: 3rem 1rem;
 	}
 
-	/* Loading State */
-	.loading-state {
-		text-align: center;
-		padding: 4rem 0;
-	}
-
-	.loading-spinner {
-		display: inline-block;
-		width: 2rem;
-		height: 2rem;
-		border: 2px solid #E5E7EB;
-		border-top: 2px solid #0066FF;
-		border-radius: 50%;
-		animation: spin 1s linear infinite;
-		margin-bottom: 1rem;
-	}
-
-	.loading-text {
-		color: #6B7280;
-		font-size: 1rem;
-	}
-
-	@keyframes spin {
-		from { transform: rotate(0deg); }
-		to { transform: rotate(360deg); }
-	}
-
 	/* Error State */
 	.error-state {
 		text-align: center;
@@ -316,30 +311,6 @@
 		border-radius: 0.5rem;
 		margin-bottom: 1.5rem;
 		display: inline-block;
-	}
-
-	/* Empty State */
-	.empty-state {
-		text-align: center;
-		padding: 4rem 0;
-	}
-
-	.empty-icon {
-		font-size: 4rem;
-		margin-bottom: 1rem;
-		opacity: 0.5;
-	}
-
-	.empty-title {
-		font-size: 1.5rem;
-		font-weight: 600;
-		color: #1F2937;
-		margin-bottom: 0.5rem;
-	}
-
-	.empty-description {
-		color: #6B7280;
-		font-size: 1rem;
 	}
 
 	/* Courses Grid */
@@ -362,141 +333,6 @@
 		}
 	}
 
-	/* Course Card */
-	.course-card {
-		background-color: white;
-		border-radius: var(--radius-xl);
-		overflow: hidden;
-		box-shadow: var(--shadow-base);
-		border: 1px solid var(--color-gray-200);
-		transition: all 0.2s ease;
-		display: flex;
-		flex-direction: column;
-	}
-
-	.course-card:hover {
-		box-shadow: var(--shadow-lg);
-		transform: translateY(-2px);
-	}
-
-	/* Course Thumbnail */
-	.course-thumbnail {
-		position: relative;
-		width: 100%;
-		height: 200px;
-		overflow: hidden;
-		background: linear-gradient(135deg, var(--color-gray-100) 0%, var(--color-gray-200) 100%);
-	}
-
-	.thumbnail-image {
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
-		transition: transform 0.3s ease;
-	}
-
-	.course-card:hover .thumbnail-image {
-		transform: scale(1.05);
-	}
-
-	.difficulty-badge {
-		position: absolute;
-		top: var(--spacing-3);
-		right: var(--spacing-3);
-		padding: var(--spacing-1) var(--spacing-3);
-		border-radius: var(--radius-full);
-		font-size: 0.75rem;
-		font-weight: 500;
-		text-transform: capitalize;
-		white-space: nowrap;
-		backdrop-filter: blur(8px);
-		background-color: rgba(255, 255, 255, 0.9);
-		box-shadow: var(--shadow-sm);
-	}
-
-	/* Course Content */
-	.course-content {
-		padding: var(--spacing-5);
-		display: flex;
-		flex-direction: column;
-		flex: 1;
-	}
-
-	.course-header {
-		margin-bottom: var(--spacing-3);
-	}
-
-	.course-title {
-		font-size: 1.125rem;
-		font-weight: 600;
-		color: var(--color-gray-800);
-		line-height: 1.3;
-		margin: 0;
-	}
-
-	.course-description {
-		color: var(--color-gray-500);
-		line-height: 1.5;
-		margin-bottom: var(--spacing-4);
-		flex: 1;
-		font-size: 0.875rem;
-	}
-
-	.course-footer {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		margin-top: auto;
-	}
-
-	.course-duration {
-		font-size: 0.875rem;
-		color: var(--color-gray-400);
-	}
-
-	/* Difficulty Badges */
-	.difficulty-beginner {
-		background-color: var(--color-success-light);
-		color: var(--color-success-text);
-	}
-
-	.difficulty-intermediate {
-		background-color: var(--color-warning-light);
-		color: var(--color-warning-text);
-	}
-
-	.difficulty-advanced {
-		background-color: var(--color-error-light);
-		color: var(--color-error-text);
-	}
-
-	.difficulty-default {
-		background-color: var(--color-gray-100);
-		color: var(--color-gray-700);
-	}
-
-	/* Buttons */
-
-	.btn-secondary {
-		background-color: white;
-		color: var(--color-primary);
-		padding: var(--spacing-3) var(--spacing-6);
-		border-radius: var(--radius-lg);
-		font-weight: 600;
-		border: 2px solid var(--color-primary);
-		transition: all 0.2s ease;
-		text-decoration: none;
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		cursor: pointer;
-	}
-
-	.btn-secondary:hover {
-		background-color: var(--color-primary);
-		color: white;
-	}
-
 	/* Results Count */
 	.results-count {
 		text-align: center;
@@ -507,14 +343,6 @@
 
 	/* Responsive Design */
 	@media (max-width: 768px) {
-		.page-title {
-			font-size: 2.25rem;
-		}
-
-		.page-subtitle {
-			font-size: 1.125rem;
-		}
-
 		.filters-container {
 			flex-direction: column;
 			align-items: stretch;
@@ -526,22 +354,6 @@
 
 		.difficulty-select {
 			min-width: auto;
-		}
-
-		.course-header {
-			flex-direction: column;
-			align-items: flex-start;
-			gap: 0.5rem;
-		}
-
-		.course-footer {
-			flex-direction: column;
-			align-items: stretch;
-			gap: 1rem;
-		}
-
-		.btn-secondary {
-			text-align: center;
 		}
 	}
 </style> 

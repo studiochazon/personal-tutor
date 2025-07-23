@@ -3,11 +3,13 @@
 	import { page } from '$app/stores';
 	import { requireAuth } from '$lib/auth-guard';
 	import { getAuthToken } from '$lib/auth';
-	import type { Course, Lesson, Enrollment } from '$lib/types';
+	import type { Course, Lesson, Enrollment, Progress } from '$lib/types';
+	import { LessonCard, LoadingState, EmptyState, EnrollmentStatus, ProgressBar } from '$lib/components/ui';
 	
 	let course: Course | null = null;
 	let lessons: Lesson[] = [];
 	let enrollment: Enrollment | null = null;
+	let courseProgress: Progress[] = [];
 	let loading = true;
 	let error: string | null = null;
 	let isAuthenticated = false;
@@ -37,8 +39,11 @@
 				course = data.course;
 				lessons = data.lessons || [];
 				
-				// Load enrollment status
-				await loadEnrollment();
+				// Load enrollment status and course progress
+				await Promise.all([
+					loadEnrollment(),
+					loadCourseProgress()
+				]);
 			} else {
 				error = data.error || 'Failed to load course';
 			}
@@ -68,6 +73,32 @@
 		} catch (err) {
 			console.error('Error loading enrollment:', err);
 		}
+	}
+	
+	async function loadCourseProgress() {
+		try {
+			const token = getAuthToken();
+			if (!token) return;
+			
+			const response = await fetch(`/api/courses/${courseId}/progress`, {
+				headers: {
+					'Authorization': `Bearer ${token}`
+				}
+			});
+			
+			if (response.ok) {
+				const data = await response.json();
+				courseProgress = data.course_progress.progress || [];
+			}
+		} catch (err) {
+			console.error('Error loading course progress:', err);
+		}
+	}
+	
+	function getCourseProgressPercentage(): number {
+		if (lessons.length === 0) return 0;
+		const completedLessons = courseProgress.filter(p => p.completed).length;
+		return Math.round((completedLessons / lessons.length) * 100);
 	}
 	
 	async function enrollInCourse() {
@@ -104,19 +135,6 @@
 		}
 	}
 	
-	function getDifficultyColor(difficulty: string): string {
-		switch (difficulty) {
-			case 'beginner':
-				return 'difficulty-beginner';
-			case 'intermediate':
-				return 'difficulty-intermediate';
-			case 'advanced':
-				return 'difficulty-advanced';
-			default:
-				return 'difficulty-default';
-		}
-	}
-	
 	function formatDuration(minutes: number | null): string {
 		if (!minutes) return 'Self-paced';
 		const hours = Math.floor(minutes / 60);
@@ -126,8 +144,6 @@
 		}
 		return `${mins}m`;
 	}
-	
-	// Removed old onMount - now handled in the new onMount with auth check
 </script>
 
 <svelte:head>
@@ -138,21 +154,13 @@
 {#if !isAuthenticated}
 	<!-- Loading state while checking authentication -->
 	<div class="page-container">
-		<div class="flex justify-center items-center min-h-[400px]">
-			<div class="text-center">
-				<div class="loading-spinner mx-auto mb-4"></div>
-				<p class="loading-text">Checking authentication...</p>
-			</div>
-		</div>
+		<LoadingState message="Checking authentication..." />
 	</div>
 {:else}
 	<div class="page-container">
 		<!-- Loading State -->
 		{#if loading}
-			<div class="loading-state">
-				<div class="loading-spinner"></div>
-				<p class="loading-text">Loading course...</p>
-			</div>
+			<LoadingState message="Loading course..." />
 		{:else if error}
 			<!-- Error State -->
 			<div class="error-state">
@@ -172,7 +180,7 @@
 						<h1 class="course-title">{course.title}</h1>
 						<p class="course-description">{course.description}</p>
 						<div class="course-meta">
-							<span class="difficulty-badge {getDifficultyColor(course.difficulty)}">
+							<span class="difficulty-badge difficulty-{course.difficulty}">
 								{course.difficulty}
 							</span>
 							<span class="meta-item">
@@ -187,12 +195,24 @@
 					<!-- Enrollment Section -->
 					<div class="enrollment-section">
 						{#if enrollment}
-							<div class="enrollment-status">
-								<span class="status-badge status-{enrollment.status}">
-									{enrollment.status === 'active' ? '📚 Enrolled' : 
-									 enrollment.status === 'completed' ? '✅ Completed' :
-									 enrollment.status === 'paused' ? '⏸️ Paused' : '❌ Dropped'}
-								</span>
+							<div class="enrollment-status-wrapper">
+								<EnrollmentStatus {enrollment} variant="badge" size="lg" />
+								
+								<!-- Course Progress -->
+								{#if lessons.length > 0}
+									<div class="course-progress-section">
+										<div class="progress-header">
+											<span class="progress-label">Course Progress</span>
+											<span class="progress-percentage">{getCourseProgressPercentage()}%</span>
+										</div>
+										<ProgressBar 
+											percentage={getCourseProgressPercentage()} 
+											size="lg" 
+											showLabel={false}
+										/>
+									</div>
+								{/if}
+								
 								{#if enrollment.status === 'active'}
 									<a href="/courses/{courseId}/lessons/{lessons[0]?.id}" class="btn-primary">
 										Continue Learning
@@ -224,36 +244,20 @@
 					<h2 class="section-title">Course Lessons</h2>
 					
 					{#if lessons.length === 0}
-						<div class="empty-state">
-							<div class="empty-icon">📝</div>
-							<p class="empty-text">No lessons available yet.</p>
-						</div>
+						<EmptyState 
+							title="No lessons available yet"
+							description="Lessons will be generated for this course."
+							icon="📝"
+						/>
 					{:else}
 						<div class="lessons-list">
 							{#each lessons as lesson, index}
-								<article class="lesson-card">
-									<div class="lesson-header">
-										<div class="lesson-number">
-											<span class="lesson-index">{index + 1}</span>
-										</div>
-										<div class="lesson-info">
-											<h3 class="lesson-title">{lesson.title}</h3>
-											<span class="lesson-duration">
-												⏱️ {formatDuration(lesson.estimated_duration)}
-											</span>
-										</div>
-									</div>
-									
-									<div class="lesson-content">
-										{lesson.content}
-									</div>
-									
-									<div class="lesson-footer">
-										<a href="/courses/{courseId}/lessons/{lesson.id}" class="btn-primary">
-											Start Lesson
-										</a>
-									</div>
-								</article>
+								<LessonCard 
+									{lesson}
+									lessonIndex={index}
+									actionText="Start Lesson"
+									actionHref="/courses/{courseId}/lessons/{lesson.id}"
+								/>
 							{/each}
 						</div>
 					{/if}
@@ -285,33 +289,6 @@
 		max-width: 1200px;
 		margin: 0 auto;
 		padding: 0 1rem;
-	}
-
-	/* Loading State */
-	.loading-state {
-		text-align: center;
-		padding: 4rem 0;
-	}
-
-	.loading-spinner {
-		display: inline-block;
-		width: 2rem;
-		height: 2rem;
-		border: 2px solid #E5E7EB;
-		border-top: 2px solid #0066FF;
-		border-radius: 50%;
-		animation: spin 1s linear infinite;
-		margin-bottom: 1rem;
-	}
-
-	.loading-text {
-		color: #6B7280;
-		font-size: 1rem;
-	}
-
-	@keyframes spin {
-		from { transform: rotate(0deg); }
-		to { transform: rotate(360deg); }
 	}
 
 	/* Error State */
@@ -355,40 +332,12 @@
 		gap: 1rem;
 		align-items: flex-end;
 	}
-	
-	.enrollment-status {
+
+	.enrollment-status-wrapper {
 		display: flex;
 		flex-direction: column;
 		gap: 0.5rem;
 		align-items: flex-end;
-	}
-	
-	.status-badge {
-		padding: 0.5rem 1rem;
-		border-radius: 9999px;
-		font-size: 0.875rem;
-		font-weight: 600;
-		text-transform: capitalize;
-	}
-	
-	.status-active {
-		background-color: #dbeafe;
-		color: #1e40af;
-	}
-	
-	.status-completed {
-		background-color: #dcfce7;
-		color: #166534;
-	}
-	
-	.status-paused {
-		background-color: #fef3c7;
-		color: #92400e;
-	}
-	
-	.status-dropped {
-		background-color: #fee2e2;
-		color: #991b1b;
 	}
 
 	.course-title {
@@ -456,97 +405,11 @@
 		margin-bottom: 1.5rem;
 	}
 
-	/* Empty State */
-	.empty-state {
-		text-align: center;
-		padding: 3rem 0;
-	}
-
-	.empty-icon {
-		font-size: 3rem;
-		margin-bottom: 1rem;
-		opacity: 0.5;
-	}
-
-	.empty-text {
-		color: #6B7280;
-		font-size: 1rem;
-	}
-
 	/* Lessons List */
 	.lessons-list {
 		display: flex;
 		flex-direction: column;
 		gap: 1.5rem;
-	}
-
-	.lesson-card {
-		border: 1px solid #E5E7EB;
-		border-radius: 0.5rem;
-		padding: 1.5rem;
-		transition: all 0.2s ease;
-	}
-
-	.lesson-card:hover {
-		box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-	}
-
-	.lesson-header {
-		display: flex;
-		justify-content: space-between;
-		align-items: flex-start;
-		margin-bottom: 1rem;
-		gap: 1rem;
-	}
-
-	.lesson-number {
-		flex-shrink: 0;
-	}
-
-	.lesson-index {
-		background-color: #DBEAFE;
-		color: #1E40AF;
-		border-radius: 50%;
-		width: 2rem;
-		height: 2rem;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		font-size: 0.875rem;
-		font-weight: 700;
-	}
-
-	.lesson-info {
-		flex: 1;
-		display: flex;
-		justify-content: space-between;
-		align-items: flex-start;
-		gap: 1rem;
-	}
-
-	.lesson-title {
-		font-size: 1.25rem;
-		font-weight: 600;
-		color: #1F2937;
-		margin: 0;
-		line-height: 1.3;
-	}
-
-	.lesson-duration {
-		font-size: 0.875rem;
-		color: #6B7280;
-		white-space: nowrap;
-	}
-
-	.lesson-content {
-		color: #6B7280;
-		line-height: 1.6;
-		margin-bottom: 1rem;
-	}
-
-	.lesson-footer {
-		padding-top: 1rem;
-		border-top: 1px solid #F3F4F6;
 	}
 
 	/* Action Buttons */
@@ -582,31 +445,30 @@
 		color: #991B1B;
 	}
 
-	.difficulty-default {
-		background-color: #F3F4F6;
-		color: #374151;
+	/* Course Progress Section */
+	.course-progress-section {
+		width: 100%;
+		margin-top: 1rem;
+		padding-top: 1rem;
+		border-top: 1px solid #E5E7EB;
 	}
 
-	/* Buttons */
-
-	.btn-secondary {
-		background-color: white;
-		color: #0066FF;
-		padding: 0.75rem 1.5rem;
-		border-radius: 0.5rem;
-		font-weight: 600;
-		border: 2px solid #0066FF;
-		transition: all 0.2s ease;
-		text-decoration: none;
-		display: inline-flex;
+	.progress-header {
+		display: flex;
+		justify-content: space-between;
 		align-items: center;
-		justify-content: center;
-		cursor: pointer;
+		margin-bottom: 0.5rem;
 	}
 
-	.btn-secondary:hover {
-		background-color: #0066FF;
-		color: white;
+	.progress-label {
+		font-size: 0.875rem;
+		color: #6B7280;
+	}
+
+	.progress-percentage {
+		font-size: 0.875rem;
+		font-weight: 600;
+		color: #1F2937;
 	}
 
 	/* Responsive Design */
@@ -620,18 +482,6 @@
 		}
 
 		.course-meta {
-			flex-direction: column;
-			align-items: flex-start;
-			gap: 0.5rem;
-		}
-
-		.lesson-header {
-			flex-direction: column;
-			align-items: flex-start;
-			gap: 0.75rem;
-		}
-
-		.lesson-info {
 			flex-direction: column;
 			align-items: flex-start;
 			gap: 0.5rem;

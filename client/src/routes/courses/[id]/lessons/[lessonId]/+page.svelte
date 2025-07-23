@@ -4,6 +4,7 @@
 	import { requireAuth } from '$lib/auth-guard';
 	import { getAuthToken } from '$lib/auth';
 	import type { Course, Lesson, Progress } from '$lib/types';
+	import { LoadingState, ProgressBar, LessonCard } from '$lib/components/ui';
 	
 	let course: Course | null = null;
 	let lesson: Lesson | null = null;
@@ -119,19 +120,6 @@
 		}
 	}
 	
-	function getDifficultyColor(difficulty: string): string {
-		switch (difficulty) {
-			case 'beginner':
-				return 'bg-green-100 text-green-800';
-			case 'intermediate':
-				return 'bg-yellow-100 text-yellow-800';
-			case 'advanced':
-				return 'bg-red-100 text-red-800';
-			default:
-				return 'bg-gray-100 text-gray-800';
-		}
-	}
-	
 	function formatDuration(minutes: number | null): string {
 		if (!minutes) return 'Self-paced';
 		const hours = Math.floor(minutes / 60);
@@ -220,19 +208,13 @@
 {#if !isAuthenticated}
 	<!-- Loading state while checking authentication -->
 	<div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 1rem;">
-		<div class="text-center py-12" style="text-align: center; padding: 3rem 0;">
-			<div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" style="display: inline-block; animation: spin 1s linear infinite; border-radius: 50%; height: 2rem; width: 2rem; border-bottom: 2px solid #2563eb;"></div>
-			<p class="mt-4 text-gray-600" style="margin-top: 1rem; color: #4b5563;">Checking authentication...</p>
-		</div>
+		<LoadingState message="Checking authentication..." />
 	</div>
 {:else}
 	<div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 1rem;">
 		<!-- Loading State -->
 		{#if loading}
-			<div class="text-center py-12" style="text-align: center; padding: 3rem 0;">
-				<div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" style="display: inline-block; animation: spin 1s linear infinite; border-radius: 50%; height: 2rem; width: 2rem; border-bottom: 2px solid #2563eb;"></div>
-				<p class="mt-4 text-gray-600" style="margin-top: 1rem; color: #4b5563;">Loading lesson...</p>
-			</div>
+			<LoadingState message="Loading lesson..." />
 		{:else if error}
 			<!-- Error State -->
 			<div class="text-center py-12" style="text-align: center; padding: 3rem 0;">
@@ -266,7 +248,7 @@
 						</h1>
 						
 						<div class="flex gap-4 items-center" style="display: flex; gap: 1rem; align-items: center;">
-							<span class="px-3 py-1 rounded-full text-sm font-medium {getDifficultyColor(course.difficulty)}" style="padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 500;">
+							<span class="px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800" style="padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 500; background: #d1fae5; color: #065f46;">
 								{course.difficulty}
 							</span>
 							<span class="text-gray-500" style="color: #6b7280;">
@@ -285,15 +267,12 @@
 				</div>
 				
 				<!-- Progress Bar -->
-				<div class="w-full bg-gray-200 rounded-full h-2 mb-4" style="width: 100%; background: #e5e7eb; border-radius: 9999px; height: 0.5rem; margin-bottom: 1rem;">
-					<div 
-						class="bg-blue-600 h-2 rounded-full transition-all duration-300" 
-						style="background: #2563eb; height: 0.5rem; border-radius: 9999px; transition: width 0.3s ease; width: {getProgressPercentage()}%;"
-					></div>
-				</div>
-				<div class="text-sm text-gray-600" style="font-size: 0.875rem; color: #4b5563;">
-					{Math.round(getProgressPercentage())}% Complete
-				</div>
+				<ProgressBar 
+					percentage={getProgressPercentage()}
+					label="Course Progress"
+					size="md"
+					animated={true}
+				/>
 			</div>
 
 			<!-- Lesson Content -->
@@ -455,87 +434,10 @@
 {/if}
 
 <style>
-	@keyframes spin {
-		from {
-			transform: rotate(0deg);
-		}
-		to {
-			transform: rotate(360deg);
-		}
-	}
-	
 	.prose {
 		color: #374151;
 		line-height: 1.7;
 	}
 	
-	.prose h1 {
-		font-size: 2rem;
-		font-weight: 700;
-		color: #111827;
-		margin-top: 2rem;
-		margin-bottom: 1rem;
-		border-bottom: 2px solid #e5e7eb;
-		padding-bottom: 0.5rem;
-	}
-	
-	.prose h2 {
-		font-size: 1.5rem;
-		font-weight: 600;
-		color: #111827;
-		margin-top: 1.5rem;
-		margin-bottom: 0.75rem;
-	}
-	
-	.prose h3 {
-		font-size: 1.25rem;
-		font-weight: 600;
-		color: #111827;
-		margin-top: 1.25rem;
-		margin-bottom: 0.5rem;
-	}
-	
-	.prose p {
-		margin-bottom: 1rem;
-	}
-	
-	.prose ul, .prose ol {
-		margin-bottom: 1rem;
-		padding-left: 1.5rem;
-	}
-	
-	.prose li {
-		margin-bottom: 0.5rem;
-	}
-	
-	.prose code {
-		background: #f3f4f6;
-		padding: 0.125rem 0.25rem;
-		border-radius: 0.25rem;
-		font-size: 0.875em;
-		font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-	}
-	
-	.prose pre {
-		background: #1f2937;
-		color: #f9fafb;
-		padding: 1rem;
-		border-radius: 0.5rem;
-		overflow-x: auto;
-		margin-bottom: 1rem;
-	}
-	
-	.prose pre code {
-		background: none;
-		padding: 0;
-		color: inherit;
-	}
-	
-	.prose blockquote {
-		border-left: 4px solid #e5e7eb;
-		padding-left: 1rem;
-		margin: 1rem 0;
-		font-style: italic;
-		color: #6b7280;
-	}
+
 </style> 
