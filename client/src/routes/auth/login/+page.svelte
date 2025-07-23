@@ -100,22 +100,7 @@
 		position: relative;
 	}
 
-	.auth-header {
-		text-align: center;
-		margin-bottom: 2rem;
-	}
-
-	.auth-header h1 {
-		font-size: var(--text-2xl);
-		font-weight: var(--font-weight-bold);
-		color: var(--color-gray-900);
-		margin-bottom: 0.5rem;
-	}
-
-	.auth-header p {
-		color: var(--color-gray-600);
-		font-size: var(--text-sm);
-	}
+	/* Using consolidated auth header styles from design-system.css */
 
 	.error-message {
 		background: var(--color-error-50);

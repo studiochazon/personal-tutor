@@ -246,7 +246,7 @@ Remember: Your goal is to create transformative learning experiences that empowe
 </svelte:head>
 
 <div class="container">
-	<div class="header">
+	<div class="page-header">
 		<h1>Create Your Course</h1>
 		<p>Describe what you want to teach and AI will create a comprehensive course for you</p>
 	</div>
@@ -350,22 +350,7 @@ Remember: Your goal is to create transformative learning experiences that empowe
 		min-height: 100vh;
 	}
 
-	.header {
-		text-align: center;
-		margin-bottom: 40px;
-	}
-
-	.header h1 {
-		color: var(--color-gray-800);
-		margin-bottom: var(--spacing-2);
-		font-size: 2.5rem;
-	}
-
-	.header p {
-		color: var(--color-gray-500);
-		margin: 0;
-		font-size: 1.1rem;
-	}
+	/* Using consolidated header styles from design-system.css */
 
 	.form-container {
 		display: grid;
@@ -555,7 +540,7 @@ Remember: Your goal is to create transformative learning experiences that empowe
 			gap: 20px;
 		}
 		
-		.header h1 {
+		.page-header h1 {
 			font-size: 2rem;
 		}
 		

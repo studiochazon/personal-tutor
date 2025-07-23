@@ -134,22 +134,7 @@
 		min-height: calc(100vh - 200px);
 	}
 
-	.profile-header {
-		text-align: center;
-		margin-bottom: 2rem;
-	}
-
-	.profile-header h1 {
-		font-size: var(--text-3xl);
-		font-weight: var(--font-weight-bold);
-		color: var(--color-gray-900);
-		margin-bottom: 0.5rem;
-	}
-
-	.profile-header p {
-		color: var(--color-gray-600);
-		font-size: var(--text-lg);
-	}
+	/* Using consolidated profile header styles from design-system.css */
 
 	.profile-content {
 		max-width: 600px;

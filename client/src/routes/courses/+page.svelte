@@ -77,10 +77,10 @@
 
 <div class="page-container">
 	<!-- Header Section -->
-	<header class="page-header">
-		<div class="header-content">
-			<h1 class="page-title">All Courses</h1>
-			<p class="page-subtitle">
+	<header class="hero-header">
+		<div class="hero-header-content">
+			<h1 class="hero-title">All Courses</h1>
+			<p class="hero-subtitle">
 				Explore our comprehensive collection of courses designed to help you master new skills and advance your career.
 			</p>
 		</div>
@@ -190,34 +190,7 @@
 		background-color: var(--color-gray-50);
 	}
 
-	/* Header Section */
-	.page-header {
-		background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
-		padding: var(--spacing-16) 0;
-		color: white;
-		text-align: center;
-	}
-
-	.header-content {
-		max-width: 1200px;
-		margin: 0 auto;
-		padding: 0 1rem;
-	}
-
-	.page-title {
-		font-size: 3rem;
-		font-weight: 700;
-		margin-bottom: 1rem;
-		line-height: 1.2;
-	}
-
-	.page-subtitle {
-		font-size: 1.25rem;
-		opacity: 0.9;
-		max-width: 48rem;
-		margin: 0 auto;
-		line-height: 1.6;
-	}
+	/* Using consolidated hero header styles from design-system.css */
 
 	/* Filters Section */
 	.filters-section {

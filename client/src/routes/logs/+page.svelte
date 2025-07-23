@@ -91,7 +91,7 @@
 </svelte:head>
 
 <div class="container">
-	<div class="header">
+	<div class="page-header">
 		<h1>LLM Response Logs</h1>
 		<p>Monitor and analyze AI responses and usage statistics</p>
 	</div>
@@ -213,20 +213,7 @@
 		padding: 20px;
 	}
 
-	.header {
-		text-align: center;
-		margin-bottom: 30px;
-	}
-
-	.header h1 {
-		color: var(--color-gray-800);
-		margin-bottom: var(--spacing-2);
-	}
-
-	.header p {
-		color: var(--color-gray-500);
-		margin: 0;
-	}
+	/* Using consolidated header styles from design-system.css */
 
 	.error-message {
 		background-color: var(--color-error-light);
