@@ -196,7 +196,7 @@
 						<strong>Error:</strong>
 						<span>{error}</span>
 					</div>
-					<button on:click={loadCourses} class="btn-primary">
+					<button on:click={loadCourses} class="btn btn-primary">
 						Try Again
 					</button>
 				</div>

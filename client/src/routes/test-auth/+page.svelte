@@ -83,21 +83,5 @@
 		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 	}
 	
-	.btn {
-		display: inline-block;
-		padding: 0.5rem 1rem;
-		border-radius: 0.25rem;
-		text-decoration: none;
-		font-weight: 500;
-	}
-	
-	.btn-primary {
-		background: #0066ff;
-		color: white;
-	}
-	
-	.btn-secondary {
-		background: #6b7280;
-		color: white;
-	}
+	/* Button styles are now imported from the consolidated buttons.css */
 </style> 

@@ -319,10 +319,9 @@ Remember: Your goal is to create transformative learning experiences that empowe
 				<button 
 					on:click={createCourse} 
 					disabled={!userPrompt.trim() || isLoading}
-					class="create-button"
+					class="btn btn-primary btn-lg create-button {isLoading ? 'btn-loading' : ''}"
 				>
 					{#if isLoading}
-						<div class="loading-spinner"></div>
 						Creating Course...
 					{:else}
 						Create Course
@@ -331,8 +330,8 @@ Remember: Your goal is to create transformative learning experiences that empowe
 
 				<button 
 					on:click={testDbConnection} 
-					class="test-button"
-					style="margin-top: 10px; background-color: #28a745;"
+					class="btn btn-success"
+					style="margin-top: 10px;"
 				>
 					Test DB Connection & Write
 				</button>
@@ -455,39 +454,10 @@ Remember: Your goal is to create transformative learning experiences that empowe
 
 	.create-button {
 		width: 100%;
-		background: var(--color-primary);
-		color: white;
-		border: none;
-		padding: var(--spacing-4) var(--spacing-6);
-		border-radius: var(--radius-lg);
-		font-size: 16px;
-		font-weight: 600;
-		cursor: pointer;
-		transition: background-color 0.2s;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		gap: var(--spacing-2);
 		margin-top: var(--spacing-5);
 	}
 
-	.create-button:hover:not(:disabled) {
-		background: var(--color-primary-dark);
-	}
-
-	.create-button:disabled {
-		background: var(--color-gray-400);
-		cursor: not-allowed;
-	}
-
-	.loading-spinner {
-		width: 20px;
-		height: 20px;
-		border: 2px solid #ffffff;
-		border-top: 2px solid transparent;
-		border-radius: 50%;
-		animation: spin 1s linear infinite;
-	}
+	/* Loading spinner is now handled by the consolidated button styles */
 
 	@keyframes spin {
 		0% { transform: rotate(0deg); }

@@ -175,10 +175,10 @@
 						on:change={loadLogs}
 						class="date-input"
 					/>
-					<button on:click={loadLogs} disabled={loading} class="refresh-btn">
+					<button on:click={loadLogs} disabled={loading} class="btn btn-primary refresh-btn {loading ? 'btn-loading' : ''}">
 						{loading ? 'Loading...' : 'Refresh'}
 					</button>
-					<button on:click={exportLogs} class="export-btn">
+					<button on:click={exportLogs} class="btn btn-success export-btn">
 						Export All
 					</button>
 				</div>
@@ -363,34 +363,7 @@
 	}
 
 	.refresh-btn, .export-btn {
-		padding: var(--spacing-2) var(--spacing-4);
-		border: none;
-		border-radius: var(--radius-base);
-		cursor: pointer;
 		font-size: 0.9rem;
-	}
-
-	.refresh-btn {
-		background: var(--color-primary);
-		color: white;
-	}
-
-	.refresh-btn:hover {
-		background: var(--color-primary-dark);
-	}
-
-	.refresh-btn:disabled {
-		background: var(--color-gray-400);
-		cursor: not-allowed;
-	}
-
-	.export-btn {
-		background: var(--color-success);
-		color: white;
-	}
-
-	.export-btn:hover {
-		background: var(--color-success-dark);
 	}
 
 	.loading {

@@ -224,8 +224,8 @@
 				</div>
 				<button
 					on:click={loadLesson}
-					class="mt-4 btn btn-primary"
-					style="margin-top: 1rem; display: inline-flex; align-items: center; justify-content: center; padding: 0.75rem 1.5rem; border-radius: 0.5rem; font-weight: 600; text-decoration: none; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;"
+					class="btn btn-primary"
+					style="margin-top: 1rem;"
 				>
 					Try Again
 				</button>
@@ -343,8 +343,7 @@
 							<button 
 								on:click={markLessonComplete}
 								disabled={markingComplete}
-								class="btn btn-success flex items-center gap-2"
-								style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; border-radius: 0.5rem; font-weight: 600; text-decoration: none; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; border: none; cursor: pointer;"
+								class="btn btn-success {markingComplete ? 'btn-loading' : ''}"
 							>
 								{markingComplete ? 'Marking...' : '✅ Mark Complete'}
 							</button>
@@ -362,8 +361,7 @@
 				{#if getPreviousLesson()}
 					<a 
 						href="/courses/{course.id}/lessons/{getPreviousLesson()!.id}" 
-						class="btn btn-secondary flex items-center gap-2"
-						style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; border-radius: 0.5rem; font-weight: 600; text-decoration: none; background: #f3f4f6; color: #374151; border: 1px solid #d1d5db;"
+						class="btn btn-secondary"
 					>
 						← Previous Lesson
 					</a>
@@ -374,15 +372,13 @@
 				{#if getNextLesson()}
 					<a 
 						href="/courses/{course.id}/lessons/{getNextLesson()!.id}" 
-						class="btn btn-primary flex items-center gap-2"
-						style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; border-radius: 0.5rem; font-weight: 600; text-decoration: none; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;"
+						class="btn btn-primary"
 					>
 						Next Lesson →
 					</a>
 				{:else}
 					<button 
-						class="btn btn-success flex items-center gap-2"
-						style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; border-radius: 0.5rem; font-weight: 600; text-decoration: none; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; border: none; cursor: pointer;"
+						class="btn btn-success"
 					>
 						🎉 Complete Course
 					</button>
@@ -422,10 +418,10 @@
 			
 			<!-- Action Buttons -->
 			<div class="flex justify-center gap-4 mt-8" style="display: flex; justify-content: center; gap: 1rem; margin-top: 2rem;">
-				<a href="/courses/{course.id}" class="btn btn-secondary" style="display: inline-flex; align-items: center; justify-content: center; padding: 0.75rem 1.5rem; border-radius: 0.5rem; font-weight: 600; text-decoration: none; background: #f3f4f6; color: #374151; border: 1px solid #d1d5db;">
+				<a href="/courses/{course.id}" class="btn btn-secondary">
 					← Back to Course
 				</a>
-				<a href="/courses" class="btn btn-secondary" style="display: inline-flex; align-items: center; justify-content: center; padding: 0.75rem 1.5rem; border-radius: 0.5rem; font-weight: 600; text-decoration: none; background: #f3f4f6; color: #374151; border: 1px solid #d1d5db;">
+				<a href="/courses" class="btn btn-secondary">
 					All Courses
 				</a>
 			</div>

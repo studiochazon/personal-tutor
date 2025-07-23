@@ -407,53 +407,7 @@ body {
 	font-size: 0.875rem;
 }
 
-/* Button styles */
-.btn {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	padding: var(--spacing-3) var(--spacing-6);
-	border-radius: var(--radius-lg);
-	font-weight: 600;
-	text-decoration: none;
-	transition: all 0.2s ease;
-	cursor: pointer;
-	border: none;
-	font-size: 1rem;
-}
-
-
-
-.btn-secondary {
-	background-color: white;
-	color: var(--color-primary);
-	border: 2px solid var(--color-primary);
-}
-
-.btn-secondary:hover {
-	background-color: var(--color-primary);
-	color: white;
-}
-
-.btn-ghost {
-	background-color: transparent;
-	color: var(--color-secondary);
-	padding: var(--spacing-3) var(--spacing-6);
-	border-radius: var(--radius-lg);
-	font-weight: 500;
-	border: none;
-	transition: all 0.2s ease;
-}
-
-.btn-ghost:hover {
-	background-color: var(--color-gray-100);
-	color: var(--color-gray-700);
-}
-
-.btn-lg {
-	padding: var(--spacing-4) var(--spacing-8);
-	font-size: 1.125rem;
-}
+/* Button styles are now imported from ./buttons.css */
 
 /* Card styles */
 .card {

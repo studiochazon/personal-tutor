@@ -65,17 +65,7 @@
   /* -------------------------------------- */
   /* Buttons                                */
   /* -------------------------------------- */
-  .btn{display:inline-flex;align-items:center;justify-content:center;gap:0.25rem;padding:0.75rem 1.5rem;font-weight:600;font-size:var(--fs-400);border-radius:var(--radius);border:1px solid transparent;cursor:pointer;transition:background-color var(--transition),border-color var(--transition),transform 0.1s ease;user-select:none;text-decoration:none;}
-  
-  .btn-primary{background-color:var(--color-primary);color:#fff;border-color:var(--color-primary);} 
-  .btn-primary:hover{background-color:var(--color-primary-hover);} 
-  .btn-primary:active{background-color:var(--color-primary-active);transform:scale(0.97);} 
-  
-  .btn-secondary{background-color:transparent;color:var(--color-text);border-color:var(--color-border);} 
-  .btn-secondary:hover{background-color:#f7f7f8;} 
-  .btn-secondary:active{background-color:#efeff0;transform:scale(0.97);} 
-  
-  .btn-lg{padding:1rem 2rem;font-size:1.125rem;} 
+  /* Button styles are now imported from the consolidated buttons.css */
   
   /* -------------------------------------- */
   /* Forms                                  */

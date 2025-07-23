@@ -1,6 +1,7 @@
 <script lang="ts">
 	import '../minimal.css';
 	import '../styles/design-system.css';
+	import '../styles/buttons.scss';
 	import { onMount } from 'svelte';
 	import { authStore, initAuth, logout } from '$lib/auth';
 	import { goto } from '$app/navigation';

@@ -168,7 +168,7 @@
 					<strong>Error:</strong>
 					<span>{error}</span>
 				</div>
-				<button on:click={loadCourse} class="btn-primary">
+				<button on:click={loadCourse} class="btn btn-primary">
 					Try Again
 				</button>
 			</div>
@@ -214,7 +214,7 @@
 								{/if}
 								
 								{#if enrollment.status === 'active'}
-									<a href="/courses/{courseId}/lessons/{lessons[0]?.id}" class="btn-primary">
+									<a href="/courses/{courseId}/lessons/{lessons[0]?.id}" class="btn btn-primary">
 										Continue Learning
 									</a>
 								{/if}
@@ -223,7 +223,7 @@
 							<button 
 								on:click={enrollInCourse} 
 								disabled={enrolling}
-								class="btn-primary"
+								class="btn btn-primary {enrolling ? 'btn-loading' : ''}"
 							>
 								{enrolling ? 'Enrolling...' : 'Enroll in Course'}
 							</button>

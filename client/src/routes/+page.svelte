@@ -94,13 +94,13 @@
 			Create custom learning paths tailored to your goals. Learn smarter, not harder, with AI-powered recommendations and interactive lessons.
 		</p>
 		<div class="hero-buttons">
-			<a href="/courses" class="btn-primary btn-large">
+			<a href="/courses" class="btn btn-primary btn-lg">
 				Start Learning
 			</a>
-			<a href="/start" class="btn-secondary btn-large">
+			<a href="/start" class="btn btn-secondary btn-lg">
 				Create Course
 			</a>
-			<a href="/auth/register" class="btn-ghost btn-large">
+			<a href="/auth/register" class="btn btn-ghost btn-lg">
 				Get Started Free
 			</a>
 		</div>
@@ -177,7 +177,7 @@
 								<span class="course-duration">
 									⏱️ {formatDuration(course.estimated_duration)}
 								</span>
-								<a href="/courses/{course.id}" class="btn-secondary">
+								<a href="/courses/{course.id}" class="btn btn-secondary">
 									Start Course
 								</a>
 							</div>
@@ -203,10 +203,10 @@
 			Join thousands of learners who are already accelerating their growth with Personal Tutor AI.
 		</p>
 		<div class="cta-buttons">
-			<a href="/auth/register" class="btn-primary btn-large">
+			<a href="/auth/register" class="btn btn-primary btn-lg">
 				Create Free Account
 			</a>
-			<a href="/courses" class="btn-secondary btn-large">
+			<a href="/courses" class="btn btn-secondary btn-lg">
 				Browse Courses
 			</a>
 		</div>
@@ -544,52 +544,7 @@
 		color: #374151;
 	}
 
-	/* Buttons */
-
-	.btn-secondary {
-		background-color: white;
-		color: #0066FF;
-		padding: 0.75rem 1.5rem;
-		border-radius: 0.5rem;
-		font-weight: 600;
-		border: 2px solid #0066FF;
-		transition: all 0.2s ease;
-		text-decoration: none;
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		cursor: pointer;
-	}
-
-	.btn-secondary:hover {
-		background-color: #0066FF;
-		color: white;
-	}
-
-	.btn-ghost {
-		background-color: transparent;
-		color: white;
-		padding: 0.75rem 1.5rem;
-		border-radius: 0.5rem;
-		font-weight: 500;
-		border: 2px solid rgba(255, 255, 255, 0.2);
-		transition: all 0.2s ease;
-		text-decoration: none;
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		cursor: pointer;
-	}
-
-	.btn-ghost:hover {
-		background-color: rgba(255, 255, 255, 0.1);
-		border-color: rgba(255, 255, 255, 0.3);
-	}
-
-	.btn-large {
-		padding: 1rem 2rem;
-		font-size: 1.125rem;
-	}
+	/* Button styles are now imported from the consolidated buttons.css */
 
 	/* Loading State */
 	.loading-state {
