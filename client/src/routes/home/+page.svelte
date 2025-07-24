@@ -41,20 +41,26 @@
 	
 	async function loadInProgressCourses() {
 		try {
-			// For now, we'll fetch all courses and filter for unpublished ones
-			// In the future, this should be a dedicated endpoint for user's in-progress courses
-			const response = await fetch('/api/courses?limit=20');
+			const token = getAuthToken();
+			if (!token) {
+				loading = false;
+				return;
+			}
+			
+			// Fetch user's in-progress courses with progress information
+			const response = await fetch('/api/courses/in-progress', {
+				headers: {
+					'Authorization': `Bearer ${token}`
+				}
+			});
 			const data = await response.json();
 			
 			if (response.ok) {
-				// Filter for unpublished courses (in-progress)
-				inProgressCourses = data.courses
-					.filter((course: Course) => !course.is_published)
-					.slice(0, 5); // Max 5 courses
+				inProgressCourses = data.courses.slice(0, 5); // Max 5 courses
 				
-				// Calculate progress for each course
+				// Set progress from the API response
 				for (const course of inProgressCourses) {
-					courseProgress[course.id] = await calculateProgress(course);
+					courseProgress[course.id] = course.progress_percentage || 0;
 				}
 			}
 		} catch (error) {
@@ -178,32 +184,7 @@ Each lesson should follow this structure:
 		}
 	}
 	
-	async function calculateProgress(course: Course): Promise<number> {
-		try {
-			const token = getAuthToken();
-			if (!token) return 0;
-			
-			const response = await fetch(`/api/courses/${course.id}/progress`, {
-				headers: {
-					'Authorization': `Bearer ${token}`
-				}
-			});
-			
-			if (response.ok) {
-				const data = await response.json();
-				const { lessons, progress } = data.course_progress;
-				
-				if (lessons.length === 0) return 0;
-				
-				const completedLessons = progress.filter((p: any) => p.completed).length;
-				return Math.round((completedLessons / lessons.length) * 100);
-			}
-		} catch (err) {
-			console.error('Error calculating progress:', err);
-		}
-		
-		return 0;
-	}
+
 	
 	function handleKeyPress(event: KeyboardEvent) {
 		if (event.key === 'Enter' && !event.shiftKey) {
@@ -241,11 +222,11 @@ Each lesson should follow this structure:
 			{:else if inProgressCourses.length === 0}
 				<!-- Empty State -->
 				<EmptyState 
-					title="You have no drafts yet"
-					description="Start creating your first course to begin your teaching journey"
-					icon="📝"
-					actionText="+ Start"
-					actionHref="/start"
+					title="No courses in progress"
+					description="Enroll in a course to start learning and track your progress"
+					icon="📚"
+					actionText="Browse Courses"
+					actionHref="/courses"
 				/>
 			{:else}
 				<!-- Horizontal Scroll List -->

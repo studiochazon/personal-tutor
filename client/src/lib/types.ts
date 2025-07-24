@@ -26,6 +26,13 @@ export interface Course {
   is_published: boolean;
   created_at: string;
   updated_at: string;
+  // Additional fields for in-progress courses
+  enrollment_status?: 'active' | 'completed' | 'paused' | 'dropped';
+  enrolled_at?: string;
+  enrollment_completed_at?: string | null;
+  total_lessons?: number;
+  completed_lessons?: number;
+  progress_percentage?: number;
 }
 
 export interface Lesson {
