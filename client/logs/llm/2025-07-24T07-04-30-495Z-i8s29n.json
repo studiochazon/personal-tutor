@@ -1,0 +1,79 @@
+{
+  "id": "2025-07-24T07-04-30-495Z-i8s29n",
+  "timestamp": "2025-07-24T07:04:30.495Z",
+  "request": {
+    "model": "gpt-4",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a course generation assistant. You must respond with ONLY valid JSON. Do not include any explanatory text, markdown formatting, or additional content outside the JSON object."
+      },
+      {
+        "role": "user",
+        "content": "You are an expert educational content creator. Based on the user's request below, create a comprehensive course structure.\n\nUser Request: \"theology\"\n\nGenerate a course with the following JSON structure (respond ONLY with valid JSON, no additional text):\n\n{\n  \"title\": \"Engaging and descriptive course title\",\n  \"description\": \"Comprehensive overview of what learners will gain from this course\",\n  \"difficulty\": \"beginner|intermediate|advanced\",\n  \"estimated_duration\": number in minutes,\n  \"lessons\": [\n    {\n      \"title\": \"Clear lesson title\",\n      \"content\": \"Comprehensive lesson content with clear structure, examples, and practical exercises. Use markdown formatting for better readability.\",\n      \"order_index\": number,\n      \"estimated_duration\": number in minutes,\n      \"video_url\": \"YouTube embed URL (https://www.youtube.com/embed/VIDEO_ID)\",\n      \"video_title\": \"Title of the video content\",\n      \"video_duration\": number in seconds\n    }\n  ]\n}\n\nGuidelines:\n- Create 5-10 lessons depending on topic complexity\n- Each lesson should be 10-30 minutes of content\n- Include practical examples and exercises\n- Use clear, engaging language\n- Structure content logically from basic to advanced concepts\n- Ensure the difficulty level matches the content\n- **IMPORTANT**: Include relevant video sources for each lesson when they would enhance learning\n- Choose high-quality educational videos from YouTube\n- **CRITICAL**: Always use YouTube embed URLs (https://www.youtube.com/embed/VIDEO_ID) NOT regular YouTube URLs\n- Video duration should be appropriate (2-15 minutes for most lessons)"
+      }
+    ],
+    "max_tokens": 3000,
+    "temperature": 0.3,
+    "user_prompt": "theology",
+    "timestamp": "2025-07-24T07:04:30.495Z"
+  },
+  "response": {
+    "content": "{\n  \"title\": \"Introduction to Theology: Exploring Faith and Belief Systems\",\n  \"description\": \"This course offers a comprehensive exploration of theology, providing learners with an understanding of various religious beliefs, doctrines, and traditions. It is designed to foster critical thinking and enhance knowledge about the world's major religions.\",\n  \"difficulty\": \"beginner\",\n  \"estimated_duration\": 300,\n  \"lessons\": [\n    {\n      \"title\": \"Introduction to Theology\",\n      \"content\": \"This lesson provides an overview of theology, its importance, and its various branches. It includes a brief history of theology and its role in society.\",\n      \"order_index\": 1,\n      \"estimated_duration\": 30,\n      \"video_url\": \"https://www.youtube.com/embed/VIDEO_ID1\",\n      \"video_title\": \"What is Theology?\",\n      \"video_duration\": 600\n    },\n    {\n      \"title\": \"Christian Theology\",\n      \"content\": \"This lesson explores Christian theology, its key concepts, and its influence on Western society. It includes a discussion on the Trinity, salvation, and the Bible.\",\n      \"order_index\": 2,\n      \"estimated_duration\": 30,\n      \"video_url\": \"https://www.youtube.com/embed/VIDEO_ID2\",\n      \"video_title\": \"Understanding Christian Theology\",\n      \"video_duration\": 720\n    },\n    {\n      \"title\": \"Islamic Theology\",\n      \"content\": \"This lesson delves into Islamic theology, discussing the core beliefs of Islam, the concept of God in Islam, and the role of the Quran.\",\n      \"order_index\": 3,\n      \"estimated_duration\": 30,\n      \"video_url\": \"https://www.youtube.com/embed/VIDEO_ID3\",\n      \"video_title\": \"Exploring Islamic Theology\",\n      \"video_duration\": 900\n    },\n    {\n      \"title\": \"Hindu Theology\",\n      \"content\": \"This lesson explores Hindu theology, its key concepts, and its influence on Indian society. It includes a discussion on Dharma, Karma, and the Vedas.\",\n      \"order_index\": 4,\n      \"estimated_duration\": 30,\n      \"video_url\": \"https://www.youtube.com/embed/VIDEO_ID4\",\n      \"video_title\": \"Understanding Hindu Theology\",\n      \"video_duration\": 720\n    },\n    {\n      \"title\": \"Buddhist Theology\",\n      \"content\": \"This lesson delves into Buddhist theology, discussing the core beliefs of Buddhism, the concept of enlightenment, and the role of the sutras.\",\n      \"order_index\": 5,\n      \"estimated_duration\": 30,\n      \"video_url\": \"https://www.youtube.com/embed/VIDEO_ID5\",\n      \"video_title\": \"Exploring Buddhist Theology\",\n      \"video_duration\": 900\n    },\n    {\n      \"title\": \"Comparative Theology\",\n      \"content\": \"This lesson provides a comparative analysis of the theologies discussed, highlighting similarities and differences. It encourages critical thinking and respect for religious diversity.\",\n      \"order_index\": 6,\n      \"estimated_duration\": 30,\n      \"video_url\": \"https://www.youtube.com/embed/VIDEO_ID6\",\n      \"video_title\": \"Comparative Theology: Understanding Religious Diversity\",\n      \"video_duration\": 900\n    },\n    {\n      \"title\": \"Theology and Society\",\n      \"content\": \"This lesson explores the impact of theology on society, culture, politics, and ethics. It encourages learners to reflect on the role of religion in contemporary society.\",\n      \"order_index\": 7,\n      \"estimated_duration\": 30,\n      \"video_url\": \"https://www.youtube.com/embed/VIDEO_ID7\",\n      \"video_title\": \"Theology and Society: The Impact of Religion\",\n      \"video_duration\": 900\n    },\n    {\n      \"title\": \"The Future of Theology\",\n      \"content\": \"This lesson discusses the future of theology in a globalized, pluralistic world. It encourages learners to think about the role of theology in promoting peace and understanding.\",\n      \"order_index\": 8,\n      \"estimated_duration\": 30,\n      \"video_url\": \"https://www.youtube.com/embed/VIDEO_ID8\",\n      \"video_title\": \"The Future of Theology: Challenges and Opportunities\",\n      \"video_duration\": 900\n    }\n  ]\n}",
+    "usage": {
+      "prompt_tokens": 376,
+      "completion_tokens": 913,
+      "total_tokens": 1289,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "model": "gpt-4-0613",
+    "finish_reason": "stop",
+    "raw_response": {
+      "id": "chatcmpl-BwkHc0RIwxkquRoTtY9KPmczTOTrt",
+      "object": "chat.completion",
+      "created": 1753340636,
+      "model": "gpt-4-0613",
+      "choices": [
+        {
+          "index": 0,
+          "message": {
+            "role": "assistant",
+            "content": "{\n  \"title\": \"Introduction to Theology: Exploring Faith and Belief Systems\",\n  \"description\": \"This course offers a comprehensive exploration of theology, providing learners with an understanding of various religious beliefs, doctrines, and traditions. It is designed to foster critical thinking and enhance knowledge about the world's major religions.\",\n  \"difficulty\": \"beginner\",\n  \"estimated_duration\": 300,\n  \"lessons\": [\n    {\n      \"title\": \"Introduction to Theology\",\n      \"content\": \"This lesson provides an overview of theology, its importance, and its various branches. It includes a brief history of theology and its role in society.\",\n      \"order_index\": 1,\n      \"estimated_duration\": 30,\n      \"video_url\": \"https://www.youtube.com/embed/VIDEO_ID1\",\n      \"video_title\": \"What is Theology?\",\n      \"video_duration\": 600\n    },\n    {\n      \"title\": \"Christian Theology\",\n      \"content\": \"This lesson explores Christian theology, its key concepts, and its influence on Western society. It includes a discussion on the Trinity, salvation, and the Bible.\",\n      \"order_index\": 2,\n      \"estimated_duration\": 30,\n      \"video_url\": \"https://www.youtube.com/embed/VIDEO_ID2\",\n      \"video_title\": \"Understanding Christian Theology\",\n      \"video_duration\": 720\n    },\n    {\n      \"title\": \"Islamic Theology\",\n      \"content\": \"This lesson delves into Islamic theology, discussing the core beliefs of Islam, the concept of God in Islam, and the role of the Quran.\",\n      \"order_index\": 3,\n      \"estimated_duration\": 30,\n      \"video_url\": \"https://www.youtube.com/embed/VIDEO_ID3\",\n      \"video_title\": \"Exploring Islamic Theology\",\n      \"video_duration\": 900\n    },\n    {\n      \"title\": \"Hindu Theology\",\n      \"content\": \"This lesson explores Hindu theology, its key concepts, and its influence on Indian society. It includes a discussion on Dharma, Karma, and the Vedas.\",\n      \"order_index\": 4,\n      \"estimated_duration\": 30,\n      \"video_url\": \"https://www.youtube.com/embed/VIDEO_ID4\",\n      \"video_title\": \"Understanding Hindu Theology\",\n      \"video_duration\": 720\n    },\n    {\n      \"title\": \"Buddhist Theology\",\n      \"content\": \"This lesson delves into Buddhist theology, discussing the core beliefs of Buddhism, the concept of enlightenment, and the role of the sutras.\",\n      \"order_index\": 5,\n      \"estimated_duration\": 30,\n      \"video_url\": \"https://www.youtube.com/embed/VIDEO_ID5\",\n      \"video_title\": \"Exploring Buddhist Theology\",\n      \"video_duration\": 900\n    },\n    {\n      \"title\": \"Comparative Theology\",\n      \"content\": \"This lesson provides a comparative analysis of the theologies discussed, highlighting similarities and differences. It encourages critical thinking and respect for religious diversity.\",\n      \"order_index\": 6,\n      \"estimated_duration\": 30,\n      \"video_url\": \"https://www.youtube.com/embed/VIDEO_ID6\",\n      \"video_title\": \"Comparative Theology: Understanding Religious Diversity\",\n      \"video_duration\": 900\n    },\n    {\n      \"title\": \"Theology and Society\",\n      \"content\": \"This lesson explores the impact of theology on society, culture, politics, and ethics. It encourages learners to reflect on the role of religion in contemporary society.\",\n      \"order_index\": 7,\n      \"estimated_duration\": 30,\n      \"video_url\": \"https://www.youtube.com/embed/VIDEO_ID7\",\n      \"video_title\": \"Theology and Society: The Impact of Religion\",\n      \"video_duration\": 900\n    },\n    {\n      \"title\": \"The Future of Theology\",\n      \"content\": \"This lesson discusses the future of theology in a globalized, pluralistic world. It encourages learners to think about the role of theology in promoting peace and understanding.\",\n      \"order_index\": 8,\n      \"estimated_duration\": 30,\n      \"video_url\": \"https://www.youtube.com/embed/VIDEO_ID8\",\n      \"video_title\": \"The Future of Theology: Challenges and Opportunities\",\n      \"video_duration\": 900\n    }\n  ]\n}",
+            "refusal": null,
+            "annotations": []
+          },
+          "logprobs": null,
+          "finish_reason": "stop"
+        }
+      ],
+      "usage": {
+        "prompt_tokens": 376,
+        "completion_tokens": 913,
+        "total_tokens": 1289,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "audio_tokens": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "audio_tokens": 0,
+          "accepted_prediction_tokens": 0,
+          "rejected_prediction_tokens": 0
+        }
+      },
+      "service_tier": "default",
+      "system_fingerprint": null
+    }
+  },
+  "success": true,
+  "duration_ms": 34336
+}

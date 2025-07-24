@@ -51,7 +51,7 @@
 				<li><a href="/home" class="nav-link">Home</a></li>
 				<li><a href="/courses" class="nav-link">Courses</a></li>
 				{#if user}
-					<li><a href="/start" class="nav-link">Create Course</a></li>
+					<li><a href="/home" class="nav-link">Create Course</a></li>
 					<li class="nav-user">
 						<div class="user-menu">
 							<button class="user-button" aria-label="User menu">
@@ -103,7 +103,7 @@
 					<h4>Product</h4>
 					<ul>
 						<li><a href="/courses">Browse Courses</a></li>
-						<li><a href="/start">Create Course</a></li>
+						<li><a href="/home">Create Course</a></li>
 						<li><a href="/auth/register">Sign Up</a></li>
 					</ul>
 				</div>

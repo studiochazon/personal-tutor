@@ -81,16 +81,6 @@
 		return `${mins}m`;
 	}
 
-	async function handlePromptSubmit(data: {prompt: string, audience?: string, depth?: string}) {
-		// Redirect to the start page with the prompt data
-		const params = new URLSearchParams({
-			prompt: data.prompt,
-			audience: data.audience || 'beginners',
-			depth: data.depth || 'comprehensive'
-		});
-		window.location.href = `/start?${params.toString()}`;
-	}
-
 	// Handler for the hero NewCourseCard - handles authentication flow
 	async function handleHeroCourseSubmit(data: {prompt: string, audience?: string, depth?: string}) {
 		// Check if user is authenticated
@@ -98,13 +88,13 @@
 		const userStr = localStorage.getItem('auth_user');
 		
 		if (token && userStr) {
-			// User is logged in, redirect to start page with prompt data
+			// User is logged in, redirect to home page with prompt data
 			const params = new URLSearchParams({
 				prompt: data.prompt,
 				audience: data.audience || 'beginners',
 				depth: data.depth || 'comprehensive'
 			});
-			window.location.href = `/start?${params.toString()}`;
+			window.location.href = `/home?${params.toString()}`;
 		} else {
 			// User is not logged in, save to localStorage and redirect to login
 			const { savePromptData, setCourseCreationInProgress } = await import('$lib/auth');

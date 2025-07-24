@@ -308,7 +308,7 @@
 					<a href="/courses" class="btn-secondary">
 						← Back to Courses
 					</a>
-					<a href="/start" class="btn-primary">
+					<a href="/home" class="btn-primary">
 						Create Another Course
 					</a>
 				</footer>

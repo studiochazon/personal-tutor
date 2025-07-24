@@ -1,0 +1,90 @@
+=== LLM Response Log ===
+Timestamp: 2025-07-24T07:04:30.498Z
+Model: gpt-4-0613
+
+=== User Prompt ===
+theology
+
+=== AI Response ===
+{
+  "title": "Introduction to Theology: Exploring Faith and Belief Systems",
+  "description": "This course offers a comprehensive exploration of theology, providing learners with an understanding of various religious beliefs, doctrines, and traditions. It is designed to foster critical thinking and enhance knowledge about the world's major religions.",
+  "difficulty": "beginner",
+  "estimated_duration": 300,
+  "lessons": [
+    {
+      "title": "Introduction to Theology",
+      "content": "This lesson provides an overview of theology, its importance, and its various branches. It includes a brief history of theology and its role in society.",
+      "order_index": 1,
+      "estimated_duration": 30,
+      "video_url": "https://www.youtube.com/embed/VIDEO_ID1",
+      "video_title": "What is Theology?",
+      "video_duration": 600
+    },
+    {
+      "title": "Christian Theology",
+      "content": "This lesson explores Christian theology, its key concepts, and its influence on Western society. It includes a discussion on the Trinity, salvation, and the Bible.",
+      "order_index": 2,
+      "estimated_duration": 30,
+      "video_url": "https://www.youtube.com/embed/VIDEO_ID2",
+      "video_title": "Understanding Christian Theology",
+      "video_duration": 720
+    },
+    {
+      "title": "Islamic Theology",
+      "content": "This lesson delves into Islamic theology, discussing the core beliefs of Islam, the concept of God in Islam, and the role of the Quran.",
+      "order_index": 3,
+      "estimated_duration": 30,
+      "video_url": "https://www.youtube.com/embed/VIDEO_ID3",
+      "video_title": "Exploring Islamic Theology",
+      "video_duration": 900
+    },
+    {
+      "title": "Hindu Theology",
+      "content": "This lesson explores Hindu theology, its key concepts, and its influence on Indian society. It includes a discussion on Dharma, Karma, and the Vedas.",
+      "order_index": 4,
+      "estimated_duration": 30,
+      "video_url": "https://www.youtube.com/embed/VIDEO_ID4",
+      "video_title": "Understanding Hindu Theology",
+      "video_duration": 720
+    },
+    {
+      "title": "Buddhist Theology",
+      "content": "This lesson delves into Buddhist theology, discussing the core beliefs of Buddhism, the concept of enlightenment, and the role of the sutras.",
+      "order_index": 5,
+      "estimated_duration": 30,
+      "video_url": "https://www.youtube.com/embed/VIDEO_ID5",
+      "video_title": "Exploring Buddhist Theology",
+      "video_duration": 900
+    },
+    {
+      "title": "Comparative Theology",
+      "content": "This lesson provides a comparative analysis of the theologies discussed, highlighting similarities and differences. It encourages critical thinking and respect for religious diversity.",
+      "order_index": 6,
+      "estimated_duration": 30,
+      "video_url": "https://www.youtube.com/embed/VIDEO_ID6",
+      "video_title": "Comparative Theology: Understanding Religious Diversity",
+      "video_duration": 900
+    },
+    {
+      "title": "Theology and Society",
+      "content": "This lesson explores the impact of theology on society, culture, politics, and ethics. It encourages learners to reflect on the role of religion in contemporary society.",
+      "order_index": 7,
+      "estimated_duration": 30,
+      "video_url": "https://www.youtube.com/embed/VIDEO_ID7",
+      "video_title": "Theology and Society: The Impact of Religion",
+      "video_duration": 900
+    },
+    {
+      "title": "The Future of Theology",
+      "content": "This lesson discusses the future of theology in a globalized, pluralistic world. It encourages learners to think about the role of theology in promoting peace and understanding.",
+      "order_index": 8,
+      "estimated_duration": 30,
+      "video_url": "https://www.youtube.com/embed/VIDEO_ID8",
+      "video_title": "The Future of Theology: Challenges and Opportunities",
+      "video_duration": 900
+    }
+  ]
+}
+
+=== End Response ===

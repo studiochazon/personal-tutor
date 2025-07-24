@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Icon } from '$lib/components/ui';
+	import Icon from './Icon.svelte';
 	
 	export let title: string = "Start a New Course";
 	export let subtitle: string = "Describe what you want to teach and our AI will create a comprehensive course for you";

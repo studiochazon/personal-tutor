@@ -1,0 +1,63 @@
+=== LLM Response Log ===
+Timestamp: 2025-07-24T07:13:05.753Z
+Model: gpt-4-0613
+
+=== User Prompt ===
+Javascript
+
+=== AI Response ===
+{
+  "title": "Mastering JavaScript: From Basics to Advanced",
+  "description": "This course provides an in-depth understanding of JavaScript, covering everything from basic syntax and data structures to advanced topics like closures, promises, and async/await. By the end of this course, learners will be able to create dynamic and interactive web applications using JavaScript.",
+  "difficulty": "beginner",
+  "estimated_duration": 300,
+  "lessons": [
+    {
+      "title": "Introduction to JavaScript",
+      "content": "Learn the basics of JavaScript, including syntax, variables, and data types. Practice with simple exercises to consolidate your knowledge.",
+      "order_index": 1,
+      "estimated_duration": 30,
+      "video_url": "https://www.youtube.com/embed/W6NZfCO5SIk",
+      "video_title": "JavaScript Tutorial for Beginners: Learn JavaScript in 1 Hour",
+      "video_duration": 3600
+    },
+    {
+      "title": "Control Structures in JavaScript",
+      "content": "Understand control structures like loops and conditionals in JavaScript. Practice with exercises to build interactive programs.",
+      "order_index": 2,
+      "estimated_duration": 30,
+      "video_url": "https://www.youtube.com/embed/ZcQyU6Kw4gA",
+      "video_title": "JavaScript Loops and Conditionals",
+      "video_duration": 1800
+    },
+    {
+      "title": "Functions in JavaScript",
+      "content": "Learn about functions in JavaScript, including function declaration, function expression, and arrow functions. Practice with exercises to write reusable code.",
+      "order_index": 3,
+      "estimated_duration": 30,
+      "video_url": "https://www.youtube.com/embed/v2tJ3nzXh8I",
+      "video_title": "JavaScript Functions",
+      "video_duration": 1800
+    },
+    {
+      "title": "Objects and Arrays in JavaScript",
+      "content": "Understand objects and arrays in JavaScript. Learn how to manipulate data and practice with exercises to build complex data structures.",
+      "order_index": 4,
+      "estimated_duration": 30,
+      "video_url": "https://www.youtube.com/embed/RjB1Ul3yhhI",
+      "video_title": "JavaScript Objects and Arrays",
+      "video_duration": 1800
+    },
+    {
+      "title": "Advanced JavaScript Concepts",
+      "content": "Learn advanced JavaScript concepts like closures, promises, and async/await. Understand how to write asynchronous code and practice with exercises to build real-world applications.",
+      "order_index": 5,
+      "estimated_duration": 30,
+      "video_url": "https://www.youtube.com/embed/Q3HtXuDEy5s",
+      "video_title": "JavaScript Promises and Async/Await",
+      "video_duration": 1800
+    }
+  ]
+}
+
+=== End Response ===
