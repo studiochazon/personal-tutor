@@ -198,7 +198,7 @@
 </section>
 
 <!-- Featured Courses Section -->
-<section class="courses-section">
+<!-- <section class="courses-section">
 	<div class="container">
 		<div class="section-header">
 			<div class="section-badge">Featured</div>
@@ -271,10 +271,10 @@
 			</div>
 		{/if}
 	</div>
-</section>
+</section> -->
 
 <!-- CTA Section -->
-<section class="cta-section">
+<!-- <section class="cta-section">
 	<div class="cta-background">
 		<div class="cta-gradient"></div>
 		<div class="cta-shapes">
@@ -308,7 +308,7 @@
 			</div>
 		</div>
 	</div>
-</section>
+</section> -->
 
 
 <style>
