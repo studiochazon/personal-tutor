@@ -340,16 +340,16 @@ Each lesson should follow this structure:
 		{#if autoCreatingCourse && creatingCourse}
 			<div class="mb-6">
 				<div class="card-elevated bg-white border border-gray-200">
-					<div class="p-6">
+					<div class="p-4">
 						<div class="flex items-center justify-center">
 							<div class="text-center">
-								<h3 class="text-lg font-semibold text-gray-900 mb-2">
-									Creating Your Course - {promptText.split(' ')[0] || 'Course'}
+								<h3 class="course-creation-title mb-3">
+									Creating Your Course - <b>{promptText.split(' ')[0] || 'Course'}</b>
 								</h3>
-								<div class="flex items-center justify-center gap-1">
-									<div class="w-2 h-2 bg-blue-500 rounded-full animate-bounce"></div>
-									<div class="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style="animation-delay: 0.1s;"></div>
-									<div class="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style="animation-delay: 0.2s;"></div>
+								<div class="loading-dots">
+									<div class="loading-dot"></div>
+									<div class="loading-dot"></div>
+									<div class="loading-dot"></div>
 								</div>
 							</div>
 						</div>

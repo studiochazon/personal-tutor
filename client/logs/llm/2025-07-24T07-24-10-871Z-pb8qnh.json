@@ -1,0 +1,79 @@
+{
+  "id": "2025-07-24T07-24-10-871Z-pb8qnh",
+  "timestamp": "2025-07-24T07:24:10.871Z",
+  "request": {
+    "model": "gpt-4",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a course generation assistant. You must respond with ONLY valid JSON. Do not include any explanatory text, markdown formatting, or additional content outside the JSON object."
+      },
+      {
+        "role": "user",
+        "content": "You are an expert educational content creator. Based on the user's request below, create a comprehensive course structure.\n\nUser Request: \"swimming\"\n\nGenerate a course with the following JSON structure (respond ONLY with valid JSON, no additional text):\n\n{\n  \"title\": \"Engaging and descriptive course title\",\n  \"description\": \"Comprehensive overview of what learners will gain from this course\",\n  \"difficulty\": \"beginner|intermediate|advanced\",\n  \"estimated_duration\": number in minutes,\n  \"lessons\": [\n    {\n      \"title\": \"Clear lesson title\",\n      \"content\": \"Comprehensive lesson content with clear structure, examples, and practical exercises. Use markdown formatting for better readability.\",\n      \"order_index\": number,\n      \"estimated_duration\": number in minutes,\n      \"video_url\": \"YouTube embed URL (https://www.youtube.com/embed/VIDEO_ID)\",\n      \"video_title\": \"Title of the video content\",\n      \"video_duration\": number in seconds\n    }\n  ]\n}\n\nGuidelines:\n- Create 5-10 lessons depending on topic complexity\n- Each lesson should be 10-30 minutes of content\n- Include practical examples and exercises\n- Use clear, engaging language\n- Structure content logically from basic to advanced concepts\n- Ensure the difficulty level matches the content\n- **IMPORTANT**: Include relevant video sources for each lesson when they would enhance learning\n- Choose high-quality educational videos from YouTube\n- **CRITICAL**: Always use YouTube embed URLs (https://www.youtube.com/embed/VIDEO_ID) NOT regular YouTube URLs\n- Video duration should be appropriate (2-15 minutes for most lessons)"
+      }
+    ],
+    "max_tokens": 3000,
+    "temperature": 0.3,
+    "user_prompt": "swimming",
+    "timestamp": "2025-07-24T07:24:10.871Z"
+  },
+  "response": {
+    "content": "{\n  \"title\": \"Mastering Swimming: From Basics to Advanced Techniques\",\n  \"description\": \"This course is designed to take you from a beginner to an advanced swimmer. You will learn various swimming techniques, safety measures, and how to improve your stamina and speed.\",\n  \"difficulty\": \"beginner\",\n  \"estimated_duration\": 300,\n  \"lessons\": [\n    {\n      \"title\": \"Introduction to Swimming\",\n      \"content\": \"In this lesson, you will learn about the basics of swimming, the importance of swimming, and the different types of swimming strokes.\",\n      \"order_index\": 1,\n      \"estimated_duration\": 20,\n      \"video_url\": \"https://www.youtube.com/embed/VIDEO_ID1\",\n      \"video_title\": \"Introduction to Swimming\",\n      \"video_duration\": 600\n    },\n    {\n      \"title\": \"Breathing Techniques\",\n      \"content\": \"This lesson will cover the correct breathing techniques to use while swimming to ensure efficiency and prevent exhaustion.\",\n      \"order_index\": 2,\n      \"estimated_duration\": 30,\n      \"video_url\": \"https://www.youtube.com/embed/VIDEO_ID2\",\n      \"video_title\": \"Breathing Techniques in Swimming\",\n      \"video_duration\": 900\n    },\n    {\n      \"title\": \"Freestyle Stroke\",\n      \"content\": \"In this lesson, we will focus on the freestyle stroke, its techniques, and tips to improve your freestyle swimming.\",\n      \"order_index\": 3,\n      \"estimated_duration\": 30,\n      \"video_url\": \"https://www.youtube.com/embed/VIDEO_ID3\",\n      \"video_title\": \"Mastering the Freestyle Stroke\",\n      \"video_duration\": 900\n    },\n    {\n      \"title\": \"Backstroke Techniques\",\n      \"content\": \"This lesson will cover the backstroke technique, including the correct body position, arm movement, and kicking technique.\",\n      \"order_index\": 4,\n      \"estimated_duration\": 30,\n      \"video_url\": \"https://www.youtube.com/embed/VIDEO_ID4\",\n      \"video_title\": \"Backstroke Techniques\",\n      \"video_duration\": 900\n    },\n    {\n      \"title\": \"Breaststroke Techniques\",\n      \"content\": \"In this lesson, you will learn the techniques of breaststroke, which includes the correct timing, body position, and breathing technique.\",\n      \"order_index\": 5,\n      \"estimated_duration\": 30,\n      \"video_url\": \"https://www.youtube.com/embed/VIDEO_ID5\",\n      \"video_title\": \"Breaststroke Techniques\",\n      \"video_duration\": 900\n    },\n    {\n      \"title\": \"Butterfly Stroke\",\n      \"content\": \"This lesson will cover the butterfly stroke, one of the most difficult swimming strokes. We will cover the correct body movement, arm movement, and breathing technique.\",\n      \"order_index\": 6,\n      \"estimated_duration\": 30,\n      \"video_url\": \"https://www.youtube.com/embed/VIDEO_ID6\",\n      \"video_title\": \"Butterfly Stroke Techniques\",\n      \"video_duration\": 900\n    },\n    {\n      \"title\": \"Swimming Safety and Etiquette\",\n      \"content\": \"In this lesson, we will cover the safety rules to follow while swimming and the etiquette to maintain in a public swimming pool.\",\n      \"order_index\": 7,\n      \"estimated_duration\": 20,\n      \"video_url\": \"https://www.youtube.com/embed/VIDEO_ID7\",\n      \"video_title\": \"Swimming Safety and Etiquette\",\n      \"video_duration\": 600\n    },\n    {\n      \"title\": \"Improving Speed and Stamina\",\n      \"content\": \"This lesson will provide tips and exercises to improve your swimming speed and stamina.\",\n      \"order_index\": 8,\n      \"estimated_duration\": 30,\n      \"video_url\": \"https://www.youtube.com/embed/VIDEO_ID8\",\n      \"video_title\": \"Improving Speed and Stamina in Swimming\",\n      \"video_duration\": 900\n    }\n  ]\n}",
+    "usage": {
+      "prompt_tokens": 376,
+      "completion_tokens": 845,
+      "total_tokens": 1221,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "model": "gpt-4-0613",
+    "finish_reason": "stop",
+    "raw_response": {
+      "id": "chatcmpl-BwkacGvFX2Hb0yPJxGlJC5sksFRwl",
+      "object": "chat.completion",
+      "created": 1753341814,
+      "model": "gpt-4-0613",
+      "choices": [
+        {
+          "index": 0,
+          "message": {
+            "role": "assistant",
+            "content": "{\n  \"title\": \"Mastering Swimming: From Basics to Advanced Techniques\",\n  \"description\": \"This course is designed to take you from a beginner to an advanced swimmer. You will learn various swimming techniques, safety measures, and how to improve your stamina and speed.\",\n  \"difficulty\": \"beginner\",\n  \"estimated_duration\": 300,\n  \"lessons\": [\n    {\n      \"title\": \"Introduction to Swimming\",\n      \"content\": \"In this lesson, you will learn about the basics of swimming, the importance of swimming, and the different types of swimming strokes.\",\n      \"order_index\": 1,\n      \"estimated_duration\": 20,\n      \"video_url\": \"https://www.youtube.com/embed/VIDEO_ID1\",\n      \"video_title\": \"Introduction to Swimming\",\n      \"video_duration\": 600\n    },\n    {\n      \"title\": \"Breathing Techniques\",\n      \"content\": \"This lesson will cover the correct breathing techniques to use while swimming to ensure efficiency and prevent exhaustion.\",\n      \"order_index\": 2,\n      \"estimated_duration\": 30,\n      \"video_url\": \"https://www.youtube.com/embed/VIDEO_ID2\",\n      \"video_title\": \"Breathing Techniques in Swimming\",\n      \"video_duration\": 900\n    },\n    {\n      \"title\": \"Freestyle Stroke\",\n      \"content\": \"In this lesson, we will focus on the freestyle stroke, its techniques, and tips to improve your freestyle swimming.\",\n      \"order_index\": 3,\n      \"estimated_duration\": 30,\n      \"video_url\": \"https://www.youtube.com/embed/VIDEO_ID3\",\n      \"video_title\": \"Mastering the Freestyle Stroke\",\n      \"video_duration\": 900\n    },\n    {\n      \"title\": \"Backstroke Techniques\",\n      \"content\": \"This lesson will cover the backstroke technique, including the correct body position, arm movement, and kicking technique.\",\n      \"order_index\": 4,\n      \"estimated_duration\": 30,\n      \"video_url\": \"https://www.youtube.com/embed/VIDEO_ID4\",\n      \"video_title\": \"Backstroke Techniques\",\n      \"video_duration\": 900\n    },\n    {\n      \"title\": \"Breaststroke Techniques\",\n      \"content\": \"In this lesson, you will learn the techniques of breaststroke, which includes the correct timing, body position, and breathing technique.\",\n      \"order_index\": 5,\n      \"estimated_duration\": 30,\n      \"video_url\": \"https://www.youtube.com/embed/VIDEO_ID5\",\n      \"video_title\": \"Breaststroke Techniques\",\n      \"video_duration\": 900\n    },\n    {\n      \"title\": \"Butterfly Stroke\",\n      \"content\": \"This lesson will cover the butterfly stroke, one of the most difficult swimming strokes. We will cover the correct body movement, arm movement, and breathing technique.\",\n      \"order_index\": 6,\n      \"estimated_duration\": 30,\n      \"video_url\": \"https://www.youtube.com/embed/VIDEO_ID6\",\n      \"video_title\": \"Butterfly Stroke Techniques\",\n      \"video_duration\": 900\n    },\n    {\n      \"title\": \"Swimming Safety and Etiquette\",\n      \"content\": \"In this lesson, we will cover the safety rules to follow while swimming and the etiquette to maintain in a public swimming pool.\",\n      \"order_index\": 7,\n      \"estimated_duration\": 20,\n      \"video_url\": \"https://www.youtube.com/embed/VIDEO_ID7\",\n      \"video_title\": \"Swimming Safety and Etiquette\",\n      \"video_duration\": 600\n    },\n    {\n      \"title\": \"Improving Speed and Stamina\",\n      \"content\": \"This lesson will provide tips and exercises to improve your swimming speed and stamina.\",\n      \"order_index\": 8,\n      \"estimated_duration\": 30,\n      \"video_url\": \"https://www.youtube.com/embed/VIDEO_ID8\",\n      \"video_title\": \"Improving Speed and Stamina in Swimming\",\n      \"video_duration\": 900\n    }\n  ]\n}",
+            "refusal": null,
+            "annotations": []
+          },
+          "logprobs": null,
+          "finish_reason": "stop"
+        }
+      ],
+      "usage": {
+        "prompt_tokens": 376,
+        "completion_tokens": 845,
+        "total_tokens": 1221,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "audio_tokens": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "audio_tokens": 0,
+          "accepted_prediction_tokens": 0,
+          "rejected_prediction_tokens": 0
+        }
+      },
+      "service_tier": "default",
+      "system_fingerprint": null
+    }
+  },
+  "success": true,
+  "duration_ms": 37604
+}
