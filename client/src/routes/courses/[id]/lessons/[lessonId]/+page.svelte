@@ -15,6 +15,12 @@
 	let isAuthenticated = false;
 	let lessonProgress: Progress | null = null;
 	let markingComplete = false;
+	let nextLesson: any = null;
+	let previousLesson: any = null;
+	
+	// Reactive statements for navigation
+	$: nextLesson = allLessons.length > 0 ? getNextLesson() : null;
+	$: previousLesson = allLessons.length > 0 ? getPreviousLesson() : null;
 	
 	$: courseId = $page.params.id;
 	$: lessonId = $page.params.lessonId;
@@ -28,6 +34,11 @@
 			await loadLesson();
 		}
 	});
+	
+	// Watch for route parameter changes and reload data
+	$: if (isAuthenticated && courseId && lessonId) {
+		loadLesson();
+	}
 	
 	async function loadLesson() {
 		try {
@@ -46,7 +57,8 @@
 			lesson = lessonData.lesson;
 			allLessons = lessonData.allLessons || [];
 			if (lesson) {
-				currentLessonIndex = allLessons.findIndex(l => l.id === lesson!.id);
+				// Use order_index - 1 since order_index starts at 1 but array index starts at 0
+				currentLessonIndex = lesson.order_index - 1;
 			} else {
 				currentLessonIndex = 0;
 			}
@@ -357,32 +369,136 @@
 			</div>
 			
 			<!-- Navigation -->
-			<div class="flex justify-between items-center mb-8" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-				{#if getPreviousLesson()}
-					<a 
-						href="/courses/{course.id}/lessons/{getPreviousLesson()!.id}" 
-						class="btn btn-secondary"
-					>
-						← Previous Lesson
-					</a>
-				{:else}
-					<div></div>
-				{/if}
+			<div class="flex justify-between items-center mb-8 navigation-container" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+				<div class="flex-1 min-w-0">
+					{#if previousLesson}
+						<a 
+							href="/courses/{course.id}/lessons/{previousLesson.id}" 
+							class="btn btn-secondary"
+							style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; border-radius: 0.5rem; font-weight: 600; font-size: 1rem; text-decoration: none; border: 2px solid #000; background: white; color: #000; transition: all 0.2s ease; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); white-space: nowrap;"
+							on:mouseenter={(e) => {
+								const target = e.target as HTMLElement;
+								if (target) {
+									target.style.background = '#000';
+									target.style.color = 'white';
+									target.style.transform = 'translateY(-1px)';
+									target.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.15)';
+								}
+							}}
+							on:mouseleave={(e) => {
+								const target = e.target as HTMLElement;
+								if (target) {
+									target.style.background = 'white';
+									target.style.color = '#000';
+									target.style.transform = 'translateY(0)';
+									target.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
+								}
+							}}
+							on:focus={(e) => {
+								const target = e.target as HTMLElement;
+								if (target) {
+									target.style.outline = 'none';
+									target.style.boxShadow = '0 0 0 3px rgba(0, 0, 0, 0.2), 0 2px 4px rgba(0, 0, 0, 0.1)';
+								}
+							}}
+							on:blur={(e) => {
+								const target = e.target as HTMLElement;
+								if (target) {
+									target.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
+								}
+							}}
+						>
+							← Previous Lesson
+						</a>
+					{/if}
+				</div>
 				
-				{#if getNextLesson()}
-					<a 
-						href="/courses/{course.id}/lessons/{getNextLesson()!.id}" 
-						class="btn btn-primary"
-					>
-						Next Lesson →
-					</a>
-				{:else}
-					<button 
-						class="btn btn-success"
-					>
-						🎉 Complete Course
-					</button>
-				{/if}
+				<div class="flex-1 text-center min-w-0">
+					<span class="text-sm text-gray-500" style="font-size: 0.875rem; color: #6b7280; display: block;">
+						Lesson {currentLessonIndex + 1} of {allLessons.length}
+					</span>
+
+				</div>
+				
+				<div class="flex-1 text-right min-w-0">
+					{#if nextLesson}
+						<a 
+							href="/courses/{course.id}/lessons/{nextLesson.id}" 
+							class="btn btn-primary"
+							style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; border-radius: 0.5rem; font-weight: 600; font-size: 1rem; text-decoration: none; border: none; background: #000; color: white; transition: all 0.2s ease; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); white-space: nowrap;"
+							on:click={(e) => {
+								// Navigation will happen automatically via the href
+							}}
+							on:mouseenter={(e) => {
+								const target = e.target as HTMLElement;
+								if (target) {
+									target.style.background = '#333';
+									target.style.transform = 'translateY(-1px)';
+									target.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.15)';
+								}
+							}}
+							on:mouseleave={(e) => {
+								const target = e.target as HTMLElement;
+								if (target) {
+									target.style.background = '#000';
+									target.style.transform = 'translateY(0)';
+									target.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
+								}
+							}}
+							on:focus={(e) => {
+								const target = e.target as HTMLElement;
+								if (target) {
+									target.style.outline = 'none';
+									target.style.boxShadow = '0 0 0 3px rgba(0, 0, 0, 0.2), 0 2px 4px rgba(0, 0, 0, 0.1)';
+								}
+							}}
+							on:blur={(e) => {
+								const target = e.target as HTMLElement;
+								if (target) {
+									target.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
+								}
+							}}
+						>
+							Next Lesson →
+						</a>
+					{:else}
+						<button 
+							class="btn btn-success"
+							style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; border-radius: 0.5rem; font-weight: 600; font-size: 1rem; text-decoration: none; border: none; background: #10B981; color: white; transition: all 0.2s ease; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); white-space: nowrap;"
+							on:mouseenter={(e) => {
+								const target = e.target as HTMLElement;
+								if (target) {
+									target.style.background = '#059669';
+									target.style.transform = 'translateY(-1px)';
+									target.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.15)';
+								}
+							}}
+							on:mouseleave={(e) => {
+								const target = e.target as HTMLElement;
+								if (target) {
+									target.style.background = '#10B981';
+									target.style.transform = 'translateY(0)';
+									target.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
+								}
+							}}
+							on:focus={(e) => {
+								const target = e.target as HTMLElement;
+								if (target) {
+									target.style.outline = 'none';
+									target.style.boxShadow = '0 0 0 3px rgba(16, 185, 129, 0.2), 0 2px 4px rgba(0, 0, 0, 0.1)';
+								}
+							}}
+							on:blur={(e) => {
+								const target = e.target as HTMLElement;
+								if (target) {
+									target.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
+								}
+							}}
+						>
+							🎉 Complete Course
+						</button>
+					{/if}
+				</div>
 			</div>
 			
 			<!-- Lesson List -->
@@ -435,5 +551,31 @@
 		line-height: 1.7;
 	}
 	
-
+	/* Mobile responsive navigation */
+	@media (max-width: 768px) {
+		.navigation-container {
+			flex-direction: column;
+			gap: 1rem;
+			align-items: stretch;
+		}
+		
+		.navigation-container > div {
+			flex: none;
+			text-align: center;
+		}
+		
+		.navigation-container .btn {
+			width: 100%;
+			justify-content: center;
+			padding: 1rem 1.5rem;
+			font-size: 1.1rem;
+		}
+	}
+	
+	@media (max-width: 480px) {
+		.navigation-container .btn {
+			padding: 0.875rem 1.25rem;
+			font-size: 1rem;
+		}
+	}
 </style> 
