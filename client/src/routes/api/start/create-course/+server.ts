@@ -2,7 +2,8 @@ import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { getConnection } from '$lib/database';
 import { OPENAI_API_KEY } from '$env/static/private';
-import { videoLogger } from '$lib/video-logger';
+import { videoLogger, convertToYouTubeEmbedUrl } from '$lib/video-logger';
+import { validateAndGetFallbackVideo } from '$lib/video-validator';
 import { logOpenAIRequest } from '$lib/llm-logger';
 import jwt from 'jsonwebtoken';
 
@@ -209,7 +210,7 @@ Generate a course with the following JSON structure (respond ONLY with valid JSO
       "content": "Comprehensive lesson content with clear structure, examples, and practical exercises. Use markdown formatting for better readability.",
       "order_index": number,
       "estimated_duration": number in minutes,
-      "video_url": "URL to relevant video content (YouTube, Vimeo, etc.)",
+      "video_url": "YouTube embed URL (https://www.youtube.com/embed/VIDEO_ID)",
       "video_title": "Title of the video content",
       "video_duration": number in seconds
     }
@@ -224,7 +225,8 @@ Guidelines:
 - Structure content logically from basic to advanced concepts
 - Ensure the difficulty level matches the content
 - **IMPORTANT**: Include relevant video sources for each lesson when they would enhance learning
-- Choose high-quality educational videos from YouTube, Vimeo, or other reputable platforms
+- Choose high-quality educational videos from YouTube
+- **CRITICAL**: Always use YouTube embed URLs (https://www.youtube.com/embed/VIDEO_ID) NOT regular YouTube URLs
 - Video duration should be appropriate (2-15 minutes for most lessons)`;
 
 		const openAIRequest = {
@@ -295,20 +297,47 @@ Guidelines:
 		try {
 			const courseData = JSON.parse(jsonContent);
 			
+			// Validate and potentially replace videos with fallbacks
+			const validateVideo = async (url: string | null, lessonTitle: string, courseTitle: string): Promise<{ url: string | null; title: string; duration: number; wasReplaced: boolean }> => {
+				if (!url) return { url: null, title: '', duration: 0, wasReplaced: false };
+				
+				try {
+					const topic = courseTitle.toLowerCase();
+					const validated = await validateAndGetFallbackVideo(url, topic);
+					
+					if (validated.wasReplaced) {
+						console.log(`Replaced unavailable video for lesson "${lessonTitle}" with fallback: ${validated.title}`);
+					} else {
+						console.log(`Video for lesson "${lessonTitle}" is available: ${validated.url}`);
+					}
+					
+					return validated;
+				} catch (error) {
+					console.error(`Error validating video for lesson "${lessonTitle}":`, error);
+					// Fallback to original conversion method
+					const embedUrl = convertToYouTubeEmbedUrl(url);
+					return { url: embedUrl, title: '', duration: 600, wasReplaced: false };
+				}
+			};
+			
 			// Validate and set defaults
 			return {
 				title: courseData.title || 'AI Generated Course',
 				description: courseData.description || 'A comprehensive course created with AI assistance.',
 				difficulty: courseData.difficulty || 'intermediate',
 				estimated_duration: courseData.estimated_duration || 60,
-				lessons: courseData.lessons && Array.isArray(courseData.lessons) ? courseData.lessons.map((lesson: any, index: number) => ({
-					title: lesson.title || `Lesson ${index + 1}`,
-					content: lesson.content || 'Lesson content will be added here.',
-					video_url: lesson.video_url || null,
-					video_title: lesson.video_title || null,
-					video_duration: lesson.video_duration || null,
-					order_index: lesson.order_index || index + 1,
-					estimated_duration: lesson.estimated_duration || 15
+				lessons: courseData.lessons && Array.isArray(courseData.lessons) ? await Promise.all(courseData.lessons.map(async (lesson: any, index: number) => {
+					const validatedVideo = await validateVideo(lesson.video_url, lesson.title || `Lesson ${index + 1}`, courseData.title || 'Course');
+					
+					return {
+						title: lesson.title || `Lesson ${index + 1}`,
+						content: lesson.content || 'Lesson content will be added here.',
+						video_url: validatedVideo.url,
+						video_title: validatedVideo.wasReplaced ? validatedVideo.title : (lesson.video_title || null),
+						video_duration: validatedVideo.wasReplaced ? validatedVideo.duration : (lesson.video_duration || null),
+						order_index: lesson.order_index || index + 1,
+						estimated_duration: lesson.estimated_duration || 15
+					};
 				})) : [
 					{
 						title: 'Introduction',

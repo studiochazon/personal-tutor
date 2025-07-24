@@ -1,0 +1,79 @@
+{
+  "id": "2025-07-24T06-52-36-955Z-goxlez",
+  "timestamp": "2025-07-24T06:52:36.955Z",
+  "request": {
+    "model": "gpt-4",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a course generation assistant. You must respond with ONLY valid JSON. Do not include any explanatory text, markdown formatting, or additional content outside the JSON object."
+      },
+      {
+        "role": "user",
+        "content": "You are an expert educational content creator. Based on the user's request below, create a comprehensive course structure.\n\nUser Request: \"C++\"\n\nGenerate a course with the following JSON structure (respond ONLY with valid JSON, no additional text):\n\n{\n  \"title\": \"Engaging and descriptive course title\",\n  \"description\": \"Comprehensive overview of what learners will gain from this course\",\n  \"difficulty\": \"beginner|intermediate|advanced\",\n  \"estimated_duration\": number in minutes,\n  \"lessons\": [\n    {\n      \"title\": \"Clear lesson title\",\n      \"content\": \"Comprehensive lesson content with clear structure, examples, and practical exercises. Use markdown formatting for better readability.\",\n      \"order_index\": number,\n      \"estimated_duration\": number in minutes,\n      \"video_url\": \"YouTube embed URL (https://www.youtube.com/embed/VIDEO_ID)\",\n      \"video_title\": \"Title of the video content\",\n      \"video_duration\": number in seconds\n    }\n  ]\n}\n\nGuidelines:\n- Create 5-10 lessons depending on topic complexity\n- Each lesson should be 10-30 minutes of content\n- Include practical examples and exercises\n- Use clear, engaging language\n- Structure content logically from basic to advanced concepts\n- Ensure the difficulty level matches the content\n- **IMPORTANT**: Include relevant video sources for each lesson when they would enhance learning\n- Choose high-quality educational videos from YouTube\n- **CRITICAL**: Always use YouTube embed URLs (https://www.youtube.com/embed/VIDEO_ID) NOT regular YouTube URLs\n- Video duration should be appropriate (2-15 minutes for most lessons)"
+      }
+    ],
+    "max_tokens": 3000,
+    "temperature": 0.3,
+    "user_prompt": "C++",
+    "timestamp": "2025-07-24T06:52:36.955Z"
+  },
+  "response": {
+    "content": "{\n  \"title\": \"Mastering C++: From Beginner to Advanced\",\n  \"description\": \"This course provides a comprehensive introduction to C++, covering everything from basic syntax to advanced concepts. By the end of this course, you will be able to write, debug, and understand C++ code.\",\n  \"difficulty\": \"beginner\",\n  \"estimated_duration\": 180,\n  \"lessons\": [\n    {\n      \"title\": \"Introduction to C++\",\n      \"content\": \"In this lesson, we will cover the basics of C++, including its history, its applications, and the basic structure of a C++ program.\",\n      \"order_index\": 1,\n      \"estimated_duration\": 20,\n      \"video_url\": \"https://www.youtube.com/embed/vLnPwxZdW4Y\",\n      \"video_title\": \"C++ Tutorial for Beginners - Full Course\",\n      \"video_duration\": 240\n    },\n    {\n      \"title\": \"Variables and Data Types\",\n      \"content\": \"This lesson will introduce you to variables and data types in C++. You will learn how to declare, initialize, and use variables in your code.\",\n      \"order_index\": 2,\n      \"estimated_duration\": 20,\n      \"video_url\": \"https://www.youtube.com/embed/Rub-JsjMhWY\",\n      \"video_title\": \"C++ Tutorial: Variables and Data Types\",\n      \"video_duration\": 180\n    },\n    {\n      \"title\": \"Control Structures\",\n      \"content\": \"In this lesson, we will cover control structures in C++, including if statements, loops, and switch statements.\",\n      \"order_index\": 3,\n      \"estimated_duration\": 20,\n      \"video_url\": \"https://www.youtube.com/embed/vLnPwxZdW4Y\",\n      \"video_title\": \"C++ Tutorial: Control Structures\",\n      \"video_duration\": 180\n    },\n    {\n      \"title\": \"Functions in C++\",\n      \"content\": \"This lesson will introduce you to functions in C++. You will learn how to declare, define, and call functions in your code.\",\n      \"order_index\": 4,\n      \"estimated_duration\": 30,\n      \"video_url\": \"https://www.youtube.com/embed/N5HgK1bTLOg\",\n      \"video_title\": \"C++ Tutorial: Functions\",\n      \"video_duration\": 240\n    },\n    {\n      \"title\": \"Pointers and References\",\n      \"content\": \"In this lesson, we will cover pointers and references in C++. You will learn how to use pointers and references to manipulate data in your code.\",\n      \"order_index\": 5,\n      \"estimated_duration\": 30,\n      \"video_url\": \"https://www.youtube.com/embed/z9bZufPHFLU\",\n      \"video_title\": \"C++ Tutorial: Pointers and References\",\n      \"video_duration\": 240\n    },\n    {\n      \"title\": \"Classes and Objects\",\n      \"content\": \"This lesson will introduce you to classes and objects in C++. You will learn how to define classes, create objects, and use object-oriented programming principles in your code.\",\n      \"order_index\": 6,\n      \"estimated_duration\": 30,\n      \"video_url\": \"https://www.youtube.com/embed/1OsGXuNA5cc\",\n      \"video_title\": \"C++ Tutorial: Classes and Objects\",\n      \"video_duration\": 300\n    }\n  ]\n}",
+    "usage": {
+      "prompt_tokens": 376,
+      "completion_tokens": 722,
+      "total_tokens": 1098,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "model": "gpt-4-0613",
+    "finish_reason": "stop",
+    "raw_response": {
+      "id": "chatcmpl-Bwk66M7CeDIUCdY6HoAqTvsyoOysS",
+      "object": "chat.completion",
+      "created": 1753339922,
+      "model": "gpt-4-0613",
+      "choices": [
+        {
+          "index": 0,
+          "message": {
+            "role": "assistant",
+            "content": "{\n  \"title\": \"Mastering C++: From Beginner to Advanced\",\n  \"description\": \"This course provides a comprehensive introduction to C++, covering everything from basic syntax to advanced concepts. By the end of this course, you will be able to write, debug, and understand C++ code.\",\n  \"difficulty\": \"beginner\",\n  \"estimated_duration\": 180,\n  \"lessons\": [\n    {\n      \"title\": \"Introduction to C++\",\n      \"content\": \"In this lesson, we will cover the basics of C++, including its history, its applications, and the basic structure of a C++ program.\",\n      \"order_index\": 1,\n      \"estimated_duration\": 20,\n      \"video_url\": \"https://www.youtube.com/embed/vLnPwxZdW4Y\",\n      \"video_title\": \"C++ Tutorial for Beginners - Full Course\",\n      \"video_duration\": 240\n    },\n    {\n      \"title\": \"Variables and Data Types\",\n      \"content\": \"This lesson will introduce you to variables and data types in C++. You will learn how to declare, initialize, and use variables in your code.\",\n      \"order_index\": 2,\n      \"estimated_duration\": 20,\n      \"video_url\": \"https://www.youtube.com/embed/Rub-JsjMhWY\",\n      \"video_title\": \"C++ Tutorial: Variables and Data Types\",\n      \"video_duration\": 180\n    },\n    {\n      \"title\": \"Control Structures\",\n      \"content\": \"In this lesson, we will cover control structures in C++, including if statements, loops, and switch statements.\",\n      \"order_index\": 3,\n      \"estimated_duration\": 20,\n      \"video_url\": \"https://www.youtube.com/embed/vLnPwxZdW4Y\",\n      \"video_title\": \"C++ Tutorial: Control Structures\",\n      \"video_duration\": 180\n    },\n    {\n      \"title\": \"Functions in C++\",\n      \"content\": \"This lesson will introduce you to functions in C++. You will learn how to declare, define, and call functions in your code.\",\n      \"order_index\": 4,\n      \"estimated_duration\": 30,\n      \"video_url\": \"https://www.youtube.com/embed/N5HgK1bTLOg\",\n      \"video_title\": \"C++ Tutorial: Functions\",\n      \"video_duration\": 240\n    },\n    {\n      \"title\": \"Pointers and References\",\n      \"content\": \"In this lesson, we will cover pointers and references in C++. You will learn how to use pointers and references to manipulate data in your code.\",\n      \"order_index\": 5,\n      \"estimated_duration\": 30,\n      \"video_url\": \"https://www.youtube.com/embed/z9bZufPHFLU\",\n      \"video_title\": \"C++ Tutorial: Pointers and References\",\n      \"video_duration\": 240\n    },\n    {\n      \"title\": \"Classes and Objects\",\n      \"content\": \"This lesson will introduce you to classes and objects in C++. You will learn how to define classes, create objects, and use object-oriented programming principles in your code.\",\n      \"order_index\": 6,\n      \"estimated_duration\": 30,\n      \"video_url\": \"https://www.youtube.com/embed/1OsGXuNA5cc\",\n      \"video_title\": \"C++ Tutorial: Classes and Objects\",\n      \"video_duration\": 300\n    }\n  ]\n}",
+            "refusal": null,
+            "annotations": []
+          },
+          "logprobs": null,
+          "finish_reason": "stop"
+        }
+      ],
+      "usage": {
+        "prompt_tokens": 376,
+        "completion_tokens": 722,
+        "total_tokens": 1098,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "audio_tokens": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "audio_tokens": 0,
+          "accepted_prediction_tokens": 0,
+          "rejected_prediction_tokens": 0
+        }
+      },
+      "service_tier": "default",
+      "system_fingerprint": null
+    }
+  },
+  "success": true,
+  "duration_ms": 34996
+}

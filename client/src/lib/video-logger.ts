@@ -214,6 +214,26 @@ export function extractYouTubeVideoId(url: string): string | null {
 }
 
 /**
+ * Utility function to convert YouTube URL to embed format
+ */
+export function convertToYouTubeEmbedUrl(url: string | null): string | null {
+  if (!url) return null;
+  
+  // Check if it's already an embed URL
+  if (url.includes('youtube.com/embed/')) {
+    return url;
+  }
+  
+  // Extract video ID and convert to embed URL
+  const videoId = extractYouTubeVideoId(url);
+  if (videoId) {
+    return `https://www.youtube.com/embed/${videoId}`;
+  }
+  
+  return null;
+}
+
+/**
  * Utility function to format video duration
  */
 export function formatVideoDuration(seconds: number | null): string {

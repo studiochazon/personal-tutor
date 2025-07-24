@@ -1,0 +1,79 @@
+{
+  "id": "2025-07-24T06-34-31-466Z-tg86mk",
+  "timestamp": "2025-07-24T06:34:31.466Z",
+  "request": {
+    "model": "gpt-4",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a course generation assistant. You must respond with ONLY valid JSON. Do not include any explanatory text, markdown formatting, or additional content outside the JSON object."
+      },
+      {
+        "role": "user",
+        "content": "You are an expert educational content creator. Based on the user's request below, create a comprehensive course structure.\n\nUser Request: \"C++ development\"\n\nGenerate a course with the following JSON structure (respond ONLY with valid JSON, no additional text):\n\n{\n  \"title\": \"Engaging and descriptive course title\",\n  \"description\": \"Comprehensive overview of what learners will gain from this course\",\n  \"difficulty\": \"beginner|intermediate|advanced\",\n  \"estimated_duration\": number in minutes,\n  \"lessons\": [\n    {\n      \"title\": \"Clear lesson title\",\n      \"content\": \"Comprehensive lesson content with clear structure, examples, and practical exercises. Use markdown formatting for better readability.\",\n      \"order_index\": number,\n      \"estimated_duration\": number in minutes,\n      \"video_url\": \"YouTube embed URL (https://www.youtube.com/embed/VIDEO_ID)\",\n      \"video_title\": \"Title of the video content\",\n      \"video_duration\": number in seconds\n    }\n  ]\n}\n\nGuidelines:\n- Create 5-10 lessons depending on topic complexity\n- Each lesson should be 10-30 minutes of content\n- Include practical examples and exercises\n- Use clear, engaging language\n- Structure content logically from basic to advanced concepts\n- Ensure the difficulty level matches the content\n- **IMPORTANT**: Include relevant video sources for each lesson when they would enhance learning\n- Choose high-quality educational videos from YouTube\n- **CRITICAL**: Always use YouTube embed URLs (https://www.youtube.com/embed/VIDEO_ID) NOT regular YouTube URLs\n- Video duration should be appropriate (2-15 minutes for most lessons)"
+      }
+    ],
+    "max_tokens": 3000,
+    "temperature": 0.3,
+    "user_prompt": "C++ development",
+    "timestamp": "2025-07-24T06:34:31.466Z"
+  },
+  "response": {
+    "content": "{\n  \"title\": \"Mastering C++ Development: From Basics to Advanced\",\n  \"description\": \"This course provides a comprehensive introduction to C++ development, covering everything from basic syntax and data types to advanced concepts like object-oriented programming and memory management. By the end of this course, learners will be able to write, compile, and debug their own C++ programs.\",\n  \"difficulty\": \"beginner\",\n  \"estimated_duration\": 200,\n  \"lessons\": [\n    {\n      \"title\": \"Introduction to C++\",\n      \"content\": \"In this lesson, we will cover the basics of C++, including its history, its uses, and the basic structure of a C++ program. We will also write and compile our first simple program.\",\n      \"order_index\": 1,\n      \"estimated_duration\": 20,\n      \"video_url\": \"https://www.youtube.com/embed/1MXd8G4pZf0\",\n      \"video_title\": \"C++ Tutorial for Beginners - Full Course\",\n      \"video_duration\": 600\n    },\n    {\n      \"title\": \"C++ Syntax and Data Types\",\n      \"content\": \"This lesson will cover the basic syntax of C++, including variables, data types, operators, and control structures. We will also do some exercises to practice these concepts.\",\n      \"order_index\": 2,\n      \"estimated_duration\": 20,\n      \"video_url\": \"https://www.youtube.com/embed/Rub-JsjMhWY\",\n      \"video_title\": \"C++ Programming\",\n      \"video_duration\": 600\n    },\n    {\n      \"title\": \"Functions in C++\",\n      \"content\": \"In this lesson, we will learn about functions in C++, including how to define and call functions, and how to use function parameters and return values. We will also do some exercises to practice writing functions.\",\n      \"order_index\": 3,\n      \"estimated_duration\": 20,\n      \"video_url\": \"https://www.youtube.com/embed/_bYFu9mBnr4\",\n      \"video_title\": \"C++ Functions\",\n      \"video_duration\": 600\n    },\n    {\n      \"title\": \"Object-Oriented Programming in C++\",\n      \"content\": \"This lesson will introduce the concept of object-oriented programming in C++, including classes, objects, inheritance, and polymorphism. We will also do some exercises to practice these concepts.\",\n      \"order_index\": 4,\n      \"estimated_duration\": 30,\n      \"video_url\": \"https://www.youtube.com/embed/tvC1WCdV1XU\",\n      \"video_title\": \"Object-oriented Programming in 7 minutes\",\n      \"video_duration\": 420\n    },\n    {\n      \"title\": \"Memory Management in C++\",\n      \"content\": \"In this final lesson, we will learn about memory management in C++, including pointers, dynamic memory allocation, and memory leaks. We will also do some exercises to practice these concepts.\",\n      \"order_index\": 5,\n      \"estimated_duration\": 30,\n      \"video_url\": \"https://www.youtube.com/embed/IzoFn3dfsPA\",\n      \"video_title\": \"C++ Memory Management\",\n      \"video_duration\": 600\n    }\n  ]\n}",
+    "usage": {
+      "prompt_tokens": 377,
+      "completion_tokens": 676,
+      "total_tokens": 1053,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "model": "gpt-4-0613",
+    "finish_reason": "stop",
+    "raw_response": {
+      "id": "chatcmpl-Bwjojk3OvaT4mYzMZOZrjF7oKpEfs",
+      "object": "chat.completion",
+      "created": 1753338845,
+      "model": "gpt-4-0613",
+      "choices": [
+        {
+          "index": 0,
+          "message": {
+            "role": "assistant",
+            "content": "{\n  \"title\": \"Mastering C++ Development: From Basics to Advanced\",\n  \"description\": \"This course provides a comprehensive introduction to C++ development, covering everything from basic syntax and data types to advanced concepts like object-oriented programming and memory management. By the end of this course, learners will be able to write, compile, and debug their own C++ programs.\",\n  \"difficulty\": \"beginner\",\n  \"estimated_duration\": 200,\n  \"lessons\": [\n    {\n      \"title\": \"Introduction to C++\",\n      \"content\": \"In this lesson, we will cover the basics of C++, including its history, its uses, and the basic structure of a C++ program. We will also write and compile our first simple program.\",\n      \"order_index\": 1,\n      \"estimated_duration\": 20,\n      \"video_url\": \"https://www.youtube.com/embed/1MXd8G4pZf0\",\n      \"video_title\": \"C++ Tutorial for Beginners - Full Course\",\n      \"video_duration\": 600\n    },\n    {\n      \"title\": \"C++ Syntax and Data Types\",\n      \"content\": \"This lesson will cover the basic syntax of C++, including variables, data types, operators, and control structures. We will also do some exercises to practice these concepts.\",\n      \"order_index\": 2,\n      \"estimated_duration\": 20,\n      \"video_url\": \"https://www.youtube.com/embed/Rub-JsjMhWY\",\n      \"video_title\": \"C++ Programming\",\n      \"video_duration\": 600\n    },\n    {\n      \"title\": \"Functions in C++\",\n      \"content\": \"In this lesson, we will learn about functions in C++, including how to define and call functions, and how to use function parameters and return values. We will also do some exercises to practice writing functions.\",\n      \"order_index\": 3,\n      \"estimated_duration\": 20,\n      \"video_url\": \"https://www.youtube.com/embed/_bYFu9mBnr4\",\n      \"video_title\": \"C++ Functions\",\n      \"video_duration\": 600\n    },\n    {\n      \"title\": \"Object-Oriented Programming in C++\",\n      \"content\": \"This lesson will introduce the concept of object-oriented programming in C++, including classes, objects, inheritance, and polymorphism. We will also do some exercises to practice these concepts.\",\n      \"order_index\": 4,\n      \"estimated_duration\": 30,\n      \"video_url\": \"https://www.youtube.com/embed/tvC1WCdV1XU\",\n      \"video_title\": \"Object-oriented Programming in 7 minutes\",\n      \"video_duration\": 420\n    },\n    {\n      \"title\": \"Memory Management in C++\",\n      \"content\": \"In this final lesson, we will learn about memory management in C++, including pointers, dynamic memory allocation, and memory leaks. We will also do some exercises to practice these concepts.\",\n      \"order_index\": 5,\n      \"estimated_duration\": 30,\n      \"video_url\": \"https://www.youtube.com/embed/IzoFn3dfsPA\",\n      \"video_title\": \"C++ Memory Management\",\n      \"video_duration\": 600\n    }\n  ]\n}",
+            "refusal": null,
+            "annotations": []
+          },
+          "logprobs": null,
+          "finish_reason": "stop"
+        }
+      ],
+      "usage": {
+        "prompt_tokens": 377,
+        "completion_tokens": 676,
+        "total_tokens": 1053,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "audio_tokens": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "audio_tokens": 0,
+          "accepted_prediction_tokens": 0,
+          "rejected_prediction_tokens": 0
+        }
+      },
+      "service_tier": "default",
+      "system_fingerprint": null
+    }
+  },
+  "success": true,
+  "duration_ms": 26056
+}
