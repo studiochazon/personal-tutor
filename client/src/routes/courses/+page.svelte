@@ -152,14 +152,14 @@
 {:else}
 	<div class="page-container">
 		<!-- Header Section -->
-		<header class="hero-header">
+		<!-- <header class="hero-header">
 			<div class="hero-header-content">
 				<h1 class="hero-title">All Courses</h1>
 				<p class="hero-subtitle">
 					Explore our comprehensive collection of courses designed to help you master new skills and advance your career.
 				</p>
 			</div>
-		</header>
+		</header> -->
 		
 		<!-- Search and Filter Section -->
 		<section class="filters-section">
@@ -249,13 +249,12 @@
 		padding: 0 var(--spacing-4);
 		display: flex;
 		gap: var(--spacing-4);
-		flex-wrap: wrap;
 		align-items: center;
 	}
 
 	.search-container {
-		flex: 1;
-		min-width: 16rem;
+		flex: 3;
+		min-width: 400px;
 	}
 
 	.search-input {
@@ -281,7 +280,8 @@
 		font-size: 1rem;
 		background-color: white;
 		transition: all 0.2s ease;
-		min-width: 12rem;
+		min-width: 8rem;
+		flex: 1;
 	}
 
 	.difficulty-select:focus {
@@ -344,12 +344,30 @@
 	/* Responsive Design */
 	@media (max-width: 768px) {
 		.filters-container {
-			flex-direction: column;
-			align-items: stretch;
+			flex-direction: row;
+			gap: var(--spacing-3);
 		}
 
 		.search-container {
-			min-width: auto;
+			min-width: 250px;
+			flex: 3;
+		}
+
+		.difficulty-select {
+			min-width: 100px;
+			flex: 1;
+		}
+	}
+	
+	@media (max-width: 480px) {
+		.filters-container {
+			flex-direction: column;
+			align-items: stretch;
+			gap: var(--spacing-3);
+		}
+
+		.search-container {
+			max-width: none;
 		}
 
 		.difficulty-select {
