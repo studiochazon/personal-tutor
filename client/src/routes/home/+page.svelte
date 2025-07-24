@@ -338,30 +338,44 @@ Each lesson should follow this structure:
 	<div class="container mx-auto px-4 py-8">
 		<!-- Automatic Course Creation Indicator -->
 		{#if autoCreatingCourse && creatingCourse}
-			<div class="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-				<div class="flex items-center">
-					<div class="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-3"></div>
-					<p class="text-blue-800 font-medium">
-						Creating your course: "{promptText.length > 50 ? promptText.substring(0, 50) + '...' : promptText}"
-					</p>
+			<div class="mb-6">
+				<div class="card-elevated bg-white border border-gray-200">
+					<div class="p-6">
+						<div class="flex items-center justify-center">
+							<div class="text-center">
+								<h3 class="text-lg font-semibold text-gray-900 mb-2">
+									Creating Your Course - {promptText.split(' ')[0] || 'Course'}
+								</h3>
+								<div class="flex items-center justify-center gap-1">
+									<div class="w-2 h-2 bg-blue-500 rounded-full animate-bounce"></div>
+									<div class="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style="animation-delay: 0.1s;"></div>
+									<div class="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style="animation-delay: 0.2s;"></div>
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		{/if}
 
 		<!-- Course Creation Error -->
 		{#if courseCreationError}
-			<div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-				<div class="flex items-start justify-between">
-					<div class="flex-1">
-						<p class="text-red-800 font-medium mb-2">Course Creation Failed</p>
-						<p class="text-red-700 text-sm">{courseCreationError}</p>
+			<div class="mb-6">
+				<div class="card-elevated bg-red-50 border border-red-200">
+					<div class="p-6">
+						<div class="flex items-center justify-between">
+							<div>
+								<h3 class="text-lg font-semibold text-red-800 mb-1">Course Creation Failed</h3>
+								<p class="text-red-700 text-sm">{courseCreationError}</p>
+							</div>
+							<button 
+								on:click={retryCourseCreation}
+								class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm font-medium"
+							>
+								Retry
+							</button>
+						</div>
 					</div>
-					<button 
-						on:click={retryCourseCreation}
-						class="ml-4 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors text-sm"
-					>
-						Retry
-					</button>
 				</div>
 			</div>
 		{/if}
@@ -436,4 +450,6 @@ Each lesson should follow this structure:
 	.overflow-x-auto {
 		scroll-behavior: smooth;
 	}
+	
+
 </style> 
