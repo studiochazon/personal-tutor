@@ -49,7 +49,7 @@
 	{/if}
 	
 	<div class="lesson-footer">
-		<a href={actionHref} class="btn-primary">
+		<a href={actionHref} class="btn-primary {isCompleted ? 'btn-completed' : ''}">
 			{actionText}
 		</a>
 	</div>
@@ -161,6 +161,17 @@
 	.lesson-footer {
 		padding-top: var(--spacing-4);
 		border-top: 1px solid var(--color-gray-100);
+	}
+
+	.btn-completed {
+		background-color: var(--color-success) !important;
+		border-color: var(--color-success) !important;
+		color: white !important;
+	}
+
+	.btn-completed:hover {
+		background-color: var(--color-success-dark) !important;
+		border-color: var(--color-success-dark) !important;
 	}
 
 	/* Responsive Design */

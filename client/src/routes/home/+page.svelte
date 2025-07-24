@@ -155,8 +155,8 @@ Each lesson should follow this structure:
 			
 			if (response.ok) {
 				const result = await response.json();
-				// Redirect to the new course
-				window.location.href = `/courses/${result.course.id}`;
+				// Redirect to the new course with success indicator
+				window.location.href = `/courses/${result.course.id}?new=true`;
 			} else {
 				const error = await response.json();
 				alert(`Error creating course: ${error.error || 'Unknown error'}`);

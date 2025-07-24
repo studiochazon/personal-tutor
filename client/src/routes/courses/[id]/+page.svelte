@@ -14,6 +14,7 @@
 	let error: string | null = null;
 	let isAuthenticated = false;
 	let enrolling = false;
+	let showSuccessMessage = false;
 	
 	$: courseId = $page.params.id;
 	
@@ -22,6 +23,9 @@
 		isAuthenticated = await requireAuth();
 		
 		if (isAuthenticated) {
+			// Check if this is a newly created course
+			showSuccessMessage = $page.url.searchParams.get('new') === 'true';
+			
 			// Only load data if authenticated
 			await loadCourse();
 		}
@@ -99,6 +103,20 @@
 		if (lessons.length === 0) return 0;
 		const completedLessons = courseProgress.filter(p => p.completed).length;
 		return Math.round((completedLessons / lessons.length) * 100);
+	}
+	
+	function isCourseCompleted(): boolean {
+		if (!enrollment || lessons.length === 0) return false;
+		const completedLessons = courseProgress.filter(p => p.completed).length;
+		return completedLessons >= lessons.length;
+	}
+	
+	function isLessonCompleted(lessonId: number): boolean {
+		return courseProgress.some(p => p.lesson_id === lessonId && p.completed);
+	}
+	
+	function getLessonActionText(lessonId: number): string {
+		return isLessonCompleted(lessonId) ? 'Review' : 'Start Lesson';
 	}
 	
 	async function enrollInCourse() {
@@ -198,6 +216,14 @@
 							<div class="enrollment-status-wrapper">
 								<EnrollmentStatus {enrollment} variant="badge" size="lg" />
 								
+								<!-- Course Completion Status -->
+								{#if isCourseCompleted()}
+									<div class="course-completion-badge">
+										<span class="completion-icon">🎉</span>
+										<span class="completion-text">Course Completed!</span>
+									</div>
+								{/if}
+								
 								<!-- Course Progress -->
 								{#if lessons.length > 0}
 									<div class="course-progress-section">
@@ -213,9 +239,13 @@
 									</div>
 								{/if}
 								
-								{#if enrollment.status === 'active'}
+								{#if enrollment.status === 'active' && !isCourseCompleted()}
 									<a href="/courses/{courseId}/lessons/{lessons[0]?.id}" class="btn btn-primary">
 										Continue Learning
+									</a>
+								{:else if isCourseCompleted()}
+									<a href="/courses/{courseId}/lessons/{lessons[0]?.id}" class="btn btn-secondary">
+										Review Course
 									</a>
 								{/if}
 							</div>
@@ -232,16 +262,25 @@
 				</header>
 
 				<!-- Success Message for New Courses -->
-				<div class="success-message">
-					<strong>🎉 Course Created Successfully!</strong>
-					<p>
-						Your course has been generated and is ready to use. You can now view the lessons below or start customizing the content.
-					</p>
-				</div>
+				{#if showSuccessMessage}
+					<div class="success-message">
+						<strong>🎉 Course Created Successfully!</strong>
+						<p>
+							Your course has been generated and is ready to use. You can now view the lessons below or start customizing the content.
+						</p>
+					</div>
+				{/if}
 
 				<!-- Lessons Section -->
 				<main class="lessons-section">
-					<h2 class="section-title">Course Lessons</h2>
+					<div class="section-header">
+						<h2 class="section-title">
+							Course Lessons
+							{#if enrollment && isCourseCompleted()}
+								<span class="completion-status">✓ Completed</span>
+							{/if}
+						</h2>
+					</div>
 					
 					{#if lessons.length === 0}
 						<EmptyState 
@@ -255,7 +294,8 @@
 								<LessonCard 
 									{lesson}
 									lessonIndex={index}
-									actionText="Start Lesson"
+									isCompleted={isLessonCompleted(lesson.id)}
+									actionText={getLessonActionText(lesson.id)}
 									actionHref="/courses/{courseId}/lessons/{lesson.id}"
 								/>
 							{/each}
@@ -390,19 +430,39 @@
 
 	/* Lessons Section */
 	.lessons-section {
-		background-color: white;
+		/* background-color: white;
 		border-radius: 0.75rem;
-		padding: 2rem;
 		box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-		border: 1px solid #E5E7EB;
+		border: 1px solid #E5E7EB; */
+		padding: 2rem;
 		margin-bottom: 2rem;
+	}
+
+	.section-header {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+		margin-bottom: 1.5rem;
 	}
 
 	.section-title {
 		font-size: 1.5rem;
 		font-weight: 700;
 		color: #1F2937;
-		margin-bottom: 1.5rem;
+		margin: 0;
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+	}
+
+	.completion-status {
+		font-size: 1rem;
+		font-weight: 600;
+		color: #10B981;
+		background-color: #F0FDF4;
+		border: 1px solid #BBF7D0;
+		padding: 0.25rem 0.75rem;
+		border-radius: 0.375rem;
 	}
 
 	/* Lessons List */
@@ -469,6 +529,29 @@
 		font-size: 0.875rem;
 		font-weight: 600;
 		color: #1F2937;
+	}
+
+	/* Course Completion Badge */
+	.course-completion-badge {
+		background-color: #F0FDF4;
+		border: 1px solid #BBF7D0;
+		color: #166534;
+		padding: 0.5rem 1rem;
+		border-radius: 0.5rem;
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		font-size: 0.875rem;
+		font-weight: 600;
+		margin-bottom: 0.5rem;
+	}
+
+	.completion-icon {
+		font-size: 1rem;
+	}
+
+	.completion-text {
+		white-space: nowrap;
 	}
 
 	/* Responsive Design */

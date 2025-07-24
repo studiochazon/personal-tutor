@@ -216,8 +216,8 @@ Remember: Your goal is to create transformative learning experiences that empowe
 			const data = await response.json();
 			
 			if (data.success && data.course) {
-				// Redirect to the course page
-				goto(`/courses/${data.course.id}`);
+				// Redirect to the course page with success indicator
+				goto(`/courses/${data.course.id}?new=true`);
 			} else {
 				throw new Error('Course creation failed');
 			}

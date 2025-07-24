@@ -100,16 +100,21 @@ $btn-border-radius-xl: 0.75rem;
 	color: $btn-white;
 	box-shadow: $btn-shadow-sm;
     padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
 
 	&:hover {
 		background: $btn-grey;
 		box-shadow: $btn-shadow-lg;
+        color: $btn-white;
 	}
 
 	&:active {
 		background: $btn-black;
 	}
+
+    
 }
+
 
 .btn-secondary {
 	background: $btn-white;
