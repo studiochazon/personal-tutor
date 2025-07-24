@@ -14,6 +14,7 @@
 	let error: string | null = null;
 	let isAuthenticated = false;
 	let lessonProgress: Progress | null = null;
+	let allLessonsProgress: Progress[] = [];
 	let markingComplete = false;
 	let nextLesson: any = null;
 	let previousLesson: any = null;
@@ -63,8 +64,8 @@
 				currentLessonIndex = 0;
 			}
 			
-			// Load progress for this lesson
-			await loadLessonProgress();
+			// Load progress for all lessons in this course
+			await loadAllLessonsProgress();
 			
 		} catch (err) {
 			error = err instanceof Error ? err.message : 'Failed to load lesson';
@@ -74,10 +75,10 @@
 		}
 	}
 	
-	async function loadLessonProgress() {
+	async function loadAllLessonsProgress() {
 		try {
 			const token = getAuthToken();
-			if (!token || !lesson) return;
+			if (!token || !course) return;
 			
 			const response = await fetch('/api/progress', {
 				headers: {
@@ -87,10 +88,15 @@
 			
 			if (response.ok) {
 				const data = await response.json();
-				lessonProgress = data.progress.find((p: Progress) => p.lesson_id === lesson!.id) || null;
+				allLessonsProgress = data.progress || [];
+				
+				// Set current lesson progress
+				if (lesson) {
+					lessonProgress = allLessonsProgress.find((p: Progress) => p.lesson_id === lesson!.id) || null;
+				}
 			}
 		} catch (err) {
-			console.error('Error loading lesson progress:', err);
+			console.error('Error loading lessons progress:', err);
 		}
 	}
 	
@@ -119,6 +125,8 @@
 			if (response.ok) {
 				const data = await response.json();
 				lessonProgress = data.progress;
+				// Refresh all lessons progress to update the lessons list
+				await loadAllLessonsProgress();
 				error = null; // Clear any previous errors
 			} else {
 				const errorData = await response.json();
@@ -209,6 +217,10 @@
 	
 	function getProgressPercentage(): number {
 		return ((currentLessonIndex + 1) / allLessons.length) * 100;
+	}
+	
+	function isLessonCompleted(lessonId: number): boolean {
+		return allLessonsProgress.some((p: Progress) => p.lesson_id === lessonId && p.completed);
 	}
 </script>
 
@@ -502,28 +514,45 @@
 			</div>
 			
 			<!-- Lesson List -->
-			<div class="bg-white rounded-lg shadow-lg p-6" style="background: white; border-radius: 0.5rem; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); padding: 1.5rem;">
-				<h3 class="text-lg font-semibold text-gray-800 mb-4" style="font-size: 1.125rem; font-weight: 600; color: #1f2937; margin-bottom: 1rem;">
-					Course Lessons
-				</h3>
+			<div class="lessons-list bg-white rounded-lg shadow-lg p-6" style="background: white; border-radius: 0.5rem; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); padding: 1.5rem;">
+				<div class="flex justify-between items-center mb-4" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+					<h3 class="text-lg font-semibold text-gray-800" style="font-size: 1.125rem; font-weight: 600; color: #1f2937;">
+						Course Lessons
+					</h3>
+					<div class="text-sm text-gray-600" style="font-size: 0.875rem; color: #4b5563;">
+						{allLessonsProgress.filter((p: Progress) => p.completed).length} of {allLessons.length} completed
+					</div>
+				</div>
 				<div class="space-y-2" style="display: flex; flex-direction: column; gap: 0.5rem;">
 					{#each allLessons as lessonItem, index}
+						{@const isCompleted = isLessonCompleted(lessonItem.id)}
+						{@const isCurrent = lessonItem.id === lesson.id}
 						<a 
 							href="/courses/{course.id}/lessons/{lessonItem.id}"
-							class="flex items-center gap-3 p-3 rounded-lg transition-colors {lessonItem.id === lesson.id ? 'bg-blue-50 border border-blue-200' : 'hover:bg-gray-50'}"
-							style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; border-radius: 0.5rem; transition: background-color 0.2s; text-decoration: none; color: inherit; {lessonItem.id === lesson.id ? 'background: #eff6ff; border: 1px solid #bfdbfe;' : ''}"
+							class="flex items-center gap-3 p-3 rounded-lg transition-colors {isCurrent ? 'bg-blue-50 border border-blue-200' : isCompleted ? 'bg-green-50 border border-green-200' : 'hover:bg-gray-50'}"
+							style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; border-radius: 0.5rem; transition: background-color 0.2s; text-decoration: none; color: inherit; {isCurrent ? 'background: #eff6ff; border: 1px solid #bfdbfe;' : isCompleted ? 'background: #f0fdf4; border: 1px solid #bbf7d0;' : ''}"
 						>
-							<span class="bg-blue-100 text-blue-800 rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold" style="background: #dbeafe; color: #1e40af; border-radius: 50%; width: 1.5rem; height: 1.5rem; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700;">
-								{index + 1}
-							</span>
-							<span class="flex-1 text-sm {lessonItem.id === lesson.id ? 'font-semibold text-blue-800' : 'text-gray-700'}" style="flex: 1; font-size: 0.875rem; {lessonItem.id === lesson.id ? 'font-weight: 600; color: #1e40af;' : 'color: #374151;'}">
+							<div class="relative">
+								{#if isCompleted}
+									<span class="bg-green-100 text-green-800 rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold" style="background: #dcfce7; color: #166534; border-radius: 50%; width: 1.5rem; height: 1.5rem; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700;">
+										✓
+									</span>
+								{:else}
+									<span class="bg-blue-100 text-blue-800 rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold" style="background: #dbeafe; color: #1e40af; border-radius: 50%; width: 1.5rem; height: 1.5rem; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700;">
+										{index + 1}
+									</span>
+								{/if}
+							</div>
+							<span class="flex-1 text-sm {isCurrent ? 'font-semibold text-blue-800' : isCompleted ? 'font-medium text-green-800' : 'text-gray-700'}" style="flex: 1; font-size: 0.875rem; {isCurrent ? 'font-weight: 600; color: #1e40af;' : isCompleted ? 'font-weight: 500; color: #166534;' : 'color: #374151;'}">
 								{lessonItem.title}
 							</span>
 							<div class="flex items-center gap-2" style="display: flex; align-items: center; gap: 0.5rem;">
 								{#if lessonItem.video_url}
 									<span class="text-blue-600 text-xs" style="color: #2563eb; font-size: 0.75rem;">🎥</span>
 								{/if}
-								{#if lessonItem.id === lesson.id}
+								{#if isCompleted}
+									<span class="text-green-600 text-xs" style="color: #16a34a; font-size: 0.75rem;">✅ Completed</span>
+								{:else if isCurrent}
 									<span class="text-blue-600 text-xs" style="color: #2563eb; font-size: 0.75rem;">Current</span>
 								{/if}
 							</div>
