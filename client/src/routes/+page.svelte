@@ -110,11 +110,11 @@
 	<div class="hero-container">
 		<div class="hero-content">
 			<h1 class="hero-title">
-				Your Personal AI Tutor
+				Novotio - Personalized Learning with AI
 				<span class="hero-title-accent">for Modern Learning</span>
 			</h1>
 			<p class="hero-subtitle">
-				Create custom learning paths tailored to your goals. Learn smarter, not harder, with AI-powered recommendations and interactive lessons that adapt to your unique learning style.
+				Create custom learning paths tailored to your goals.
 			</p>
 			<div class="hero-buttons">
 				<a href="/courses" class="btn btn-primary btn-lg hero-btn-primary">

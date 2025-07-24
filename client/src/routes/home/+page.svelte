@@ -3,7 +3,7 @@
 	import { requireAuth } from '$lib/auth-guard';
 	import { getAuthToken } from '$lib/auth';
 	import type { Course } from '$lib/types';
-	import { CourseCard, LoadingState, EmptyState } from '$lib/components/ui';
+	import { CourseCard, LoadingState, EmptyState, NewCourseCard } from '$lib/components/ui';
 	
 	let inProgressCourses: Course[] = [];
 	let courseProgress: { [key: number]: number } = {};
@@ -186,11 +186,11 @@ Each lesson should follow this structure:
 	
 
 	
-	function handleKeyPress(event: KeyboardEvent) {
-		if (event.key === 'Enter' && !event.shiftKey) {
-			event.preventDefault();
-			createCourse();
-		}
+	function handleNewCourseSubmit(data: {prompt: string, audience?: string, depth?: string}) {
+		promptText = data.prompt;
+		if (data.audience) selectedAudience = data.audience;
+		if (data.depth) selectedDepth = data.depth;
+		createCourse();
 	}
 </script>
 
@@ -248,75 +248,14 @@ Each lesson should follow this structure:
 		</section>
 		
 		<!-- Start a New Course Card -->
-		<section class="prompt-sectionmb-12">
-			<div class="card-elevated p-8">
-				<h2 class="text-2xl font-bold text-gray-800 mb-6">Start a New Course</h2>
-				
-				<div class="space-y-6">
-					<!-- Textarea -->
-					<div>
-						<textarea
-							bind:value={promptText}
-							on:keypress={handleKeyPress}
-							placeholder="Teach X to Y in Z hours…"
-							class="textarea w-full min-h-[120px] resize-none"
-							disabled={creatingCourse}
-						></textarea>
-					</div>
-					
-					<!-- Dropdowns Row -->
-					<div class="flex gap-4 flex-wrap">
-						<div class="flex-1 min-w-[200px]">
-							<label for="audience" class="block text-sm font-medium text-gray-700 mb-2">
-								Audience
-							</label>
-							<select
-								id="audience"
-								bind:value={selectedAudience}
-								class="input"
-								disabled={creatingCourse}
-							>
-								{#each audienceOptions as option}
-									<option value={option.value}>{option.label}</option>
-								{/each}
-							</select>
-						</div>
-						
-						<div class="flex-1 min-w-[200px]">
-							<label for="depth" class="block text-sm font-medium text-gray-700 mb-2">
-								Depth
-							</label>
-							<select
-								id="depth"
-								bind:value={selectedDepth}
-								class="input"
-								disabled={creatingCourse}
-							>
-								{#each depthOptions as option}
-									<option value={option.value}>{option.label}</option>
-								{/each}
-							</select>
-						</div>
-					</div>
-					
-					<!-- Create Button -->
-					<div class="flex justify-end">
-						<button
-							on:click={createCourse}
-							class="btn btn-primary btn-lg flex items-center gap-2"
-							disabled={!promptText.trim() || creatingCourse}
-						>
-							{#if creatingCourse}
-								<div class="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-								Creating...
-							{:else}
-							
-								Create Course →
-							{/if}
-						</button>
-					</div>
-				</div>
-			</div>
+		<section class="mb-12">
+			<NewCourseCard
+				bind:promptText
+				bind:selectedAudience
+				bind:selectedDepth
+				bind:isLoading={creatingCourse}
+				onSubmit={handleNewCourseSubmit}
+			/>
 		</section>
 	</div>
 {/if}
