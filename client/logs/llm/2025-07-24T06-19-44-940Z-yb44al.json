@@ -1,0 +1,31 @@
+{
+  "id": "2025-07-24T06-19-44-940Z-yb44al",
+  "timestamp": "2025-07-24T06:19:44.940Z",
+  "request": {
+    "model": "gpt-4",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a course generation assistant. You must respond with ONLY valid JSON. Do not include any explanatory text, markdown formatting, or additional content outside the JSON object."
+      },
+      {
+        "role": "user",
+        "content": "You are an expert educational content creator. Based on the user's request below, create a comprehensive course structure.\n\nUser Request: \"React development\"\n\nGenerate a course with the following JSON structure (respond ONLY with valid JSON, no additional text):\n\n{\n  \"title\": \"Engaging and descriptive course title\",\n  \"description\": \"Comprehensive overview of what learners will gain from this course\",\n  \"difficulty\": \"beginner|intermediate|advanced\",\n  \"estimated_duration\": number in minutes,\n  \"lessons\": [\n    {\n      \"title\": \"Clear lesson title\",\n      \"content\": \"Comprehensive lesson content with clear structure, examples, and practical exercises. Use markdown formatting for better readability.\",\n      \"order_index\": number,\n      \"estimated_duration\": number in minutes,\n      \"video_url\": \"URL to relevant video content (YouTube, Vimeo, etc.)\",\n      \"video_title\": \"Title of the video content\",\n      \"video_duration\": number in seconds\n    }\n  ]\n}\n\nGuidelines:\n- Create 5-10 lessons depending on topic complexity\n- Each lesson should be 10-30 minutes of content\n- Include practical examples and exercises\n- Use clear, engaging language\n- Structure content logically from basic to advanced concepts\n- Ensure the difficulty level matches the content\n- **IMPORTANT**: Include relevant video sources for each lesson when they would enhance learning\n- Choose high-quality educational videos from YouTube, Vimeo, or other reputable platforms\n- Video duration should be appropriate (2-15 minutes for most lessons)"
+      }
+    ],
+    "max_tokens": 3000,
+    "temperature": 0.3,
+    "user_prompt": "React development",
+    "timestamp": "2025-07-24T06:19:44.940Z"
+  },
+  "response": {
+    "content": "Error: Failed to extract course data: 429",
+    "model": "gpt-4",
+    "raw_response": {
+      "error": "Failed to extract course data: 429"
+    }
+  },
+  "success": false,
+  "error": "Failed to extract course data: 429",
+  "duration_ms": 1336
+}

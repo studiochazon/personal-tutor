@@ -107,8 +107,9 @@
 			window.location.href = `/start?${params.toString()}`;
 		} else {
 			// User is not logged in, save to localStorage and redirect to login
-			const { savePromptData } = await import('$lib/auth');
+			const { savePromptData, setCourseCreationInProgress } = await import('$lib/auth');
 			savePromptData(data);
+			setCourseCreationInProgress(); // Set course creation in progress flag
 			window.location.href = '/auth/login';
 		}
 	}

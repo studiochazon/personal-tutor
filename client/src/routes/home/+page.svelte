@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { requireAuth } from '$lib/auth-guard';
-	import { getAuthToken } from '$lib/auth';
+	import { getAuthToken, clearCourseCreationInProgress } from '$lib/auth';
 	import type { Course } from '$lib/types';
 	import { CourseCard, LoadingState, EmptyState, NewCourseCard } from '$lib/components/ui';
 	
@@ -13,16 +13,100 @@
 	let selectedAudience = 'beginners';
 	let selectedDepth = 'comprehensive';
 	let isAuthenticated = false;
+	let hasProcessedUrlParams = false; // Flag to prevent duplicate processing
+	let autoCreatingCourse = false; // Flag for automatic course creation from URL params
+	let courseCreationError = ''; // Store error message for retry functionality
 	
-	onMount(async () => {
+	onMount(() => {
 		// Check authentication first
-		isAuthenticated = await requireAuth();
-		
-		if (isAuthenticated) {
-			// Only load data if authenticated
-			await loadInProgressCourses();
+		requireAuth().then(authenticated => {
+			isAuthenticated = authenticated;
+			
+			if (isAuthenticated) {
+				// Only load data if authenticated
+				loadInProgressCourses().then(() => {
+					// Check for URL parameters and handle automatic course creation
+					handleUrlParameters();
+				});
+			}
+		});
+
+		// Also check for URL parameters on page load (for direct URL visits)
+		const urlParams = new URLSearchParams(window.location.search);
+		if (urlParams.get('prompt') && !hasProcessedUrlParams) {
+			// If we have URL parameters but haven't processed them yet, wait for authentication
+			const checkAuth = setInterval(() => {
+				if (isAuthenticated && !hasProcessedUrlParams) {
+					handleUrlParameters();
+					clearInterval(checkAuth);
+				}
+			}, 100);
+			
+			// Cleanup interval after 10 seconds
+			setTimeout(() => clearInterval(checkAuth), 10000);
 		}
+
+		// Add beforeunload event listener to clear course creation flag if user navigates away during course creation
+		const handleBeforeUnload = () => {
+			if (creatingCourse) {
+				clearCourseCreationInProgress();
+			}
+		};
+
+		window.addEventListener('beforeunload', handleBeforeUnload);
+
+		// Cleanup function
+		return () => {
+			window.removeEventListener('beforeunload', handleBeforeUnload);
+		};
 	});
+
+	function handleUrlParameters() {
+		// Prevent duplicate processing
+		if (hasProcessedUrlParams) {
+			return;
+		}
+		
+		// Check for URL parameters
+		const urlParams = new URLSearchParams(window.location.search);
+		const promptParam = urlParams.get('prompt');
+		const audienceParam = urlParams.get('audience');
+		const depthParam = urlParams.get('depth');
+
+		if (promptParam) {
+			console.log('Home page: Found URL parameters, initiating automatic course creation');
+			
+			// Mark as processed to prevent duplicates
+			hasProcessedUrlParams = true;
+			autoCreatingCourse = true;
+			
+			// Set the form values
+			promptText = promptParam;
+			if (audienceParam) selectedAudience = audienceParam;
+			if (depthParam) selectedDepth = depthParam;
+			
+			// Clear URL parameters to prevent duplicate course creation
+			const newUrl = window.location.pathname;
+			window.history.replaceState({}, '', newUrl);
+			
+			// Automatically start course creation with longer delay to ensure auth is ready
+			setTimeout(() => {
+				// Double-check that we have auth token before proceeding
+				let token = getAuthToken();
+				if (!token) {
+					// Fallback to localStorage
+					token = localStorage.getItem('auth_token');
+				}
+				if (token) {
+					createCourse();
+				} else {
+					console.error('Home page: No auth token available for automatic course creation');
+					autoCreatingCourse = false;
+					alert('Authentication error. Please try again.');
+				}
+			}, 1000); // Longer delay to ensure auth store is fully updated
+		}
+	}
 	
 	// Audience options for the dropdown
 	const audienceOptions = [
@@ -73,6 +157,12 @@
 	async function createCourse() {
 		if (!promptText.trim()) {
 			alert('Please enter a course description');
+			return;
+		}
+		
+		// Prevent duplicate course creation
+		if (creatingCourse) {
+			console.log('Home page: Course creation already in progress, ignoring duplicate request');
 			return;
 		}
 		
@@ -145,27 +235,61 @@ Each lesson should follow this structure:
 				{ role: 'user', content: promptText.trim() }
 			];
 
+			// Get auth token - try both store and localStorage
+			let token = getAuthToken();
+			if (!token) {
+				// Fallback to localStorage
+				token = localStorage.getItem('auth_token');
+			}
+			console.log('Home page: Auth token check:', { 
+				hasToken: !!token, 
+				tokenLength: token?.length,
+				fromStore: !!getAuthToken(),
+				fromLocalStorage: !!localStorage.getItem('auth_token')
+			});
+			if (!token) {
+				throw new Error('Authentication token not found. Please log in again.');
+			}
+
 			const response = await fetch('/api/start/create-course', {
 				method: 'POST',
 				headers: {
-					'Content-Type': 'application/json'
+					'Content-Type': 'application/json',
+					'Authorization': `Bearer ${token}`
 				},
 				body: JSON.stringify({ messages })
 			});
 			
 			if (response.ok) {
 				const result = await response.json();
+				// Clear course creation in progress flag since course was successfully created
+				clearCourseCreationInProgress();
+				courseCreationError = ''; // Clear any error messages
 				// Redirect to the new course with success indicator
 				window.location.href = `/courses/${result.course.id}?new=true`;
 			} else {
 				const error = await response.json();
-				alert(`Error creating course: ${error.error || 'Unknown error'}`);
+				const errorMessage = error.error || 'Unknown error';
+				
+				// Show more user-friendly error messages
+				if (errorMessage.includes('quota exceeded')) {
+					courseCreationError = 'Course creation is temporarily unavailable due to high demand. Please try again in a few minutes.';
+				} else if (errorMessage.includes('temporarily unavailable')) {
+					courseCreationError = 'Course creation service is temporarily unavailable. Please try again in a few minutes.';
+				} else if (errorMessage.includes('authentication failed')) {
+					courseCreationError = 'There was an authentication issue. Please try logging out and logging back in.';
+				} else {
+					courseCreationError = `Error creating course: ${errorMessage}`;
+				}
 			}
 		} catch (error) {
 			console.error('Error creating course:', error);
-			alert('Failed to create course. Please try again.');
+			courseCreationError = 'Failed to create course. Please try again.';
+			// Clear course creation in progress flag on error
+			clearCourseCreationInProgress();
 		} finally {
 			creatingCourse = false;
+			autoCreatingCourse = false; // Reset automatic course creation flag
 		}
 	}
 	
@@ -190,6 +314,12 @@ Each lesson should follow this structure:
 		promptText = data.prompt;
 		if (data.audience) selectedAudience = data.audience;
 		if (data.depth) selectedDepth = data.depth;
+		courseCreationError = ''; // Clear any previous errors
+		createCourse();
+	}
+
+	function retryCourseCreation() {
+		courseCreationError = ''; // Clear error
 		createCourse();
 	}
 </script>
@@ -206,6 +336,35 @@ Each lesson should follow this structure:
 	</div>
 {:else}
 	<div class="container mx-auto px-4 py-8">
+		<!-- Automatic Course Creation Indicator -->
+		{#if autoCreatingCourse && creatingCourse}
+			<div class="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+				<div class="flex items-center">
+					<div class="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-3"></div>
+					<p class="text-blue-800 font-medium">
+						Creating your course: "{promptText.length > 50 ? promptText.substring(0, 50) + '...' : promptText}"
+					</p>
+				</div>
+			</div>
+		{/if}
+
+		<!-- Course Creation Error -->
+		{#if courseCreationError}
+			<div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+				<div class="flex items-start justify-between">
+					<div class="flex-1">
+						<p class="text-red-800 font-medium mb-2">Course Creation Failed</p>
+						<p class="text-red-700 text-sm">{courseCreationError}</p>
+					</div>
+					<button 
+						on:click={retryCourseCreation}
+						class="ml-4 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors text-sm"
+					>
+						Retry
+					</button>
+				</div>
+			</div>
+		{/if}
 		<!-- In-Progress Courses Section -->
 		<section class="mb-12">
 			<div class="flex items-center justify-between mb-6">
@@ -248,15 +407,17 @@ Each lesson should follow this structure:
 		</section>
 		
 		<!-- Start a New Course Card -->
-		<section class="mb-12">
-			<NewCourseCard
-				bind:promptText
-				bind:selectedAudience
-				bind:selectedDepth
-				bind:isLoading={creatingCourse}
-				onSubmit={handleNewCourseSubmit}
-			/>
-		</section>
+		{#if !autoCreatingCourse}
+			<section class="mb-12">
+				<NewCourseCard
+					bind:promptText
+					bind:selectedAudience
+					bind:selectedDepth
+					bind:isLoading={creatingCourse}
+					onSubmit={handleNewCourseSubmit}
+				/>
+			</section>
+		{/if}
 	</div>
 {/if}
 

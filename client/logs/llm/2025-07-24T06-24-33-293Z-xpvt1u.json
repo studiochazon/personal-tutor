@@ -1,0 +1,79 @@
+{
+  "id": "2025-07-24T06-24-33-293Z-xpvt1u",
+  "timestamp": "2025-07-24T06:24:33.293Z",
+  "request": {
+    "model": "gpt-4",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a course generation assistant. You must respond with ONLY valid JSON. Do not include any explanatory text, markdown formatting, or additional content outside the JSON object."
+      },
+      {
+        "role": "user",
+        "content": "You are an expert educational content creator. Based on the user's request below, create a comprehensive course structure.\n\nUser Request: \"React development\"\n\nGenerate a course with the following JSON structure (respond ONLY with valid JSON, no additional text):\n\n{\n  \"title\": \"Engaging and descriptive course title\",\n  \"description\": \"Comprehensive overview of what learners will gain from this course\",\n  \"difficulty\": \"beginner|intermediate|advanced\",\n  \"estimated_duration\": number in minutes,\n  \"lessons\": [\n    {\n      \"title\": \"Clear lesson title\",\n      \"content\": \"Comprehensive lesson content with clear structure, examples, and practical exercises. Use markdown formatting for better readability.\",\n      \"order_index\": number,\n      \"estimated_duration\": number in minutes,\n      \"video_url\": \"URL to relevant video content (YouTube, Vimeo, etc.)\",\n      \"video_title\": \"Title of the video content\",\n      \"video_duration\": number in seconds\n    }\n  ]\n}\n\nGuidelines:\n- Create 5-10 lessons depending on topic complexity\n- Each lesson should be 10-30 minutes of content\n- Include practical examples and exercises\n- Use clear, engaging language\n- Structure content logically from basic to advanced concepts\n- Ensure the difficulty level matches the content\n- **IMPORTANT**: Include relevant video sources for each lesson when they would enhance learning\n- Choose high-quality educational videos from YouTube, Vimeo, or other reputable platforms\n- Video duration should be appropriate (2-15 minutes for most lessons)"
+      }
+    ],
+    "max_tokens": 3000,
+    "temperature": 0.3,
+    "user_prompt": "React development",
+    "timestamp": "2025-07-24T06:24:33.293Z"
+  },
+  "response": {
+    "content": "{\n  \"title\": \"Mastering React Development: From Basics to Advanced\",\n  \"description\": \"This course provides a comprehensive overview of React development, starting from the basics and progressing to advanced concepts. Learners will gain hands-on experience with practical examples and exercises.\",\n  \"difficulty\": \"beginner\",\n  \"estimated_duration\": 240,\n  \"lessons\": [\n    {\n      \"title\": \"Introduction to React\",\n      \"content\": \"This lesson introduces the basics of React, including its history, purpose, and core features. Practical exercises include setting up a React development environment.\",\n      \"order_index\": 1,\n      \"estimated_duration\": 30,\n      \"video_url\": \"https://www.youtube.com/watch?v=Ke90Tje7VS0\",\n      \"video_title\": \"Introduction to React.js\",\n      \"video_duration\": 720\n    },\n    {\n      \"title\": \"React Components and Props\",\n      \"content\": \"This lesson covers the concept of React components and props, and how to use them to build interactive UIs. Practical exercises include creating a simple component and passing data using props.\",\n      \"order_index\": 2,\n      \"estimated_duration\": 30,\n      \"video_url\": \"https://www.youtube.com/watch?v=0KlRgFEEz0g\",\n      \"video_title\": \"React Components and Props\",\n      \"video_duration\": 900\n    },\n    {\n      \"title\": \"React State and Lifecycle\",\n      \"content\": \"This lesson delves into React state and lifecycle methods, explaining how to create dynamic and interactive components. Practical exercises include building a clock component that updates in real-time.\",\n      \"order_index\": 3,\n      \"estimated_duration\": 30,\n      \"video_url\": \"https://www.youtube.com/watch?v=Oioo0IdoEls\",\n      \"video_title\": \"React State and Lifecycle\",\n      \"video_duration\": 840\n    },\n    {\n      \"title\": \"Handling Events in React\",\n      \"content\": \"This lesson covers how to handle events in React, such as user interactions. Practical exercises include building a button that changes state when clicked.\",\n      \"order_index\": 4,\n      \"estimated_duration\": 30,\n      \"video_url\": \"https://www.youtube.com/watch?v=DJBoB6fV8NA\",\n      \"video_title\": \"Handling Events in React\",\n      \"video_duration\": 720\n    },\n    {\n      \"title\": \"Conditional Rendering in React\",\n      \"content\": \"This lesson explains how to conditionally render components in React based on state or props. Practical exercises include creating a user login/logout button that changes based on the user's login status.\",\n      \"order_index\": 5,\n      \"estimated_duration\": 30,\n      \"video_url\": \"https://www.youtube.com/watch?v=ZgPz3Sq76ho\",\n      \"video_title\": \"Conditional Rendering in React\",\n      \"video_duration\": 780\n    },\n    {\n      \"title\": \"React Router and Navigation\",\n      \"content\": \"This lesson covers how to use React Router for navigation in a React application. Practical exercises include setting up routing for a multi-page application.\",\n      \"order_index\": 6,\n      \"estimated_duration\": 30,\n      \"video_url\": \"https://www.youtube.com/watch?v=Law7wfdg_ls\",\n      \"video_title\": \"React Router and Navigation\",\n      \"video_duration\": 840\n    },\n    {\n      \"title\": \"Advanced React Concepts\",\n      \"content\": \"This lesson introduces advanced React concepts like Hooks, Context API, and Redux. Practical exercises include refactoring a simple app to use Hooks and Context API.\",\n      \"order_index\": 7,\n      \"estimated_duration\": 30,\n      \"video_url\": \"https://www.youtube.com/watch?v=mxK8b99iJTg\",\n      \"video_title\": \"Advanced React Concepts\",\n      \"video_duration\": 900\n    }\n  ]\n}",
+    "usage": {
+      "prompt_tokens": 356,
+      "completion_tokens": 829,
+      "total_tokens": 1185,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "model": "gpt-4-0613",
+    "finish_reason": "stop",
+    "raw_response": {
+      "id": "chatcmpl-Bwjf32dK5KPJJCIbtt5OmmERVu0iy",
+      "object": "chat.completion",
+      "created": 1753338245,
+      "model": "gpt-4-0613",
+      "choices": [
+        {
+          "index": 0,
+          "message": {
+            "role": "assistant",
+            "content": "{\n  \"title\": \"Mastering React Development: From Basics to Advanced\",\n  \"description\": \"This course provides a comprehensive overview of React development, starting from the basics and progressing to advanced concepts. Learners will gain hands-on experience with practical examples and exercises.\",\n  \"difficulty\": \"beginner\",\n  \"estimated_duration\": 240,\n  \"lessons\": [\n    {\n      \"title\": \"Introduction to React\",\n      \"content\": \"This lesson introduces the basics of React, including its history, purpose, and core features. Practical exercises include setting up a React development environment.\",\n      \"order_index\": 1,\n      \"estimated_duration\": 30,\n      \"video_url\": \"https://www.youtube.com/watch?v=Ke90Tje7VS0\",\n      \"video_title\": \"Introduction to React.js\",\n      \"video_duration\": 720\n    },\n    {\n      \"title\": \"React Components and Props\",\n      \"content\": \"This lesson covers the concept of React components and props, and how to use them to build interactive UIs. Practical exercises include creating a simple component and passing data using props.\",\n      \"order_index\": 2,\n      \"estimated_duration\": 30,\n      \"video_url\": \"https://www.youtube.com/watch?v=0KlRgFEEz0g\",\n      \"video_title\": \"React Components and Props\",\n      \"video_duration\": 900\n    },\n    {\n      \"title\": \"React State and Lifecycle\",\n      \"content\": \"This lesson delves into React state and lifecycle methods, explaining how to create dynamic and interactive components. Practical exercises include building a clock component that updates in real-time.\",\n      \"order_index\": 3,\n      \"estimated_duration\": 30,\n      \"video_url\": \"https://www.youtube.com/watch?v=Oioo0IdoEls\",\n      \"video_title\": \"React State and Lifecycle\",\n      \"video_duration\": 840\n    },\n    {\n      \"title\": \"Handling Events in React\",\n      \"content\": \"This lesson covers how to handle events in React, such as user interactions. Practical exercises include building a button that changes state when clicked.\",\n      \"order_index\": 4,\n      \"estimated_duration\": 30,\n      \"video_url\": \"https://www.youtube.com/watch?v=DJBoB6fV8NA\",\n      \"video_title\": \"Handling Events in React\",\n      \"video_duration\": 720\n    },\n    {\n      \"title\": \"Conditional Rendering in React\",\n      \"content\": \"This lesson explains how to conditionally render components in React based on state or props. Practical exercises include creating a user login/logout button that changes based on the user's login status.\",\n      \"order_index\": 5,\n      \"estimated_duration\": 30,\n      \"video_url\": \"https://www.youtube.com/watch?v=ZgPz3Sq76ho\",\n      \"video_title\": \"Conditional Rendering in React\",\n      \"video_duration\": 780\n    },\n    {\n      \"title\": \"React Router and Navigation\",\n      \"content\": \"This lesson covers how to use React Router for navigation in a React application. Practical exercises include setting up routing for a multi-page application.\",\n      \"order_index\": 6,\n      \"estimated_duration\": 30,\n      \"video_url\": \"https://www.youtube.com/watch?v=Law7wfdg_ls\",\n      \"video_title\": \"React Router and Navigation\",\n      \"video_duration\": 840\n    },\n    {\n      \"title\": \"Advanced React Concepts\",\n      \"content\": \"This lesson introduces advanced React concepts like Hooks, Context API, and Redux. Practical exercises include refactoring a simple app to use Hooks and Context API.\",\n      \"order_index\": 7,\n      \"estimated_duration\": 30,\n      \"video_url\": \"https://www.youtube.com/watch?v=mxK8b99iJTg\",\n      \"video_title\": \"Advanced React Concepts\",\n      \"video_duration\": 900\n    }\n  ]\n}",
+            "refusal": null,
+            "annotations": []
+          },
+          "logprobs": null,
+          "finish_reason": "stop"
+        }
+      ],
+      "usage": {
+        "prompt_tokens": 356,
+        "completion_tokens": 829,
+        "total_tokens": 1185,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "audio_tokens": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "audio_tokens": 0,
+          "accepted_prediction_tokens": 0,
+          "rejected_prediction_tokens": 0
+        }
+      },
+      "service_tier": "default",
+      "system_fingerprint": null
+    }
+  },
+  "success": true,
+  "duration_ms": 28661
+}

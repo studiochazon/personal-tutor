@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
-	import { authStore, initializeGoogleIdentity, initAuth, getPromptData, clearPromptData } from '$lib/auth';
+	import { authStore, initializeGoogleIdentity, initAuth, getPromptData, clearPromptData, isCourseCreationInProgress, clearCourseCreationInProgress, getAuthStoreState } from '$lib/auth';
 	import type { User } from '$lib/types';
 
 	let isLoading = false;
@@ -11,23 +11,25 @@
 		// Initialize auth from localStorage
 		initAuth();
 		
-		// Check if already authenticated
-		authStore.subscribe(state => {
-			if (state.user && state.token) {
-				// Check if there's saved prompt data
-				const promptData = getPromptData();
-				if (promptData) {
-					// Clear the saved data and redirect to start page with prompt
-					clearPromptData();
-					const params = new URLSearchParams({
-						prompt: promptData.prompt,
-						audience: promptData.audience || 'beginners',
-						depth: promptData.depth || 'comprehensive'
-					});
-					goto(`/start?${params.toString()}`);
-				} else {
-					goto('/home');
-				}
+		// Check if already authenticated on mount
+		const currentState = getAuthStoreState();
+		if (currentState.user && currentState.token) {
+			handleAuthenticatedUser();
+		}
+		
+		// Subscribe to auth store changes
+		const unsubscribe = authStore.subscribe(state => {
+			console.log('Login page: Auth store state changed:', state);
+			isLoading = state.isLoading;
+			error = state.error;
+			
+			if (state.user && state.token && !state.isLoading) {
+				console.log('Login page: User authenticated, handling redirect...');
+				// Only handle authentication if we're not loading and have user data
+				// Add a small delay to ensure everything is properly set
+				setTimeout(() => {
+					handleAuthenticatedUser();
+				}, 100);
 			}
 		});
 
@@ -55,9 +57,59 @@
 			}
 		}, 100);
 
-		// Cleanup
-		return () => clearInterval(timer);
+		// Cleanup function
+		return () => {
+			clearInterval(timer);
+			unsubscribe();
+		};
 	});
+
+	function handleAuthenticatedUser() {
+		console.log('Login page: handleAuthenticatedUser called');
+		
+		// Check if course creation is in progress
+		if (isCourseCreationInProgress()) {
+			console.log('Login page: Course creation in progress, redirecting to home page');
+			// Clear the course creation flag
+			clearCourseCreationInProgress();
+			
+			// Check if there's saved prompt data
+			const promptData = getPromptData();
+			if (promptData) {
+				console.log('Login page: Found saved prompt data, redirecting to home page with prompt');
+				// Clear the saved data and redirect to home page with prompt
+				clearPromptData();
+				const params = new URLSearchParams({
+					prompt: promptData.prompt,
+					audience: promptData.audience || 'beginners',
+					depth: promptData.depth || 'comprehensive'
+				});
+				window.location.href = `/home?${params.toString()}`;
+			} else {
+				console.log('Login page: No prompt data but course creation was in progress, redirecting to home page');
+				// No prompt data but course creation was in progress, redirect to home page
+				window.location.href = '/home';
+			}
+		} else {
+			console.log('Login page: No course creation in progress');
+			// No course creation in progress, check for saved prompt data anyway
+			const promptData = getPromptData();
+			if (promptData) {
+				console.log('Login page: Found saved prompt data, redirecting to home page with prompt');
+				// Clear the saved data and redirect to home page with prompt
+				clearPromptData();
+				const params = new URLSearchParams({
+					prompt: promptData.prompt,
+					audience: promptData.audience || 'beginners',
+					depth: promptData.depth || 'comprehensive'
+				});
+				window.location.href = `/home?${params.toString()}`;
+			} else {
+				console.log('Login page: No course creation or prompt data, redirecting to home');
+				window.location.href = '/home';
+			}
+		}
+	}
 
 	function showGoogleError() {
 		const buttonContainer = document.getElementById('google-signin-button');
@@ -76,12 +128,6 @@
 			`;
 		}
 	}
-
-	// Subscribe to auth store for loading and error states
-	authStore.subscribe(state => {
-		isLoading = state.isLoading;
-		error = state.error;
-	});
 </script>
 
 <svelte:head>

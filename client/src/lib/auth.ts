@@ -15,6 +15,13 @@ export const authStore = writable<{
 	error: null
 });
 
+// Helper function to get current auth store state
+export function getAuthStoreState() {
+	let state: any;
+	authStore.subscribe(s => state = s)();
+	return state;
+}
+
 // Initialize authentication from localStorage
 export function initAuth() {
 	if (typeof window !== 'undefined') {
@@ -94,6 +101,7 @@ export function initializeGoogleIdentity() {
 
 // Handle Google sign-in callback
 async function handleGoogleSignIn(response: any) {
+	console.log('Google sign-in callback triggered');
 	authStore.update(state => ({ ...state, isLoading: true, error: null }));
 
 	try {
@@ -106,11 +114,14 @@ async function handleGoogleSignIn(response: any) {
 		});
 
 		const data = await result.json();
+		console.log('Google sign-in API response:', data);
 
 		if (data.success) {
 			// Store in localStorage
 			localStorage.setItem('auth_token', data.token);
 			localStorage.setItem('auth_user', JSON.stringify(data.user));
+			
+			console.log('Stored auth data in localStorage, updating store...');
 			
 			// Update store
 			authStore.set({
@@ -119,6 +130,8 @@ async function handleGoogleSignIn(response: any) {
 				isLoading: false,
 				error: null
 			});
+			
+			console.log('Auth store updated successfully');
 		} else {
 			throw new Error(data.error || 'Authentication failed');
 		}
@@ -255,6 +268,39 @@ export function clearPromptData(): void {
 			localStorage.removeItem('pending_course_prompt');
 		} catch (error) {
 			console.error('Failed to clear prompt data:', error);
+		}
+	}
+}
+
+// Course creation state management
+export function setCourseCreationInProgress(): void {
+	if (typeof window !== 'undefined') {
+		try {
+			localStorage.setItem('course_creation_in_progress', 'true');
+		} catch (error) {
+			console.error('Failed to set course creation in progress:', error);
+		}
+	}
+}
+
+export function isCourseCreationInProgress(): boolean {
+	if (typeof window !== 'undefined') {
+		try {
+			return localStorage.getItem('course_creation_in_progress') === 'true';
+		} catch (error) {
+			console.error('Failed to check course creation status:', error);
+			return false;
+		}
+	}
+	return false;
+}
+
+export function clearCourseCreationInProgress(): void {
+	if (typeof window !== 'undefined') {
+		try {
+			localStorage.removeItem('course_creation_in_progress');
+		} catch (error) {
+			console.error('Failed to clear course creation status:', error);
 		}
 	}
 } 

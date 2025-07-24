@@ -3,7 +3,7 @@
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import { requireAuth } from '$lib/auth-guard';
-	import { authStore, getAuthToken } from '$lib/auth';
+	import { authStore, getAuthToken, clearCourseCreationInProgress } from '$lib/auth';
 	import type { CreateCourseRequest } from '$lib/types';
 
 	let userPrompt = '';
@@ -13,16 +13,18 @@
 	let user: any = null;
 	let isAuthenticated = false;
 
-	onMount(async () => {
+	onMount(() => {
 		// Check authentication first
-		isAuthenticated = await requireAuth();
-		
-		if (isAuthenticated) {
-			// Subscribe to auth store for user data
-			authStore.subscribe(state => {
-				user = state.user;
-			});
-		}
+		requireAuth().then(authenticated => {
+			isAuthenticated = authenticated;
+			
+			if (isAuthenticated) {
+				// Subscribe to auth store for user data
+				authStore.subscribe(state => {
+					user = state.user;
+				});
+			}
+		});
 
 		// Handle URL parameters from landing page
 		const urlParams = new URLSearchParams(window.location.search);
@@ -41,6 +43,18 @@
 			// You can use this to customize the system prompt
 			console.log('Depth:', depthParam);
 		}
+
+		// Add beforeunload event listener to clear course creation flag if user navigates away
+		const handleBeforeUnload = () => {
+			clearCourseCreationInProgress();
+		};
+
+		window.addEventListener('beforeunload', handleBeforeUnload);
+
+		// Cleanup function
+		return () => {
+			window.removeEventListener('beforeunload', handleBeforeUnload);
+		};
 	});
 
 	// System prompt for course creation - this should match the content from system-prompt.md
@@ -235,6 +249,8 @@ Remember: Your goal is to create transformative learning experiences that empowe
 			const data = await response.json();
 			
 			if (data.success && data.course) {
+				// Clear course creation in progress flag since course was successfully created
+				clearCourseCreationInProgress();
 				// Redirect to the course page with success indicator
 				goto(`/courses/${data.course.id}?new=true`);
 			} else {
@@ -244,6 +260,8 @@ Remember: Your goal is to create transformative learning experiences that empowe
 		} catch (error) {
 			console.error('Error creating course:', error);
 			errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
+			// Clear course creation in progress flag on error
+			clearCourseCreationInProgress();
 		} finally {
 			isLoading = false;
 		}

@@ -69,10 +69,36 @@ export const POST: RequestHandler = async ({ request }) => {
 		}
 
 		// Use OpenAI to extract structured course data from the conversation
-		const courseData = await extractCourseFromConversation(messages);
+		let courseData;
+		try {
+			courseData = await extractCourseFromConversation(messages);
 
-		if (!courseData) {
-			return json({ error: 'Could not extract course data from conversation' }, { status: 400 });
+			if (!courseData) {
+				return json({ error: 'Could not extract course data from conversation' }, { status: 400 });
+			}
+		} catch (error) {
+			console.error('Course creation error:', error);
+			
+			// Handle specific OpenAI API errors
+			if (error instanceof Error) {
+				if (error.message.includes('429')) {
+					return json({ 
+						error: 'OpenAI API quota exceeded. Please try again later or contact support.' 
+					}, { status: 503 });
+				} else if (error.message.includes('401')) {
+					return json({ 
+						error: 'OpenAI API authentication failed. Please contact support.' 
+					}, { status: 500 });
+				} else if (error.message.includes('Failed to extract course data')) {
+					return json({ 
+						error: 'Course creation service temporarily unavailable. Please try again in a few minutes.' 
+					}, { status: 503 });
+				}
+			}
+			
+			return json({ 
+				error: 'Course creation failed. Please try again later.' 
+			}, { status: 500 });
 		}
 
 		// Save course to database
