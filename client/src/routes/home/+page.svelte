@@ -248,7 +248,7 @@ Each lesson should follow this structure:
 		</section>
 		
 		<!-- Start a New Course Card -->
-		<section class="mb-12">
+		<section class="prompt-sectionmb-12">
 			<div class="card-elevated p-8">
 				<h2 class="text-2xl font-bold text-gray-800 mb-6">Start a New Course</h2>
 				
@@ -310,7 +310,7 @@ Each lesson should follow this structure:
 								<div class="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
 								Creating...
 							{:else}
-								<span class="text-lg">•</span>
+							
 								Create Course →
 							{/if}
 						</button>

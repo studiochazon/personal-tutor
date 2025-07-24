@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
 	import { requireAuth } from '$lib/auth-guard';
 	import { authStore, getAuthToken } from '$lib/auth';
 	import type { CreateCourseRequest } from '$lib/types';
@@ -21,6 +22,24 @@
 			authStore.subscribe(state => {
 				user = state.user;
 			});
+		}
+
+		// Handle URL parameters from landing page
+		const urlParams = new URLSearchParams(window.location.search);
+		const promptParam = urlParams.get('prompt');
+		const audienceParam = urlParams.get('audience');
+		const depthParam = urlParams.get('depth');
+
+		if (promptParam) {
+			userPrompt = promptParam;
+		}
+		if (audienceParam) {
+			// You can use this to customize the system prompt
+			console.log('Audience:', audienceParam);
+		}
+		if (depthParam) {
+			// You can use this to customize the system prompt
+			console.log('Depth:', depthParam);
 		}
 	});
 
