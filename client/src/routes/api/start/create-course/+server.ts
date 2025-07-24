@@ -91,7 +91,7 @@ export const POST: RequestHandler = async ({ request }) => {
 				courseData.difficulty,
 				courseData.estimated_duration || null,
 				userId,
-				false // Start as unpublished
+				true // Automatically publish courses created from prompts
 			]
 		);
 
