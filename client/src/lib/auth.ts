@@ -211,3 +211,50 @@ export function verifyJWTToken(token: string): { userId: number; email: string }
 		return null;
 	}
 } 
+
+// Prompt data storage utilities for non-authenticated users
+export function savePromptData(data: {prompt: string, audience?: string, depth?: string}): void {
+	if (typeof window !== 'undefined') {
+		try {
+			const promptData = {
+				...data,
+				timestamp: Date.now()
+			};
+			localStorage.setItem('pending_course_prompt', JSON.stringify(promptData));
+		} catch (error) {
+			console.error('Failed to save prompt data:', error);
+		}
+	}
+}
+
+export function getPromptData(): {prompt: string, audience?: string, depth?: string} | null {
+	if (typeof window !== 'undefined') {
+		try {
+			const stored = localStorage.getItem('pending_course_prompt');
+			if (stored) {
+				const data = JSON.parse(stored);
+				// Check if data is not too old (24 hours)
+				if (Date.now() - data.timestamp < 24 * 60 * 60 * 1000) {
+					return data;
+				} else {
+					// Data is too old, clear it
+					clearPromptData();
+				}
+			}
+		} catch (error) {
+			console.error('Failed to get prompt data:', error);
+			clearPromptData();
+		}
+	}
+	return null;
+}
+
+export function clearPromptData(): void {
+	if (typeof window !== 'undefined') {
+		try {
+			localStorage.removeItem('pending_course_prompt');
+		} catch (error) {
+			console.error('Failed to clear prompt data:', error);
+		}
+	}
+} 

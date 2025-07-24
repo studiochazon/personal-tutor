@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
-	import { authStore, initializeGoogleIdentity, initAuth } from '$lib/auth';
+	import { authStore, initializeGoogleIdentity, initAuth, getPromptData, clearPromptData } from '$lib/auth';
 	import type { User } from '$lib/types';
 
 	let isLoading = false;
@@ -14,7 +14,20 @@
 		// Check if already authenticated
 		authStore.subscribe(state => {
 			if (state.user && state.token) {
-				goto('/home');
+				// Check if there's saved prompt data
+				const promptData = getPromptData();
+				if (promptData) {
+					// Clear the saved data and redirect to start page with prompt
+					clearPromptData();
+					const params = new URLSearchParams({
+						prompt: promptData.prompt,
+						audience: promptData.audience || 'beginners',
+						depth: promptData.depth || 'comprehensive'
+					});
+					goto(`/start?${params.toString()}`);
+				} else {
+					goto('/home');
+				}
 			}
 		});
 

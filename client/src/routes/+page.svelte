@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import type { Course } from '$lib/types';
-	import { Icon, PromptSection } from '$lib/components/ui';
+	import { Icon, PromptSection, NewCourseCard } from '$lib/components/ui';
 	
 	let featuredCourses: Course[] = [];
 	let loading = true;
@@ -31,11 +31,11 @@
 			title: "Personalized Learning Paths",
 			description: "AI-powered course recommendations tailored to your learning style and goals"
 		},
-		{
-			icon: "book",
-			title: "Interactive Lessons",
-			description: "Engage with hands-on exercises, quizzes, and real-world projects"
-		},
+		// {
+		// 	icon: "book",
+		// 	title: "Interactive Lessons",
+		// 	description: "Engage with hands-on exercises, quizzes, and real-world projects"
+		// },
 		{
 			icon: "chart",
 			title: "Progress Tracking",
@@ -46,11 +46,11 @@
 			title: "Learn at Your Pace",
 			description: "Flexible learning schedule that adapts to your busy lifestyle"
 		},
-		{
-			icon: "bot",
-			title: "AI Tutor Support",
-			description: "Get instant help and guidance from our intelligent tutoring system"
-		},
+		// {
+		// 	icon: "bot",
+		// 	title: "AI Tutor Support",
+		// 	description: "Get instant help and guidance from our intelligent tutoring system"
+		// },
 		{
 			icon: "sparkles",
 			title: "AI Course Creation",
@@ -90,6 +90,28 @@
 		});
 		window.location.href = `/start?${params.toString()}`;
 	}
+
+	// Handler for the hero NewCourseCard - handles authentication flow
+	async function handleHeroCourseSubmit(data: {prompt: string, audience?: string, depth?: string}) {
+		// Check if user is authenticated
+		const token = localStorage.getItem('auth_token');
+		const userStr = localStorage.getItem('auth_user');
+		
+		if (token && userStr) {
+			// User is logged in, redirect to start page with prompt data
+			const params = new URLSearchParams({
+				prompt: data.prompt,
+				audience: data.audience || 'beginners',
+				depth: data.depth || 'comprehensive'
+			});
+			window.location.href = `/start?${params.toString()}`;
+		} else {
+			// User is not logged in, save to localStorage and redirect to login
+			const { savePromptData } = await import('$lib/auth');
+			savePromptData(data);
+			window.location.href = '/auth/login';
+		}
+	}
 </script>
 
 <svelte:head>
@@ -116,31 +138,17 @@
 			<p class="hero-subtitle">
 				Create custom learning paths tailored to your goals.
 			</p>
-			<div class="hero-buttons">
-				<a href="/courses" class="btn btn-primary btn-lg hero-btn-primary">
-					<span class="btn-content">
-						<span class="btn-text">Start Learning</span>
-						<span class="btn-icon">
-							<Icon name="arrowRight" size={20} color="white" />
-						</span>
-					</span>
-				</a>
-				<a href="/start" class="btn btn-secondary btn-lg hero-btn-secondary">
-					<span class="btn-content">
-						<span class="btn-text">Create Course</span>
-						<span class="btn-icon">
-							<Icon name="sparkles" size={20} color="white" />
-						</span>
-					</span>
-				</a>
-				<a href="/auth/register" class="btn btn-ghost btn-lg hero-btn-ghost">
-					<span class="btn-content">
-						<span class="btn-text">Get Started Free</span>
-						<span class="btn-icon">
-							<Icon name="rocket" size={20} color="white" />
-						</span>
-					</span>
-				</a>
+			<div class="hero-course-card-container">
+				<NewCourseCard 
+					title="Start Creating Your Course"
+					subtitle="Describe what you want to teach and our AI will create a comprehensive course for you"
+					placeholder="e.g., I want to create a course about React development"
+					buttonText="Create Course"
+					loadingText="Creating Course..."
+					showAudienceDropdown={true}
+					showDepthDropdown={true}
+					onSubmit={handleHeroCourseSubmit}
+				/>
 			</div>
 			<div class="hero-stats">
 				<div class="stat-item">
@@ -239,7 +247,7 @@
 							</p>
 							<div class="course-footer">
 								<span class="course-duration">
-									<Icon name="clock" size={16} color="currentColor" class="duration-icon" />
+									<Icon name="clock" size={16} color="currentColor" />
 									{formatDuration(course.estimated_duration)}
 								</span>
 								<a href="/courses/{course.id}" class="btn btn-secondary course-btn">
@@ -302,21 +310,6 @@
 	</div>
 </section>
 
-<!-- Prompt Section -->
-<section class="prompt-section-wrapper">
-	<div class="container">
-		<PromptSection 
-			title="Start Creating Your Course"
-			subtitle="Describe what you want to teach and our AI will create a comprehensive course tailored to your needs"
-			placeholder="e.g., I want to create a course about React development for beginners, covering components, state management, and hooks..."
-			buttonText="Create Course"
-			loadingText="Creating Course..."
-			showAudienceDropdown={true}
-			showDepthDropdown={true}
-			onSubmit={handlePromptSubmit}
-		/>
-	</div>
-</section>
 
 <style>
 	/* Container */
@@ -449,51 +442,63 @@
 		font-weight: 400;
 	}
 
-	.hero-buttons {
-		display: flex;
-		gap: 1.5rem;
-		justify-content: center;
-		flex-wrap: wrap;
+	.hero-course-card-container {
 		margin-bottom: 4rem;
 	}
 
-	.hero-btn-primary,
-	.hero-btn-secondary,
-	.hero-btn-ghost {
-		position: relative;
-		overflow: hidden;
-		transition: all 0.3s ease;
+	/* Hero-specific styling for NewCourseCard */
+	.hero-course-card-container :global(.new-course-card) {
+		max-width: 800px;
+		margin: 0 auto;
+		--card-title-color: var(--color-gray-800);
+		--card-subtitle-color: var(--color-gray-600);
+		--dropdown-label-color: var(--color-gray-700);
+		--submit-button-bg: var(--color-primary);
+		--submit-button-color: white;
+		--submit-button-shadow: 0 4px 12px rgba(0, 102, 255, 0.3);
+		--submit-button-hover-bg: var(--color-primary-dark);
+		--submit-button-hover-shadow: 0 8px 25px rgba(0, 102, 255, 0.4);
 	}
 
-	.hero-btn-primary:hover {
-		transform: translateY(-2px);
-		box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+	.hero-course-card-container :global(.card-elevated) {
+		background: rgba(255, 255, 255, 0.95);
+		backdrop-filter: blur(10px);
+		border: 1px solid rgba(255, 255, 255, 0.2);
+		box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
 	}
 
-	.hero-btn-secondary:hover {
-		transform: translateY(-2px);
-		box-shadow: 0 20px 40px rgba(255, 255, 255, 0.1);
+	.hero-course-card-container :global(.card-title) {
+		/* No text shadow needed for dark text on white background */
 	}
 
-	.hero-btn-ghost:hover {
-		transform: translateY(-2px);
-		background: rgba(255, 255, 255, 0.1);
+	.hero-course-card-container :global(.card-subtitle) {
+		/* No text shadow needed for dark text on white background */
 	}
 
-	.btn-content {
-		display: flex;
-		align-items: center;
-		gap: 0.5rem;
+	.hero-course-card-container :global(.dropdown-label) {
+		/* No text shadow needed for dark text on white background */
 	}
 
-	.btn-icon {
-		transition: transform 0.3s ease;
+	.hero-course-card-container :global(.dropdown-select) {
+		border-color: rgba(255, 255, 255, 0.3);
+		background: rgba(255, 255, 255, 0.9);
 	}
 
-	.hero-btn-primary:hover .btn-icon,
-	.hero-btn-secondary:hover .btn-icon,
-	.hero-btn-ghost:hover .btn-icon {
-		transform: translateX(4px);
+	.hero-course-card-container :global(.dropdown-select:focus) {
+		border-color: white;
+		background: white;
+		box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2);
+	}
+
+	.hero-course-card-container :global(.prompt-textarea) {
+		border-color: rgba(255, 255, 255, 0.3);
+		background: rgba(255, 255, 255, 0.9);
+	}
+
+	.hero-course-card-container :global(.prompt-textarea:focus) {
+		border-color: white;
+		background: white;
+		box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2);
 	}
 
 	.hero-stats {
@@ -1041,7 +1046,6 @@
 			font-size: 2.5rem;
 		}
 
-		.hero-buttons,
 		.cta-buttons {
 			flex-direction: column;
 			align-items: center;

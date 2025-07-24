@@ -175,14 +175,14 @@
 	.card-title {
 		font-size: 1.5rem;
 		font-weight: 700;
-		color: var(--color-gray-800);
+		color: var(--card-title-color, var(--color-gray-800));
 		margin: 0 0 var(--spacing-2) 0;
 		line-height: 1.3;
 	}
 
 	.card-subtitle {
 		font-size: 1rem;
-		color: var(--color-gray-600);
+		color: var(--card-subtitle-color, var(--color-gray-600));
 		margin: 0;
 		line-height: 1.5;
 	}
@@ -255,7 +255,7 @@
 		display: block;
 		font-size: 0.875rem;
 		font-weight: 600;
-		color: var(--color-gray-700);
+		color: var(--dropdown-label-color, var(--color-gray-700));
 		margin-bottom: var(--spacing-1);
 	}
 
@@ -299,9 +299,9 @@
 	}
 
 	.submit-button {
-		background: #000;
-		color: #fff;
-		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+		background: var(--submit-button-bg, #000);
+		color: var(--submit-button-color, #fff);
+		box-shadow: var(--submit-button-shadow, 0 2px 4px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06));
 		padding: 0.5rem 1rem;
 		border-radius: 0.5rem;
 		font-weight: 600;
@@ -330,9 +330,9 @@
 	}
 
 	.submit-button:hover:not(:disabled) {
-		background: #333;
+		background: var(--submit-button-hover-bg, #333);
 		transform: translateY(-1px);
-		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25), 0 2px 4px rgba(0, 0, 0, 0.15);
+		box-shadow: var(--submit-button-hover-shadow, 0 4px 12px rgba(0, 0, 0, 0.25), 0 2px 4px rgba(0, 0, 0, 0.15));
 	}
 
 	.submit-button:hover:not(:disabled)::before {
