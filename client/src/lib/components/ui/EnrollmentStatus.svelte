@@ -110,6 +110,12 @@
 		gap: var(--spacing-2);
 		font-weight: 500;
 		transition: all 0.2s ease;
+		cursor: default;
+	}
+
+	.enrollment-status:hover {
+		transform: translateY(-1px);
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 	}
 
 	.enrollment-status--badge {
@@ -178,69 +184,80 @@
 
 	/* Status Colors */
 	.status-active {
-		background-color: var(--color-primary-light);
-		color: var(--color-primary-dark);
+		background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
+		color: white;
 		border-color: var(--color-primary);
+		box-shadow: 0 2px 4px rgba(0, 102, 255, 0.2);
 	}
 
 	.status-completed {
-		background-color: var(--color-success-light);
-		color: var(--color-success-text);
+		background: linear-gradient(135deg, var(--color-success) 0%, var(--color-success-light) 100%);
+		color: white;
 		border-color: var(--color-success);
+		box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
 	}
 
 	.status-paused {
-		background-color: var(--color-warning-light);
-		color: var(--color-warning-text);
+		background: linear-gradient(135deg, var(--color-warning) 0%, var(--color-warning-light) 100%);
+		color: white;
 		border-color: var(--color-warning);
+		box-shadow: 0 2px 4px rgba(245, 158, 11, 0.2);
 	}
 
 	.status-dropped {
-		background-color: var(--color-error-light);
-		color: var(--color-error-text);
+		background: linear-gradient(135deg, var(--color-error) 0%, var(--color-error-light) 100%);
+		color: white;
 		border-color: var(--color-error);
+		box-shadow: 0 2px 4px rgba(239, 68, 68, 0.2);
 	}
 
 	.status-default {
-		background-color: var(--color-gray-100);
-		color: var(--color-gray-700);
-		border-color: var(--color-gray-300);
+		background: linear-gradient(135deg, var(--color-gray-400) 0%, var(--color-gray-300) 100%);
+		color: white;
+		border-color: var(--color-gray-400);
+		box-shadow: 0 2px 4px rgba(156, 163, 175, 0.2);
 	}
 
 	.enrollment-status--not-enrolled {
-		background-color: var(--color-gray-50);
-		color: var(--color-gray-600);
-		border-color: var(--color-gray-200);
+		background: linear-gradient(135deg, var(--color-gray-300) 0%, var(--color-gray-200) 100%);
+		color: var(--color-gray-700);
+		border-color: var(--color-gray-300);
+		box-shadow: 0 2px 4px rgba(156, 163, 175, 0.1);
 	}
 
 	/* Card variant specific styles */
 	.enrollment-status--card.status-active {
-		background-color: white;
+		background: linear-gradient(135deg, rgba(0, 102, 255, 0.05) 0%, rgba(0, 102, 255, 0.1) 100%);
 		border-color: var(--color-primary);
 		color: var(--color-primary-dark);
+		box-shadow: 0 2px 8px rgba(0, 102, 255, 0.1);
 	}
 
 	.enrollment-status--card.status-completed {
-		background-color: white;
+		background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(16, 185, 129, 0.1) 100%);
 		border-color: var(--color-success);
 		color: var(--color-success-text);
+		box-shadow: 0 2px 8px rgba(16, 185, 129, 0.1);
 	}
 
 	.enrollment-status--card.status-paused {
-		background-color: white;
+		background: linear-gradient(135deg, rgba(245, 158, 11, 0.05) 0%, rgba(245, 158, 11, 0.1) 100%);
 		border-color: var(--color-warning);
 		color: var(--color-warning-text);
+		box-shadow: 0 2px 8px rgba(245, 158, 11, 0.1);
 	}
 
 	.enrollment-status--card.status-dropped {
-		background-color: white;
+		background: linear-gradient(135deg, rgba(239, 68, 68, 0.05) 0%, rgba(239, 68, 68, 0.1) 100%);
 		border-color: var(--color-error);
 		color: var(--color-error-text);
+		box-shadow: 0 2px 8px rgba(239, 68, 68, 0.1);
 	}
 
 	.enrollment-status--card.enrollment-status--not-enrolled {
-		background-color: white;
+		background: linear-gradient(135deg, rgba(156, 163, 175, 0.05) 0%, rgba(156, 163, 175, 0.1) 100%);
 		border-color: var(--color-gray-200);
 		color: var(--color-gray-600);
+		box-shadow: 0 2px 8px rgba(156, 163, 175, 0.05);
 	}
 </style> 
