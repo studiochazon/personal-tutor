@@ -2,7 +2,7 @@
 	import Icon from './Icon.svelte';
 	
 	export let title: string = "Start a New Course";
-	export let subtitle: string = "Describe what you want to teach and our AI will create a comprehensive course for you";
+	export let subtitle: string = "Describe what you want to learn and our AI will create a comprehensive course for you";
 	export let placeholder: string = "Teach X to Y in Z hours…";
 	export let buttonText: string = "Create Course";
 	export let loadingText: string = "Creating...";

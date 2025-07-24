@@ -124,7 +124,7 @@
 		<div class="hero-content">
 			<h1 class="hero-title">
 				Novotio - Personalized Learning with AI
-				<span class="hero-title-accent">for Modern Learning</span>
+				
 			</h1>
 			<p class="hero-subtitle">
 				Create custom learning paths tailored to your goals.
@@ -141,7 +141,7 @@
 					onSubmit={handleHeroCourseSubmit}
 				/>
 			</div>
-			<div class="hero-stats">
+			<!-- <div class="hero-stats">
 				<div class="stat-item">
 					<span class="stat-number">10K+</span>
 					<span class="stat-label">Active Learners</span>
@@ -155,7 +155,7 @@
 					<span class="stat-label">Completion Rate</span>
 				</div>
 			</div>
-		</div>
+		</div> -->
 	</div>
 </section>
 
@@ -163,7 +163,7 @@
 <section class="features-section">
 	<div class="container">
 		<div class="section-header">
-			<div class="section-badge">Why Choose Us</div>
+			<div class="section-badge">Why?</div>
 			<h2 class="section-title">Experience the Future of Learning</h2>
 			<p class="section-subtitle">
 				Our AI-powered platform is designed to adapt to your unique learning style, providing personalized experiences that accelerate your growth.
@@ -404,9 +404,9 @@
 	}
 
 	.hero-title {
-		font-size: 4rem;
+		font-size: 2rem;
 		font-weight: 800;
-		margin-bottom: 1.5rem;
+		margin-bottom: 0.5rem;
 		line-height: 1.1;
 		background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
 		-webkit-background-clip: text;
@@ -444,7 +444,7 @@
 		--card-title-color: var(--color-gray-800);
 		--card-subtitle-color: var(--color-gray-600);
 		--dropdown-label-color: var(--color-gray-700);
-		--submit-button-bg: var(--color-primary);
+		--submit-button-bg: #000;
 		--submit-button-color: white;
 		--submit-button-shadow: 0 4px 12px rgba(0, 102, 255, 0.3);
 		--submit-button-hover-bg: var(--color-primary-dark);
