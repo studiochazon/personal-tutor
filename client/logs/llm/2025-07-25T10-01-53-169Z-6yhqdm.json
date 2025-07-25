@@ -1,0 +1,79 @@
+{
+  "id": "2025-07-25T10-01-53-169Z-6yhqdm",
+  "timestamp": "2025-07-25T10:01:53.183Z",
+  "request": {
+    "model": "gpt-4",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a course generation assistant. You must respond with ONLY valid JSON. Do not include any explanatory text, markdown formatting, or additional content outside the JSON object."
+      },
+      {
+        "role": "user",
+        "content": "You are an expert educational content creator. Based on the user's request below, create a comprehensive course structure.\n\nUser Request: \"Crypto\"\n\nGenerate a course with the following JSON structure (respond ONLY with valid JSON, no additional text):\n\n{\n  \"title\": \"Engaging and descriptive course title\",\n  \"description\": \"Comprehensive overview of what learners will gain from this course\",\n  \"difficulty\": \"beginner|intermediate|advanced\",\n  \"estimated_duration\": number in minutes,\n  \"lessons\": [\n    {\n      \"title\": \"Clear lesson title\",\n      \"content\": \"Comprehensive lesson content with clear structure, examples, and practical exercises. Use markdown formatting for better readability.\",\n      \"order_index\": number,\n      \"estimated_duration\": number in minutes,\n      \"video_url\": \"YouTube embed URL (https://www.youtube.com/embed/VIDEO_ID)\",\n      \"video_title\": \"Title of the video content\",\n      \"video_duration\": number in seconds\n    }\n  ]\n}\n\nGuidelines:\n- Create 5-10 lessons depending on topic complexity\n- Each lesson should be 10-30 minutes of content\n- Include practical examples and exercises\n- Use clear, engaging language\n- Structure content logically from basic to advanced concepts\n- Ensure the difficulty level matches the content\n- **IMPORTANT**: Include relevant video sources for each lesson when they would enhance learning\n- Choose high-quality educational videos from YouTube\n- **CRITICAL**: Always use YouTube embed URLs (https://www.youtube.com/embed/VIDEO_ID) NOT regular YouTube URLs\n- Video duration should be appropriate (2-15 minutes for most lessons)"
+      }
+    ],
+    "max_tokens": 3000,
+    "temperature": 0.3,
+    "user_prompt": "Crypto",
+    "timestamp": "2025-07-25T10:01:53.183Z"
+  },
+  "response": {
+    "content": "{\n  \"title\": \"Cryptocurrency 101: Understanding Digital Assets\",\n  \"description\": \"This course provides a comprehensive introduction to the world of cryptocurrencies. It covers everything from blockchain technology to the economics of cryptocurrencies. By the end of this course, learners will have a solid understanding of cryptocurrencies and how they work.\",\n  \"difficulty\": \"beginner\",\n  \"estimated_duration\": 180,\n  \"lessons\": [\n    {\n      \"title\": \"Introduction to Cryptocurrencies\",\n      \"content\": \"This lesson provides an overview of cryptocurrencies, their history, and their significance in today's world. It includes practical examples of cryptocurrencies and exercises to familiarize learners with cryptocurrency transactions.\",\n      \"order_index\": 1,\n      \"estimated_duration\": 20,\n      \"video_url\": \"https://www.youtube.com/embed/3x1b_S6Qp2Q\",\n      \"video_title\": \"What is Cryptocurrency?\",\n      \"video_duration\": 600\n    },\n    {\n      \"title\": \"Understanding Blockchain Technology\",\n      \"content\": \"This lesson delves into the technology behind cryptocurrencies - the blockchain. It explains how blockchain works, its applications, and its significance in the cryptocurrency world.\",\n      \"order_index\": 2,\n      \"estimated_duration\": 30,\n      \"video_url\": \"https://www.youtube.com/embed/_160oMzblY8\",\n      \"video_title\": \"How Does a Blockchain Work?\",\n      \"video_duration\": 900\n    },\n    {\n      \"title\": \"Bitcoin and Altcoins\",\n      \"content\": \"This lesson introduces Bitcoin, the first cryptocurrency, and altcoins, which are alternatives to Bitcoin. It includes practical examples and exercises to understand the differences and similarities between various cryptocurrencies.\",\n      \"order_index\": 3,\n      \"estimated_duration\": 20,\n      \"video_url\": \"https://www.youtube.com/embed/2p0MTZD5roM\",\n      \"video_title\": \"Bitcoin vs Altcoins\",\n      \"video_duration\": 720\n    },\n    {\n      \"title\": \"Cryptocurrency Mining\",\n      \"content\": \"This lesson explains the process of cryptocurrency mining. It includes practical examples and exercises to understand the role of miners in maintaining the integrity of the blockchain.\",\n      \"order_index\": 4,\n      \"estimated_duration\": 30,\n      \"video_url\": \"https://www.youtube.com/embed/3EUAcxhuoU4\",\n      \"video_title\": \"What is Cryptocurrency Mining?\",\n      \"video_duration\": 840\n    },\n    {\n      \"title\": \"Investing in Cryptocurrencies\",\n      \"content\": \"This lesson provides an overview of investing in cryptocurrencies. It covers the risks, rewards, and strategies of cryptocurrency investment.\",\n      \"order_index\": 5,\n      \"estimated_duration\": 30,\n      \"video_url\": \"https://www.youtube.com/embed/SLj5jLys2b8\",\n      \"video_title\": \"How to Invest in Cryptocurrency\",\n      \"video_duration\": 900\n    },\n    {\n      \"title\": \"The Future of Cryptocurrencies\",\n      \"content\": \"This lesson explores the potential future of cryptocurrencies. It includes discussions on regulatory issues, technological advancements, and the role of cryptocurrencies in the global economy.\",\n      \"order_index\": 6,\n      \"estimated_duration\": 20,\n      \"video_url\": \"https://www.youtube.com/embed/2R337Q09KTQ\",\n      \"video_title\": \"The Future of Cryptocurrency\",\n      \"video_duration\": 720\n    }\n  ]\n}",
+    "usage": {
+      "prompt_tokens": 375,
+      "completion_tokens": 735,
+      "total_tokens": 1110,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "model": "gpt-4-0613",
+    "finish_reason": "stop",
+    "raw_response": {
+      "id": "chatcmpl-Bx9WgX2fZcg0IwIhlyUAK7BQhChRx",
+      "object": "chat.completion",
+      "created": 1753437670,
+      "model": "gpt-4-0613",
+      "choices": [
+        {
+          "index": 0,
+          "message": {
+            "role": "assistant",
+            "content": "{\n  \"title\": \"Cryptocurrency 101: Understanding Digital Assets\",\n  \"description\": \"This course provides a comprehensive introduction to the world of cryptocurrencies. It covers everything from blockchain technology to the economics of cryptocurrencies. By the end of this course, learners will have a solid understanding of cryptocurrencies and how they work.\",\n  \"difficulty\": \"beginner\",\n  \"estimated_duration\": 180,\n  \"lessons\": [\n    {\n      \"title\": \"Introduction to Cryptocurrencies\",\n      \"content\": \"This lesson provides an overview of cryptocurrencies, their history, and their significance in today's world. It includes practical examples of cryptocurrencies and exercises to familiarize learners with cryptocurrency transactions.\",\n      \"order_index\": 1,\n      \"estimated_duration\": 20,\n      \"video_url\": \"https://www.youtube.com/embed/3x1b_S6Qp2Q\",\n      \"video_title\": \"What is Cryptocurrency?\",\n      \"video_duration\": 600\n    },\n    {\n      \"title\": \"Understanding Blockchain Technology\",\n      \"content\": \"This lesson delves into the technology behind cryptocurrencies - the blockchain. It explains how blockchain works, its applications, and its significance in the cryptocurrency world.\",\n      \"order_index\": 2,\n      \"estimated_duration\": 30,\n      \"video_url\": \"https://www.youtube.com/embed/_160oMzblY8\",\n      \"video_title\": \"How Does a Blockchain Work?\",\n      \"video_duration\": 900\n    },\n    {\n      \"title\": \"Bitcoin and Altcoins\",\n      \"content\": \"This lesson introduces Bitcoin, the first cryptocurrency, and altcoins, which are alternatives to Bitcoin. It includes practical examples and exercises to understand the differences and similarities between various cryptocurrencies.\",\n      \"order_index\": 3,\n      \"estimated_duration\": 20,\n      \"video_url\": \"https://www.youtube.com/embed/2p0MTZD5roM\",\n      \"video_title\": \"Bitcoin vs Altcoins\",\n      \"video_duration\": 720\n    },\n    {\n      \"title\": \"Cryptocurrency Mining\",\n      \"content\": \"This lesson explains the process of cryptocurrency mining. It includes practical examples and exercises to understand the role of miners in maintaining the integrity of the blockchain.\",\n      \"order_index\": 4,\n      \"estimated_duration\": 30,\n      \"video_url\": \"https://www.youtube.com/embed/3EUAcxhuoU4\",\n      \"video_title\": \"What is Cryptocurrency Mining?\",\n      \"video_duration\": 840\n    },\n    {\n      \"title\": \"Investing in Cryptocurrencies\",\n      \"content\": \"This lesson provides an overview of investing in cryptocurrencies. It covers the risks, rewards, and strategies of cryptocurrency investment.\",\n      \"order_index\": 5,\n      \"estimated_duration\": 30,\n      \"video_url\": \"https://www.youtube.com/embed/SLj5jLys2b8\",\n      \"video_title\": \"How to Invest in Cryptocurrency\",\n      \"video_duration\": 900\n    },\n    {\n      \"title\": \"The Future of Cryptocurrencies\",\n      \"content\": \"This lesson explores the potential future of cryptocurrencies. It includes discussions on regulatory issues, technological advancements, and the role of cryptocurrencies in the global economy.\",\n      \"order_index\": 6,\n      \"estimated_duration\": 20,\n      \"video_url\": \"https://www.youtube.com/embed/2R337Q09KTQ\",\n      \"video_title\": \"The Future of Cryptocurrency\",\n      \"video_duration\": 720\n    }\n  ]\n}",
+            "refusal": null,
+            "annotations": []
+          },
+          "logprobs": null,
+          "finish_reason": "stop"
+        }
+      ],
+      "usage": {
+        "prompt_tokens": 375,
+        "completion_tokens": 735,
+        "total_tokens": 1110,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "audio_tokens": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "audio_tokens": 0,
+          "accepted_prediction_tokens": 0,
+          "rejected_prediction_tokens": 0
+        }
+      },
+      "service_tier": "default",
+      "system_fingerprint": null
+    }
+  },
+  "success": true,
+  "duration_ms": 43562
+}

@@ -61,7 +61,13 @@ ssh $VPS_USER@$VPS_HOST << EOF
     
     # Copy environment file
     echo "📋 Setting up environment..."
-    cp env.remote .env 2>/dev/null || echo "No env.remote file found"
+    if [ -f "env.remote" ]; then
+        cp env.remote .env
+        echo "✅ Environment file copied from env.remote to .env"
+    else
+        echo "❌ env.remote file not found. Please ensure it exists with proper configuration."
+        exit 1
+    fi
     
     # Install production dependencies
     echo "📦 Installing production dependencies..."
