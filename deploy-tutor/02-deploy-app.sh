@@ -55,6 +55,10 @@ ssh $VPS_USER@$VPS_HOST << EOF
     cd client
     npm install
     
+    # Clean previous build
+    echo "🧹 Cleaning previous build..."
+    rm -rf build/
+    
     # Build for production
     echo "🏗️ Building for production..."
     npm run build:production
@@ -73,6 +77,11 @@ ssh $VPS_USER@$VPS_HOST << EOF
     echo "📦 Installing production dependencies..."
     npm install --production
     
+    # Ensure the build directory is accessible to nginx
+    echo "🔧 Setting up build directory permissions..."
+    chmod -R 755 build/
+    chown -R root:root build/
+    
     echo "✅ Build completed successfully"
 EOF
 
@@ -81,6 +90,5 @@ echo "✅ App deployment completed successfully!"
 echo ""
 echo "📋 Next steps:"
 echo "  1. Run: ./deploy-tutor/03-configure-nginx.sh"
-echo "  2. Run: ./deploy-tutor/04-setup-ssl.sh"
-echo "  3. Run: ./deploy-tutor/05-start-services.sh"
+echo "  2. Run: ./deploy-tutor/05-start-services.sh"
 echo "" 

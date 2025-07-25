@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Personal Tutor Deployment - Nginx Configuration
-# This script configures nginx for tutor.novotio.com
+# This script configures nginx for novotio.com (Personal Tutor AI)
 
 set -e
 
@@ -10,7 +10,7 @@ echo "🚀 Starting Personal Tutor Nginx Configuration..."
 # Configuration
 VPS_HOST="89.116.170.241"
 VPS_USER="root"
-DOMAIN="tutor.novotio.com"
+DOMAIN="novotio.com"
 APP_DIR="/var/www/personal-tutor"
 SERVICE_NAME="personal-tutor"
 APP_PORT="3001"
@@ -22,18 +22,28 @@ echo "  App Directory: $APP_DIR"
 echo "  App Port: $APP_PORT"
 echo ""
 
-# Create nginx configuration
-echo "📝 Creating nginx configuration..."
+# Create complete nginx configuration with both HTTP and HTTPS
+echo "📝 Creating complete nginx configuration..."
 NGINX_CONFIG=$(cat << EOF
+# HTTPS Server Block
 server {
-    server_name $DOMAIN;
+    server_name $DOMAIN www.$DOMAIN;
     
-    access_log /var/log/nginx/tutor.novotio-access.log;
-    error_log /var/log/nginx/tutor.novotio-error.log;
+    access_log /var/log/nginx/novotio-access.log;
+    error_log /var/log/nginx/novotio-error.log;
 
-    # Static assets
-    location ~ ^/(_app/|favicon|assets/|images/|icons/) {
-        root $APP_DIR/build/client;
+    # SvelteKit static assets with cache busting
+    location ~ ^/_app/immutable/ {
+        root $APP_DIR/client/build/client;
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+        access_log off;
+        try_files \$uri =404;
+    }
+
+    # Other static assets
+    location ~ ^/(favicon|assets/|images/|icons/) {
+        root $APP_DIR/client/build/client;
         expires 30d;
         add_header Cache-Control "public, max-age=2592000";
         access_log off;
@@ -51,7 +61,7 @@ server {
         proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto \$scheme;
         proxy_set_header X-Forwarded-Host \$host;
-        proxy_set_header X-Forwarded-Port 80;
+        proxy_set_header X-Forwarded-Port 443;
         
         # Timeout settings
         proxy_connect_timeout 60s;
@@ -66,18 +76,38 @@ server {
     add_header Referrer-Policy "no-referrer-when-downgrade" always;
     add_header Content-Security-Policy "default-src 'self' http: https: data: blob: 'unsafe-inline'" always;
 
+    # SSL Configuration
+    listen 443 ssl;
+    ssl_certificate /etc/letsencrypt/live/$DOMAIN/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/$DOMAIN/privkey.pem;
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+}
+
+# HTTP Server Block (redirect to HTTPS)
+server {
+    if (\$host = www.$DOMAIN) {
+        return 301 https://\$host\$request_uri;
+    }
+
+    if (\$host = $DOMAIN) {
+        return 301 https://\$host\$request_uri;
+    }
+
     listen 80;
+    server_name $DOMAIN www.$DOMAIN;
+    return 404;
 }
 EOF
 )
 
 # Upload nginx configuration to server
 echo "📤 Uploading nginx configuration..."
-echo "$NGINX_CONFIG" | ssh $VPS_USER@$VPS_HOST "cat > /etc/nginx/sites-available/tutor.novotio.conf"
+echo "$NGINX_CONFIG" | ssh $VPS_USER@$VPS_HOST "cat > /etc/nginx/sites-available/novotio-landing.conf"
 
 # Enable the site
 echo "🔗 Enabling nginx site..."
-ssh $VPS_USER@$VPS_HOST "ln -sf /etc/nginx/sites-available/tutor.novotio.conf /etc/nginx/sites-enabled/"
+ssh $VPS_USER@$VPS_HOST "ln -sf /etc/nginx/sites-available/novotio-landing.conf /etc/nginx/sites-enabled/"
 
 # Test nginx configuration
 echo "🧪 Testing nginx configuration..."
@@ -97,8 +127,9 @@ echo ""
 echo "✅ Nginx configuration completed successfully!"
 echo ""
 echo "📋 Next steps:"
-echo "  1. Run: ./deploy-tutor/04-setup-ssl.sh"
-echo "  2. Run: ./deploy-tutor/05-start-services.sh"
+echo "  1. Run: ./deploy-tutor/05-start-services.sh"
 echo ""
-echo "🌐 Your site will be available at: http://$DOMAIN"
+echo "🌐 Your site will be available at:"
+echo "   HTTP:  http://$DOMAIN (redirects to HTTPS)"
+echo "   HTTPS: https://$DOMAIN"
 echo "" 
