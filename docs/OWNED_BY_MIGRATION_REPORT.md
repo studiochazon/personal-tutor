@@ -199,8 +199,8 @@ return courses.length > 0 && courses[0].owned_by === userId;
 ### **Database & Schema**
 - `database/schema.sql` - Updated table definition
 - `schema.json` - Updated schema documentation
-- `migrate-user-id-to-owned-by.sql` - Migration script
-- `cleanup-duplicate-constraints.sql` - Cleanup script
+- `database-migrations/migrate-user-id-to-owned-by.sql` - Migration script
+- `database-migrations/cleanup-duplicate-constraints.sql` - Cleanup script
 
 ### **TypeScript Types**
 - `types.ts` - Updated Course interface
@@ -212,8 +212,8 @@ return courses.length > 0 && courses[0].owned_by === userId;
 - `client/src/routes/api/courses/[id]/+server.ts` - Updated ownership checks
 
 ### **Testing**
-- `test-course-ownership.cjs` - Updated test queries
-- `migrate-course-ownership.sql` - Updated migration script
+- `tests/test-course-ownership.cjs` - Updated test queries
+- `database-migrations/migrate-course-ownership.sql` - Updated migration script
 
 ## Production Considerations
 

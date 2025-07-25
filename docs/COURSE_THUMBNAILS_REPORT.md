@@ -220,13 +220,13 @@ on:error={(e) => {
 1. **`client/src/routes/courses/+page.svelte`** - Updated layout and styling
 2. **`client/static/images/default-course-thumbnail.svg`** - **NEW** (Default thumbnail)
 3. **`database/schema.sql`** - Updated sample data with thumbnail URLs
-4. **`update-course-thumbnails.sql`** - **NEW** (Database migration script)
+4. **`database-migrations/update-course-thumbnails.sql`** - **NEW** (Database migration script)
 
 ## Database Migration
 
 ### **Migration Script:**
 ```sql
--- update-course-thumbnails.sql
+-- database-migrations/update-course-thumbnails.sql
 UPDATE courses SET thumbnail_url = 'https://images.unsplash.com/...' WHERE id = 1;
 -- ... (6 courses updated)
 SELECT id, title, thumbnail_url FROM courses WHERE is_published = true;

@@ -64,7 +64,7 @@ export function verifyJWTToken(token: string): { userId: number; email: string }
 - **PUT**: Requires authentication + ownership validation
 - **DELETE**: Requires authentication + ownership validation
 
-### 4. **Database Migration** (`migrate-course-ownership.sql`)
+### 4. **Database Migration** (`database-migrations/migrate-course-ownership.sql`)
 ```sql
 -- Update all existing courses to be owned by user ID 4
 UPDATE courses 

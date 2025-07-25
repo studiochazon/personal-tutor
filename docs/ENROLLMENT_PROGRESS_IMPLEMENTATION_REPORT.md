@@ -250,7 +250,7 @@ const response = await fetch(`/api/courses/${courseId}/progress`, {
 
 2. **Test the Implementation**:
    ```bash
-   node test-enrollment-progress.js
+   node tests/test-enrollment-progress.js
    ```
 
 3. **Verify Frontend**:
