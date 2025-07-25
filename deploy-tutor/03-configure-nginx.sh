@@ -33,7 +33,7 @@ server {
 
     # Static assets
     location ~ ^/(_app/|favicon|assets/|images/|icons/) {
-        root $APP_DIR/build;
+        root $APP_DIR/build/client;
         expires 30d;
         add_header Cache-Control "public, max-age=2592000";
         access_log off;
