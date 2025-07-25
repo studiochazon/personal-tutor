@@ -56,7 +56,7 @@ cp -r client/build $DEPLOY_DIR/
 cp -r client/static $DEPLOY_DIR/ 2>/dev/null || echo "No static directory found"
 cp client/package.json $DEPLOY_DIR/
 cp client/package-lock.json $DEPLOY_DIR/
-cp client/env.production $DEPLOY_DIR/.env 2>/dev/null || echo "No env.production file found"
+cp client/env.remote $DEPLOY_DIR/.env 2>/dev/null || echo "No env.remote file found"
 cp ecosystem.config.cjs $DEPLOY_DIR/ 2>/dev/null || echo "No ecosystem.config.cjs found"
 
 # Create ecosystem.config.cjs if it doesn't exist
