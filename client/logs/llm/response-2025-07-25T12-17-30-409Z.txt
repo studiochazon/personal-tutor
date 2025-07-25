@@ -1,0 +1,72 @@
+=== LLM Response Log ===
+Timestamp: 2025-07-25T12:17:30.409Z
+Model: gpt-4-0613
+
+=== User Prompt ===
+Christian theology
+
+=== AI Response ===
+{
+  "title": "Exploring Christian Theology: From Basics to Advanced Concepts",
+  "description": "This course provides a comprehensive overview of Christian theology, exploring its fundamental concepts, historical development, and various interpretations. Ideal for beginners and intermediate learners, the course is designed to equip learners with a solid understanding of Christian theological thought.",
+  "difficulty": "intermediate",
+  "estimated_duration": 180,
+  "lessons": [
+    {
+      "title": "Introduction to Christian Theology",
+      "content": "This lesson introduces the basic concepts of Christian theology, its historical context, and its significance in Christianity. Practical exercises include reflective journaling on key concepts.",
+      "order_index": 1,
+      "estimated_duration": 20,
+      "video_url": "https://www.youtube.com/embed/3nZ1o9_V_ss",
+      "video_title": "Introduction to Christian Theology",
+      "video_duration": 600
+    },
+    {
+      "title": "The Nature of God in Christian Theology",
+      "content": "This lesson delves into the Christian understanding of God's nature, discussing concepts such as the Trinity and divine attributes. Practical exercises include analyzing biblical passages.",
+      "order_index": 2,
+      "estimated_duration": 30,
+      "video_url": "https://www.youtube.com/embed/0G2S5ziDcO0",
+      "video_title": "The Nature of God in Christian Theology",
+      "video_duration": 900
+    },
+    {
+      "title": "Christology: The Study of Jesus Christ",
+      "content": "This lesson explores Christology, the study of Jesus Christ, discussing his divinity, humanity, and role in salvation. Practical exercises include a comparative study of gospel accounts.",
+      "order_index": 3,
+      "estimated_duration": 30,
+      "video_url": "https://www.youtube.com/embed/1A3i0GATnRA",
+      "video_title": "Christology: The Study of Jesus Christ",
+      "video_duration": 900
+    },
+    {
+      "title": "Soteriology: The Study of Salvation",
+      "content": "This lesson delves into Soteriology, the study of salvation, discussing the concepts of sin, grace, and atonement. Practical exercises include a personal reflection on the meaning of salvation.",
+      "order_index": 4,
+      "estimated_duration": 30,
+      "video_url": "https://www.youtube.com/embed/3dC3Dk4Q4E0",
+      "video_title": "Soteriology: The Study of Salvation",
+      "video_duration": 900
+    },
+    {
+      "title": "Eschatology: The Study of End Times",
+      "content": "This lesson explores Eschatology, the study of end times, discussing Christian beliefs about heaven, hell, and the second coming of Christ. Practical exercises include a group discussion on different eschatological views.",
+      "order_index": 5,
+      "estimated_duration": 30,
+      "video_url": "https://www.youtube.com/embed/6-0E6_kdZC4",
+      "video_title": "Eschatology: The Study of End Times",
+      "video_duration": 900
+    },
+    {
+      "title": "The Role of the Church in Christian Theology",
+      "content": "This lesson discusses the role of the Church in Christian theology, exploring its function, sacraments, and leadership. Practical exercises include a case study of a local church community.",
+      "order_index": 6,
+      "estimated_duration": 30,
+      "video_url": "https://www.youtube.com/embed/5yjPEy7Y3Eo",
+      "video_title": "The Role of the Church in Christian Theology",
+      "video_duration": 900
+    }
+  ]
+}
+
+=== End Response ===

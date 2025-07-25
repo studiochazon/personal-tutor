@@ -102,6 +102,40 @@ const FALLBACK_VIDEOS: Record<string, FallbackVideo[]> = {
 			embedUrl: 'https://www.youtube.com/embed/Oe421EPjeBE'
 		}
 	],
+	'theology': [
+		{
+			videoId: '8jLOx1hD3_o',
+			title: 'Introduction to Christian Theology',
+			duration: 600,
+			embedUrl: 'https://www.youtube.com/embed/8jLOx1hD3_o'
+		},
+		{
+			videoId: 'vLnPwxZdW4Y',
+			title: 'Biblical Theology Explained',
+			duration: 720,
+			embedUrl: 'https://www.youtube.com/embed/vLnPwxZdW4Y'
+		},
+		{
+			videoId: 'rfscVS0vtbw',
+			title: 'Systematic Theology Overview',
+			duration: 600,
+			embedUrl: 'https://www.youtube.com/embed/rfscVS0vtbw'
+		}
+	],
+	'christian': [
+		{
+			videoId: '8jLOx1hD3_o',
+			title: 'Introduction to Christian Theology',
+			duration: 600,
+			embedUrl: 'https://www.youtube.com/embed/8jLOx1hD3_o'
+		},
+		{
+			videoId: 'vLnPwxZdW4Y',
+			title: 'Biblical Theology Explained',
+			duration: 720,
+			embedUrl: 'https://www.youtube.com/embed/vLnPwxZdW4Y'
+		}
+	],
 	'default': [
 		{
 			videoId: 'W6NZfCO5SIk',

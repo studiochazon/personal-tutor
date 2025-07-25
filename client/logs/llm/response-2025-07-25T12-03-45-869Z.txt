@@ -1,0 +1,99 @@
+=== LLM Response Log ===
+Timestamp: 2025-07-25T12:03:45.869Z
+Model: gpt-4-0613
+
+=== User Prompt ===
+Learn Christian THeology
+
+=== AI Response ===
+{
+  "title": "Introduction to Christian Theology",
+  "description": "This course provides a comprehensive understanding of Christian Theology, covering its basic concepts, historical development, and various theological perspectives. It is designed to equip learners with a solid foundation in Christian Theology.",
+  "difficulty": "beginner",
+  "estimated_duration": 300,
+  "lessons": [
+    {
+      "title": "Introduction to Christian Theology",
+      "content": "This lesson provides an overview of Christian Theology, its importance, and its role in the Christian faith. It includes a brief history of theology and an introduction to theological terms.",
+      "order_index": 1,
+      "estimated_duration": 30,
+      "video_url": "https://www.youtube.com/embed/VIDEO_ID1",
+      "video_title": "Introduction to Christian Theology",
+      "video_duration": 900
+    },
+    {
+      "title": "Biblical Theology",
+      "content": "This lesson explores the concept of Biblical Theology, its principles, and its application. It includes practical examples from the Bible.",
+      "order_index": 2,
+      "estimated_duration": 30,
+      "video_url": "https://www.youtube.com/embed/VIDEO_ID2",
+      "video_title": "Understanding Biblical Theology",
+      "video_duration": 900
+    },
+    {
+      "title": "Systematic Theology",
+      "content": "This lesson delves into Systematic Theology, discussing its methodology and its role in organizing theological concepts.",
+      "order_index": 3,
+      "estimated_duration": 30,
+      "video_url": "https://www.youtube.com/embed/VIDEO_ID3",
+      "video_title": "Introduction to Systematic Theology",
+      "video_duration": 900
+    },
+    {
+      "title": "Historical Theology",
+      "content": "This lesson explores Historical Theology, examining how Christian doctrine has developed over time. It includes a review of key historical events that influenced Christian Theology.",
+      "order_index": 4,
+      "estimated_duration": 30,
+      "video_url": "https://www.youtube.com/embed/VIDEO_ID4",
+      "video_title": "Exploring Historical Theology",
+      "video_duration": 900
+    },
+    {
+      "title": "Practical Theology",
+      "content": "This lesson focuses on Practical Theology, discussing how theology is applied in everyday life and ministry. It includes practical exercises to help learners apply theological concepts.",
+      "order_index": 5,
+      "estimated_duration": 30,
+      "video_url": "https://www.youtube.com/embed/VIDEO_ID5",
+      "video_title": "Applying Theology in Practice",
+      "video_duration": 900
+    },
+    {
+      "title": "Contemporary Theology",
+      "content": "This lesson covers Contemporary Theology, examining current theological trends and debates. It includes a discussion on the impact of modern culture on theology.",
+      "order_index": 6,
+      "estimated_duration": 30,
+      "video_url": "https://www.youtube.com/embed/VIDEO_ID6",
+      "video_title": "Understanding Contemporary Theology",
+      "video_duration": 900
+    },
+    {
+      "title": "Theology and Ethics",
+      "content": "This lesson explores the relationship between theology and ethics, discussing how theological beliefs influence ethical decisions. It includes practical examples and exercises.",
+      "order_index": 7,
+      "estimated_duration": 30,
+      "video_url": "https://www.youtube.com/embed/VIDEO_ID7",
+      "video_title": "Theology and Ethics",
+      "video_duration": 900
+    },
+    {
+      "title": "Theology and Apologetics",
+      "content": "This lesson covers the role of theology in apologetics, discussing how theological understanding can be used to defend the Christian faith. It includes practical exercises to develop apologetic skills.",
+      "order_index": 8,
+      "estimated_duration": 30,
+      "video_url": "https://www.youtube.com/embed/VIDEO_ID8",
+      "video_title": "Theology and Apologetics",
+      "video_duration": 900
+    },
+    {
+      "title": "Conclusion and Next Steps",
+      "content": "This final lesson reviews the course content and discusses next steps for further study in Christian Theology. It includes resources for further learning and practical steps to apply what has been learned.",
+      "order_index": 9,
+      "estimated_duration": 30,
+      "video_url": "https://www.youtube.com/embed/VIDEO_ID9",
+      "video_title": "Conclusion and Next Steps in Christian Theology",
+      "video_duration": 900
+    }
+  ]
+}
+
+=== End Response ===

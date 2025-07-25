@@ -1,0 +1,79 @@
+{
+  "id": "2025-07-25T12-17-30-407Z-3ob7zp",
+  "timestamp": "2025-07-25T12:17:30.407Z",
+  "request": {
+    "model": "gpt-4",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a course generation assistant. You must respond with ONLY valid JSON. Do not include any explanatory text, markdown formatting, or additional content outside the JSON object."
+      },
+      {
+        "role": "user",
+        "content": "You are an expert educational content creator. Based on the user's request below, create a comprehensive course structure.\n\nUser Request: \"Christian theology\"\n\nGenerate a course with the following JSON structure (respond ONLY with valid JSON, no additional text):\n\n{\n  \"title\": \"Engaging and descriptive course title\",\n  \"description\": \"Comprehensive overview of what learners will gain from this course\",\n  \"difficulty\": \"beginner|intermediate|advanced\",\n  \"estimated_duration\": number in minutes,\n  \"lessons\": [\n    {\n      \"title\": \"Clear lesson title\",\n      \"content\": \"Comprehensive lesson content with clear structure, examples, and practical exercises. Use markdown formatting for better readability.\",\n      \"order_index\": number,\n      \"estimated_duration\": number in minutes,\n      \"video_url\": \"https://www.youtube.com/embed/ACTUAL_VIDEO_ID\",\n      \"video_title\": \"Title of the video content\",\n      \"video_duration\": number in seconds\n    }\n  ]\n}\n\nGuidelines:\n- Create 5-10 lessons depending on topic complexity\n- Each lesson should be 10-30 minutes of content\n- Include practical examples and exercises\n- Use clear, engaging language\n- Structure content logically from basic to advanced concepts\n- Ensure the difficulty level matches the content\n- **IMPORTANT**: Include relevant video sources for each lesson when they would enhance learning\n- Choose high-quality educational videos from YouTube\n- **CRITICAL**: Always use REAL YouTube embed URLs with actual video IDs (e.g., https://www.youtube.com/embed/W6NZfCO5SIk)\n- **DO NOT USE PLACEHOLDERS** like VIDEO_ID1, VIDEO_ID2, etc. - use actual YouTube video IDs\n- Video duration should be appropriate (2-15 minutes for most lessons)\n- For each lesson, find a real YouTube video that matches the lesson topic and use its actual video ID"
+      }
+    ],
+    "max_tokens": 3000,
+    "temperature": 0.3,
+    "user_prompt": "Christian theology",
+    "timestamp": "2025-07-25T12:17:30.407Z"
+  },
+  "response": {
+    "content": "{\n  \"title\": \"Exploring Christian Theology: From Basics to Advanced Concepts\",\n  \"description\": \"This course provides a comprehensive overview of Christian theology, exploring its fundamental concepts, historical development, and various interpretations. Ideal for beginners and intermediate learners, the course is designed to equip learners with a solid understanding of Christian theological thought.\",\n  \"difficulty\": \"intermediate\",\n  \"estimated_duration\": 180,\n  \"lessons\": [\n    {\n      \"title\": \"Introduction to Christian Theology\",\n      \"content\": \"This lesson introduces the basic concepts of Christian theology, its historical context, and its significance in Christianity. Practical exercises include reflective journaling on key concepts.\",\n      \"order_index\": 1,\n      \"estimated_duration\": 20,\n      \"video_url\": \"https://www.youtube.com/embed/3nZ1o9_V_ss\",\n      \"video_title\": \"Introduction to Christian Theology\",\n      \"video_duration\": 600\n    },\n    {\n      \"title\": \"The Nature of God in Christian Theology\",\n      \"content\": \"This lesson delves into the Christian understanding of God's nature, discussing concepts such as the Trinity and divine attributes. Practical exercises include analyzing biblical passages.\",\n      \"order_index\": 2,\n      \"estimated_duration\": 30,\n      \"video_url\": \"https://www.youtube.com/embed/0G2S5ziDcO0\",\n      \"video_title\": \"The Nature of God in Christian Theology\",\n      \"video_duration\": 900\n    },\n    {\n      \"title\": \"Christology: The Study of Jesus Christ\",\n      \"content\": \"This lesson explores Christology, the study of Jesus Christ, discussing his divinity, humanity, and role in salvation. Practical exercises include a comparative study of gospel accounts.\",\n      \"order_index\": 3,\n      \"estimated_duration\": 30,\n      \"video_url\": \"https://www.youtube.com/embed/1A3i0GATnRA\",\n      \"video_title\": \"Christology: The Study of Jesus Christ\",\n      \"video_duration\": 900\n    },\n    {\n      \"title\": \"Soteriology: The Study of Salvation\",\n      \"content\": \"This lesson delves into Soteriology, the study of salvation, discussing the concepts of sin, grace, and atonement. Practical exercises include a personal reflection on the meaning of salvation.\",\n      \"order_index\": 4,\n      \"estimated_duration\": 30,\n      \"video_url\": \"https://www.youtube.com/embed/3dC3Dk4Q4E0\",\n      \"video_title\": \"Soteriology: The Study of Salvation\",\n      \"video_duration\": 900\n    },\n    {\n      \"title\": \"Eschatology: The Study of End Times\",\n      \"content\": \"This lesson explores Eschatology, the study of end times, discussing Christian beliefs about heaven, hell, and the second coming of Christ. Practical exercises include a group discussion on different eschatological views.\",\n      \"order_index\": 5,\n      \"estimated_duration\": 30,\n      \"video_url\": \"https://www.youtube.com/embed/6-0E6_kdZC4\",\n      \"video_title\": \"Eschatology: The Study of End Times\",\n      \"video_duration\": 900\n    },\n    {\n      \"title\": \"The Role of the Church in Christian Theology\",\n      \"content\": \"This lesson discusses the role of the Church in Christian theology, exploring its function, sacraments, and leadership. Practical exercises include a case study of a local church community.\",\n      \"order_index\": 6,\n      \"estimated_duration\": 30,\n      \"video_url\": \"https://www.youtube.com/embed/5yjPEy7Y3Eo\",\n      \"video_title\": \"The Role of the Church in Christian Theology\",\n      \"video_duration\": 900\n    }\n  ]\n}",
+    "usage": {
+      "prompt_tokens": 431,
+      "completion_tokens": 812,
+      "total_tokens": 1243,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "model": "gpt-4-0613",
+    "finish_reason": "stop",
+    "raw_response": {
+      "id": "chatcmpl-BxBeA7FKsF28IICffCb81FubjzKoc",
+      "object": "chat.completion",
+      "created": 1753445822,
+      "model": "gpt-4-0613",
+      "choices": [
+        {
+          "index": 0,
+          "message": {
+            "role": "assistant",
+            "content": "{\n  \"title\": \"Exploring Christian Theology: From Basics to Advanced Concepts\",\n  \"description\": \"This course provides a comprehensive overview of Christian theology, exploring its fundamental concepts, historical development, and various interpretations. Ideal for beginners and intermediate learners, the course is designed to equip learners with a solid understanding of Christian theological thought.\",\n  \"difficulty\": \"intermediate\",\n  \"estimated_duration\": 180,\n  \"lessons\": [\n    {\n      \"title\": \"Introduction to Christian Theology\",\n      \"content\": \"This lesson introduces the basic concepts of Christian theology, its historical context, and its significance in Christianity. Practical exercises include reflective journaling on key concepts.\",\n      \"order_index\": 1,\n      \"estimated_duration\": 20,\n      \"video_url\": \"https://www.youtube.com/embed/3nZ1o9_V_ss\",\n      \"video_title\": \"Introduction to Christian Theology\",\n      \"video_duration\": 600\n    },\n    {\n      \"title\": \"The Nature of God in Christian Theology\",\n      \"content\": \"This lesson delves into the Christian understanding of God's nature, discussing concepts such as the Trinity and divine attributes. Practical exercises include analyzing biblical passages.\",\n      \"order_index\": 2,\n      \"estimated_duration\": 30,\n      \"video_url\": \"https://www.youtube.com/embed/0G2S5ziDcO0\",\n      \"video_title\": \"The Nature of God in Christian Theology\",\n      \"video_duration\": 900\n    },\n    {\n      \"title\": \"Christology: The Study of Jesus Christ\",\n      \"content\": \"This lesson explores Christology, the study of Jesus Christ, discussing his divinity, humanity, and role in salvation. Practical exercises include a comparative study of gospel accounts.\",\n      \"order_index\": 3,\n      \"estimated_duration\": 30,\n      \"video_url\": \"https://www.youtube.com/embed/1A3i0GATnRA\",\n      \"video_title\": \"Christology: The Study of Jesus Christ\",\n      \"video_duration\": 900\n    },\n    {\n      \"title\": \"Soteriology: The Study of Salvation\",\n      \"content\": \"This lesson delves into Soteriology, the study of salvation, discussing the concepts of sin, grace, and atonement. Practical exercises include a personal reflection on the meaning of salvation.\",\n      \"order_index\": 4,\n      \"estimated_duration\": 30,\n      \"video_url\": \"https://www.youtube.com/embed/3dC3Dk4Q4E0\",\n      \"video_title\": \"Soteriology: The Study of Salvation\",\n      \"video_duration\": 900\n    },\n    {\n      \"title\": \"Eschatology: The Study of End Times\",\n      \"content\": \"This lesson explores Eschatology, the study of end times, discussing Christian beliefs about heaven, hell, and the second coming of Christ. Practical exercises include a group discussion on different eschatological views.\",\n      \"order_index\": 5,\n      \"estimated_duration\": 30,\n      \"video_url\": \"https://www.youtube.com/embed/6-0E6_kdZC4\",\n      \"video_title\": \"Eschatology: The Study of End Times\",\n      \"video_duration\": 900\n    },\n    {\n      \"title\": \"The Role of the Church in Christian Theology\",\n      \"content\": \"This lesson discusses the role of the Church in Christian theology, exploring its function, sacraments, and leadership. Practical exercises include a case study of a local church community.\",\n      \"order_index\": 6,\n      \"estimated_duration\": 30,\n      \"video_url\": \"https://www.youtube.com/embed/5yjPEy7Y3Eo\",\n      \"video_title\": \"The Role of the Church in Christian Theology\",\n      \"video_duration\": 900\n    }\n  ]\n}",
+            "refusal": null,
+            "annotations": []
+          },
+          "logprobs": null,
+          "finish_reason": "stop"
+        }
+      ],
+      "usage": {
+        "prompt_tokens": 431,
+        "completion_tokens": 812,
+        "total_tokens": 1243,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "audio_tokens": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "audio_tokens": 0,
+          "accepted_prediction_tokens": 0,
+          "rejected_prediction_tokens": 0
+        }
+      },
+      "service_tier": "default",
+      "system_fingerprint": null
+    }
+  },
+  "success": true,
+  "duration_ms": 28754
+}

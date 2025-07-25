@@ -187,6 +187,121 @@ export const POST: RequestHandler = async ({ request }) => {
 	}
 };
 
+/**
+ * Get real video URLs for lessons using a focused API call
+ */
+async function getVideoUrlsForLessons(lessons: any[], courseTitle: string): Promise<Array<{ video_url: string | null; video_title: string | null; video_duration: number | null }>> {
+	const maxRetries = 3;
+	
+	for (let attempt = 1; attempt <= maxRetries; attempt++) {
+		try {
+			console.log(`Attempt ${attempt}/${maxRetries}: Getting video URLs for ${lessons.length} lessons`);
+			
+			// Create a focused prompt for video URLs only
+			const videoPrompt = `Find real YouTube video URLs for these lessons. Respond with ONLY a JSON array of video objects.
+
+Course: "${courseTitle}"
+
+Lessons:
+${lessons.map((lesson, index) => `${index + 1}. ${lesson.title}`).join('\n')}
+
+Requirements:
+- Use REAL YouTube video IDs (e.g., W6NZfCO5SIk, PkZNo7MFNFg)
+- Format as embed URLs: https://www.youtube.com/embed/VIDEO_ID
+- Choose high-quality educational videos that match each lesson topic
+- Include realistic video titles and durations (2-15 minutes)
+- DO NOT use placeholders like VIDEO_ID1, VIDEO_ID2
+
+Respond with JSON array:
+[
+  {
+    "video_url": "https://www.youtube.com/embed/REAL_VIDEO_ID",
+    "video_title": "Real video title",
+    "video_duration": 600
+  }
+]`;
+
+			const openAIRequest = {
+				model: 'gpt-4',
+				messages: [
+					{
+						role: 'system',
+						content: 'You are a video research assistant. Find real YouTube educational videos. Respond with ONLY valid JSON.'
+					},
+					{
+						role: 'user',
+						content: videoPrompt
+					}
+				],
+				max_tokens: 1000,
+				temperature: 0.3
+			};
+
+			// Log the request and make the API call
+			const data = await logOpenAIRequest(
+				openAIRequest, 
+				`Video followup for course: ${courseTitle}`, 
+				async () => {
+					const response = await fetch('https://api.openai.com/v1/chat/completions', {
+						method: 'POST',
+						headers: {
+							'Authorization': `Bearer ${OPENAI_API_KEY}`,
+							'Content-Type': 'application/json'
+						},
+						body: JSON.stringify(openAIRequest)
+					});
+
+					if (!response.ok) {
+						throw new Error(`OpenAI API error: ${response.status}`);
+					}
+
+					return response.json();
+				}
+			);
+			const videoResponse = data.choices[0]?.message?.content;
+
+			if (!videoResponse) {
+				throw new Error('No response content from OpenAI');
+			}
+
+			// Parse the video response
+			const videoData = JSON.parse(videoResponse);
+			
+			if (!Array.isArray(videoData) || videoData.length !== lessons.length) {
+				throw new Error(`Invalid video response format: expected array of ${lessons.length} items`);
+			}
+
+			// Validate that we got real video URLs
+			const hasRealVideos = videoData.every((video: any) => 
+				video.video_url && 
+				video.video_url.includes('youtube.com/embed/') && 
+				!video.video_url.includes('VIDEO_ID') &&
+				!video.video_url.includes('placeholder')
+			);
+
+			if (hasRealVideos) {
+				console.log(`✅ Successfully got real video URLs on attempt ${attempt}`);
+				return videoData;
+			} else {
+				console.log(`❌ Attempt ${attempt}: Still got invalid video URLs, retrying...`);
+				if (attempt === maxRetries) {
+					console.log('Max retries reached, using fallback videos');
+					return lessons.map(() => ({ video_url: null, video_title: null, video_duration: null }));
+				}
+			}
+
+		} catch (error) {
+			console.error(`Error on attempt ${attempt}:`, error);
+			if (attempt === maxRetries) {
+				console.log('Max retries reached, using fallback videos');
+				return lessons.map(() => ({ video_url: null, video_title: null, video_duration: null }));
+			}
+		}
+	}
+
+	return lessons.map(() => ({ video_url: null, video_title: null, video_duration: null }));
+}
+
 async function extractCourseFromConversation(messages: ChatMessage[]): Promise<any> {
 	try {
 		// Get the user's prompt from the messages
@@ -210,7 +325,7 @@ Generate a course with the following JSON structure (respond ONLY with valid JSO
       "content": "Comprehensive lesson content with clear structure, examples, and practical exercises. Use markdown formatting for better readability.",
       "order_index": number,
       "estimated_duration": number in minutes,
-      "video_url": "YouTube embed URL (https://www.youtube.com/embed/VIDEO_ID)",
+      "video_url": "https://www.youtube.com/embed/ACTUAL_VIDEO_ID",
       "video_title": "Title of the video content",
       "video_duration": number in seconds
     }
@@ -226,8 +341,10 @@ Guidelines:
 - Ensure the difficulty level matches the content
 - **IMPORTANT**: Include relevant video sources for each lesson when they would enhance learning
 - Choose high-quality educational videos from YouTube
-- **CRITICAL**: Always use YouTube embed URLs (https://www.youtube.com/embed/VIDEO_ID) NOT regular YouTube URLs
-- Video duration should be appropriate (2-15 minutes for most lessons)`;
+- **CRITICAL**: Always use REAL YouTube embed URLs with actual video IDs (e.g., https://www.youtube.com/embed/W6NZfCO5SIk)
+- **DO NOT USE PLACEHOLDERS** like VIDEO_ID1, VIDEO_ID2, etc. - use actual YouTube video IDs
+- Video duration should be appropriate (2-15 minutes for most lessons)
+- For each lesson, find a real YouTube video that matches the lesson topic and use its actual video ID`;
 
 		const openAIRequest = {
 			model: 'gpt-4',
@@ -296,6 +413,32 @@ Guidelines:
 		// Try to parse the JSON response
 		try {
 			const courseData = JSON.parse(jsonContent);
+			
+			// Check if videos are valid or need follow-up
+			const needsVideoFollowup = courseData.lessons && Array.isArray(courseData.lessons) && 
+				courseData.lessons.some((lesson: any) => {
+					const videoUrl = lesson.video_url;
+					return videoUrl && (
+						videoUrl.includes('VIDEO_ID') || 
+						videoUrl.includes('placeholder') ||
+						!videoUrl.includes('youtube.com/embed/')
+					);
+				});
+			
+			// If videos need follow-up, make a specific API call for video URLs
+			if (needsVideoFollowup) {
+				console.log('Detected invalid video URLs, making follow-up API call for real video sources...');
+				
+				const videoFollowupResult = await getVideoUrlsForLessons(courseData.lessons, courseData.title);
+				
+				// Update lessons with real video URLs
+				courseData.lessons = courseData.lessons.map((lesson: any, index: number) => ({
+					...lesson,
+					video_url: videoFollowupResult[index]?.video_url || lesson.video_url,
+					video_title: videoFollowupResult[index]?.video_title || lesson.video_title,
+					video_duration: videoFollowupResult[index]?.video_duration || lesson.video_duration
+				}));
+			}
 			
 			// Validate and potentially replace videos with fallbacks
 			const validateVideo = async (url: string | null, lessonTitle: string, courseTitle: string): Promise<{ url: string | null; title: string; duration: number; wasReplaced: boolean }> => {
