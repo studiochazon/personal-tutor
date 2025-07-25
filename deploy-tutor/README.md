@@ -28,11 +28,19 @@ Before running the deployment scripts, ensure you have:
 - Installs/verifies Node.js, PM2, nginx, and certbot
 - Prepares the server environment
 
+### 1a. Database Setup (`01a-setup-database.sh`)
+- Installs MySQL on the remote server
+- Creates database and user using credentials from `client/env.remote`
+- Runs the complete schema setup from `database/schema.sql`
+- Applies all migrations from `database-migrations/`
+- Saves database credentials to server
+
 ### 2. App Deployment (`02-deploy-app.sh`)
 - Builds the application locally
 - Creates deployment package
 - Uploads files to the server
 - Installs production dependencies
+- Copies `env.remote` to `.env` on server
 
 ### 3. Nginx Configuration (`03-configure-nginx.sh`)
 - Creates nginx configuration for `tutor.novotio.com`
@@ -84,6 +92,44 @@ To update the application after initial deployment:
 # Restart services
 ./deploy-tutor/05-start-services.sh
 ```
+
+## 🗄️ Database Management
+
+The deployment includes comprehensive database management tools:
+
+### Database Setup
+```bash
+# Set up database (first time only)
+./deploy-tutor/01a-setup-database.sh
+
+# Or use the management script
+./deploy-tutor/db-manage.sh setup
+```
+
+### Database Operations
+```bash
+# Test database connection
+./deploy-tutor/test-remote-db.sh
+
+# Run migrations
+./deploy-tutor/db-manage.sh migrate
+
+# Create backup
+./deploy-tutor/db-manage.sh backup
+
+# Check status
+./deploy-tutor/db-manage.sh status
+
+# Connect to database
+./deploy-tutor/db-manage.sh connect
+```
+
+### Database Configuration
+The database setup uses credentials from `client/env.remote`:
+- **Database**: `personal_tutor`
+- **User**: `novotio_admin`
+- **Host**: `127.0.0.1`
+- **Port**: `3306`
 
 ## 🛠️ Troubleshooting
 

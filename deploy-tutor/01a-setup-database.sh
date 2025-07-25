@@ -12,14 +12,31 @@ VPS_HOST="89.116.170.241"
 VPS_USER="root"
 DOMAIN="tutor.novotio.com"
 APP_DIR="/var/www/personal-tutor"
-DB_NAME="personal_tutor_ai"
-DB_USER="personal_tutor_user"
-DB_PASSWORD=""
+
+# Load database configuration from env.remote
+if [ -f "client/env.remote" ]; then
+    echo "📋 Loading database configuration from env.remote..."
+    source <(grep -E '^DB_' client/env.remote | sed 's/^/export /')
+    DB_NAME="${DB_NAME:-personal_tutor}"
+    DB_USER="${DB_USER:-novotio_admin}"
+    DB_PASSWORD="${DB_PASSWORD:-1991@RootOmega}"
+    DB_HOST="${DB_HOST:-127.0.0.1}"
+    DB_PORT="${DB_PORT:-3306}"
+else
+    echo "❌ env.remote file not found. Using default values."
+    DB_NAME="personal_tutor"
+    DB_USER="novotio_admin"
+    DB_PASSWORD="1991@RootOmega"
+    DB_HOST="127.0.0.1"
+    DB_PORT="3306"
+fi
 
 echo "📋 Configuration:"
 echo "  VPS: $VPS_USER@$VPS_HOST"
 echo "  Database: $DB_NAME"
 echo "  Database User: $DB_USER"
+echo "  Database Host: $DB_HOST"
+echo "  Database Port: $DB_PORT"
 echo ""
 
 # Check if we can connect to the server
@@ -46,12 +63,7 @@ else
     echo "✅ MySQL already installed: $MYSQL_VERSION"
 fi
 
-# Generate a secure password for the database user
-echo "🔐 Generating database password..."
-DB_PASSWORD=$(openssl rand -base64 32 | tr -d "=+/" | cut -c1-25)
-echo "Generated password: $DB_PASSWORD"
-
-# Create database and user
+# Create database and user (using existing credentials from env.remote)
 echo "🗄️ Creating database and user..."
 ssh $VPS_USER@$VPS_HOST "mysql -e \"CREATE DATABASE IF NOT EXISTS $DB_NAME CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;\""
 ssh $VPS_USER@$VPS_HOST "mysql -e \"CREATE USER IF NOT EXISTS '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASSWORD';\""
@@ -81,12 +93,12 @@ ssh $VPS_USER@$VPS_HOST "for file in /tmp/migrations/*.sql; do echo \"Running mi
 echo "🧹 Cleaning up temporary files..."
 ssh $VPS_USER@$VPS_HOST "rm -f /tmp/schema.sql && rm -rf /tmp/migrations"
 
-# Create environment file with database credentials
+# Create environment file with database credentials (using env.remote values)
 echo "📝 Creating database environment file..."
 ssh $VPS_USER@$VPS_HOST "cat > $APP_DIR/.env.database << EOF
 # Database Configuration
-DB_HOST=localhost
-DB_PORT=3306
+DB_HOST=$DB_HOST
+DB_PORT=$DB_PORT
 DB_NAME=$DB_NAME
 DB_USER=$DB_USER
 DB_PASSWORD=$DB_PASSWORD
@@ -99,8 +111,8 @@ echo "📋 Database Information:"
 echo "  Database Name: $DB_NAME"
 echo "  Database User: $DB_USER"
 echo "  Database Password: $DB_PASSWORD"
-echo "  Database Host: localhost"
-echo "  Database Port: 3306"
+echo "  Database Host: $DB_HOST"
+echo "  Database Port: $DB_PORT"
 echo ""
 echo "📁 Database credentials saved to: $APP_DIR/.env.database"
 echo ""
