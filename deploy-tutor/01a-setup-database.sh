@@ -63,12 +63,12 @@ else
     echo "✅ MySQL already installed: $MYSQL_VERSION"
 fi
 
-# Create database and user (using existing credentials from env.remote)
+# Create database and user (using root with password for database creation)
 echo "🗄️ Creating database and user..."
-ssh $VPS_USER@$VPS_HOST "mysql -e \"CREATE DATABASE IF NOT EXISTS $DB_NAME CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;\""
-ssh $VPS_USER@$VPS_HOST "mysql -e \"CREATE USER IF NOT EXISTS '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASSWORD';\""
-ssh $VPS_USER@$VPS_HOST "mysql -e \"GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'localhost';\""
-ssh $VPS_USER@$VPS_HOST "mysql -e \"FLUSH PRIVILEGES;\""
+ssh $VPS_USER@$VPS_HOST "mysql -u root -p1991@AlphaOmega -e \"CREATE DATABASE IF NOT EXISTS $DB_NAME CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;\""
+ssh $VPS_USER@$VPS_HOST "mysql -u root -p1991@AlphaOmega -e \"CREATE USER IF NOT EXISTS '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASSWORD';\""
+ssh $VPS_USER@$VPS_HOST "mysql -u root -p1991@AlphaOmega -e \"GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'localhost';\""
+ssh $VPS_USER@$VPS_HOST "mysql -u root -p1991@AlphaOmega -e \"FLUSH PRIVILEGES;\""
 
 echo "✅ Database and user created successfully"
 
