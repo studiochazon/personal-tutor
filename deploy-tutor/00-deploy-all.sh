@@ -28,7 +28,7 @@ fi
 
 # Check if all deployment scripts exist
 echo "🔍 Checking deployment scripts..."
-for script in 01-setup-server.sh 02-deploy-app.sh 03-configure-nginx.sh 04-setup-ssl.sh 05-start-services.sh; do
+for script in 01-setup-server.sh 01a-setup-database.sh 02-deploy-app.sh 03-configure-nginx.sh 04-setup-ssl.sh 05-start-services.sh; do
     if [ ! -f "deploy-tutor/$script" ]; then
         echo "❌ Error: deploy-tutor/$script not found"
         exit 1
@@ -57,35 +57,42 @@ echo "🚀 Starting deployment process..."
 echo ""
 
 # Step 1: Server Setup
-echo "📋 Step 1/5: Server Setup"
+echo "📋 Step 1/6: Server Setup"
 echo "------------------------"
 chmod +x deploy-tutor/01-setup-server.sh
 ./deploy-tutor/01-setup-server.sh
 echo ""
 
+# Step 1a: Database Setup
+echo "📋 Step 1a/6: Database Setup"
+echo "----------------------------"
+chmod +x deploy-tutor/01a-setup-database.sh
+./deploy-tutor/01a-setup-database.sh
+echo ""
+
 # Step 2: App Deployment
-echo "📋 Step 2/5: App Deployment"
+echo "📋 Step 2/6: App Deployment"
 echo "---------------------------"
 chmod +x deploy-tutor/02-deploy-app.sh
 ./deploy-tutor/02-deploy-app.sh
 echo ""
 
 # Step 3: Nginx Configuration
-echo "📋 Step 3/5: Nginx Configuration"
+echo "📋 Step 3/6: Nginx Configuration"
 echo "-------------------------------"
 chmod +x deploy-tutor/03-configure-nginx.sh
 ./deploy-tutor/03-configure-nginx.sh
 echo ""
 
 # Step 4: SSL Setup
-echo "📋 Step 4/5: SSL Setup"
+echo "📋 Step 4/6: SSL Setup"
 echo "---------------------"
 chmod +x deploy-tutor/04-setup-ssl.sh
 ./deploy-tutor/04-setup-ssl.sh
 echo ""
 
 # Step 5: Start Services
-echo "📋 Step 5/5: Start Services"
+echo "📋 Step 5/6: Start Services"
 echo "--------------------------"
 chmod +x deploy-tutor/05-start-services.sh
 ./deploy-tutor/05-start-services.sh

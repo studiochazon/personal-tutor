@@ -10,7 +10,10 @@
 		"preview": "vite preview",
 		"prepare": "svelte-kit sync || echo ''",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
+		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+		"db:setup": "mysql -u root -p < ../database/schema.sql",
+		"db:migrate": "for file in ../database-migrations/*.sql; do echo \"Running migration: $file\"; mysql -u root -p < \"$file\"; done",
+		"db:reset": "mysql -u root -p -e \"DROP DATABASE IF EXISTS personal_tutor_ai; CREATE DATABASE personal_tutor_ai; USE personal_tutor_ai;\" && npm run db:setup"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^6.0.0",
