@@ -1,0 +1,63 @@
+=== LLM Response Log ===
+Timestamp: 2025-07-30T06:13:51.573Z
+Model: gpt-4-0613
+
+=== User Prompt ===
+Christian theology
+
+=== AI Response ===
+{
+  "title": "Understanding Christian Theology: A Comprehensive Course",
+  "description": "This course provides a comprehensive overview of Christian theology, covering its historical development, major doctrines, and contemporary issues. It is designed for learners of all backgrounds who are interested in deepening their understanding of Christianity from a theological perspective.",
+  "difficulty": "beginner",
+  "estimated_duration": 180,
+  "lessons": [
+    {
+      "title": "Introduction to Christian Theology",
+      "content": "This lesson introduces the concept of theology, its importance in Christianity, and the different branches of Christian theology. It also provides a brief overview of the historical development of Christian theology.",
+      "order_index": 1,
+      "estimated_duration": 20,
+      "video_url": "https://www.youtube.com/embed/3nZ1ytG7CkY",
+      "video_title": "What is Theology?",
+      "video_duration": 480
+    },
+    {
+      "title": "Historical Development of Christian Theology",
+      "content": "This lesson explores the historical development of Christian theology, from the early church to the present day. It covers key historical periods, major theological debates, and influential theologians.",
+      "order_index": 2,
+      "estimated_duration": 30,
+      "video_url": "https://www.youtube.com/embed/6V0Bp7h7Lz4",
+      "video_title": "History of Christian Theology",
+      "video_duration": 900
+    },
+    {
+      "title": "Major Doctrines of Christian Theology",
+      "content": "This lesson examines the major doctrines of Christian theology, including the doctrines of God, Christ, the Holy Spirit, salvation, the church, and the last things. It also discusses the biblical basis for these doctrines and their implications for Christian life and practice.",
+      "order_index": 3,
+      "estimated_duration": 30,
+      "video_url": "https://www.youtube.com/embed/1R5t3VQGADg",
+      "video_title": "Major Doctrines of Christianity",
+      "video_duration": 900
+    },
+    {
+      "title": "Contemporary Issues in Christian Theology",
+      "content": "This lesson explores contemporary issues in Christian theology, including the relationship between theology and science, the role of women in the church, and the challenge of religious pluralism. It also discusses how Christian theology can contribute to these debates.",
+      "order_index": 4,
+      "estimated_duration": 30,
+      "video_url": "https://www.youtube.com/embed/8ZtSw-w9CUs",
+      "video_title": "Contemporary Issues in Theology",
+      "video_duration": 900
+    },
+    {
+      "title": "The Future of Christian Theology",
+      "content": "This lesson looks at the future of Christian theology, including emerging trends and potential challenges. It also discusses the role of theology in shaping the future of the church and society.",
+      "order_index": 5,
+      "estimated_duration": 20,
+      "video_url": "https://www.youtube.com/embed/5nTuScU70As",
+      "video_title": "The Future of Theology",
+      "video_duration": 480
+    }
+  ]
+}
+
+=== End Response ===

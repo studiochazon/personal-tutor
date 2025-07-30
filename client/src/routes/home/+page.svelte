@@ -229,11 +229,8 @@ Each lesson should follow this structure:
    - Self-assessment questions
    - Next steps and preparation`;
 
-			// Create messages array with system prompt and user input
-			const messages = [
-				{ role: 'system', content: systemPrompt },
-				{ role: 'user', content: promptText.trim() }
-			];
+			// Use the enhanced simple course creation system
+			// No need for complex message arrays - just send the user prompt
 
 			// Get auth token - try both store and localStorage
 			let token = getAuthToken();
@@ -251,13 +248,13 @@ Each lesson should follow this structure:
 				throw new Error('Authentication token not found. Please log in again.');
 			}
 
-			const response = await fetch('/api/start/create-course', {
+			const response = await fetch('/api/start/simple-course', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
 					'Authorization': `Bearer ${token}`
 				},
-				body: JSON.stringify({ messages })
+				body: JSON.stringify({ userPrompt: promptText })
 			});
 			
 			if (response.ok) {
@@ -265,8 +262,19 @@ Each lesson should follow this structure:
 				// Clear course creation in progress flag since course was successfully created
 				clearCourseCreationInProgress();
 				courseCreationError = ''; // Clear any error messages
-				// Redirect to the new course with success indicator
-				window.location.href = `/courses/${result.course.id}?new=true`;
+				
+				// For simple course creation, show success message instead of redirecting to course page
+				// since we don't create database entries, just generate content
+				const sanitizedPrompt = promptText
+					.toLowerCase()
+					.replace(/[^a-z0-9\s]/g, '')
+					.trim()
+					.split(/\s+/)
+					.slice(0, 3)
+					.join('-')
+					.substring(0, 30);
+				
+				alert(`✅ Course created successfully!\n\n📁 Response saved as: ${result.logId || 'latest'}-${sanitizedPrompt}.txt\n\nCheck the /llm-logs/simple-response/ directory to view your course content.`);
 			} else {
 				const error = await response.json();
 				const errorMessage = error.error || 'Unknown error';

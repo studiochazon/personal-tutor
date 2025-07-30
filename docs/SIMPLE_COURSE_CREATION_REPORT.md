@@ -13,12 +13,13 @@ Successfully implemented a simplified course creation system that uses OpenAI's 
 - **Real-time Data:** Access to current information beyond the model's training cutoff
 - **Source Citations:** OpenAI automatically includes source references in responses
 
-### 2. Simplified System Prompt
+### 2. Enhanced System Prompt
 
-**Prompt:** "Create a course based on [user prompt]"
-- **Minimal Complexity:** Uses the simplest possible system prompt for course generation
-- **Direct Approach:** No complex structured JSON extraction or validation
-- **Flexible Output:** Allows the AI to generate course content in natural language format
+**Prompt:** Structured course creation with lessons and video URLs
+- **Organized Content:** Requests course title, description, learning objectives, and structured lessons
+- **Video Integration:** Asks for real YouTube video URLs in embed format for each lesson
+- **Natural Language:** Still outputs in readable text format (not complex JSON)
+- **Web Search Enhanced:** Leverages current information for up-to-date content and video recommendations
 
 ### 3. Simple Text Logging System
 
@@ -111,6 +112,22 @@ private sanitizePromptForFilename(prompt: string): string {
 - `"Machine Learning for Data Scientists!"` → `4-machine-learning-for.txt`
 - `"Python Programming: Beginner's Guide"` → `5-python-programming.txt`
 
+### Enhanced System Prompt
+
+```typescript
+const systemPrompt = `Create a comprehensive course based on the user's request. Include:
+
+1. Course title and description
+2. Learning objectives  
+3. Well-organized lessons with:
+   - Clear lesson titles
+   - Detailed lesson content
+   - Real YouTube video URLs (embed format: https://www.youtube.com/embed/VIDEO_ID)
+   - Estimated duration for each lesson
+
+Format the response as a complete course outline with all lessons clearly structured. Use real, working YouTube video URLs that are relevant to each lesson topic. Include current information from web search when available.`;
+```
+
 ### Web Search Configuration
 
 ```typescript
@@ -120,15 +137,15 @@ private sanitizePromptForFilename(prompt: string): string {
   messages: [
     {
       role: 'system',
-      content: 'Create a course based on [user prompt]'
+      content: systemPrompt
     },
     {
       role: 'user', 
       content: userPrompt
     }
   ],
-  max_tokens: 4000,
-  temperature: 0.7
+  max_tokens: 4000
+  // Note: gpt-4o-search-preview doesn't support temperature parameter
 }
 ```
 
@@ -136,7 +153,7 @@ private sanitizePromptForFilename(prompt: string): string {
 
 | Feature | Complex System | Simple System |
 |---------|----------------|---------------|
-| **Prompt** | Multi-paragraph structured prompt | Single sentence: "Create a course based on [user prompt]" |
+| **Prompt** | Multi-paragraph structured prompt | Enhanced prompt requesting lessons with video URLs |
 | **Output Format** | Structured JSON with validation | Natural language text |
 | **Web Search** | No web search | Built-in web search with citations |
 | **Logging** | Complex JSON with metadata | Simple text files |

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
 
 	let userPrompt = '';
 	let isLoading = false;
@@ -9,11 +10,17 @@
 	let logId = '';
 	let model = '';
 
-	// Check authentication on mount
+	// Check authentication on mount and handle URL parameters
 	onMount(() => {
 		const token = localStorage.getItem('authToken');
 		if (!token) {
 			goto('/auth/login');
+		}
+		
+		// Check for prompt parameter from landing page
+		const urlPrompt = $page.url.searchParams.get('prompt');
+		if (urlPrompt) {
+			userPrompt = urlPrompt;
 		}
 	});
 
@@ -176,7 +183,8 @@
 		<h3>ℹ️ About Simple Course Creation</h3>
 		<ul>
 			<li><strong>Web Search Enabled:</strong> Uses OpenAI's web search capabilities for up-to-date information</li>
-			<li><strong>Simple Prompt:</strong> Uses a minimal system prompt: "Create a course based on [user prompt]"</li>
+			<li><strong>Structured Lessons:</strong> Generates organized courses with lessons, video URLs, and learning objectives</li>
+			<li><strong>Real Video URLs:</strong> Includes working YouTube video links relevant to each lesson</li>
 			<li><strong>Text Logging:</strong> Responses are saved as simple text files in <code>/llm-logs/simple-response/</code></li>
 			<li><strong>Consecutive Numbering:</strong> Files are named like <code>1-sustainable-energy.txt</code>, <code>2-machine-learning.txt</code>, etc.</li>
 			<li><strong>Model:</strong> Uses <code>gpt-4o-search-preview</code> for enhanced search capabilities</li>

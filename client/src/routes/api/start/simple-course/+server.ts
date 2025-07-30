@@ -61,8 +61,18 @@ export const POST: RequestHandler = async ({ request }) => {
 			return json({ error: 'Invalid user prompt' }, { status: 400 });
 		}
 
-		// Simple system prompt for course creation
-		const systemPrompt = `Create a course based on [user prompt]`;
+		// Enhanced system prompt for structured course creation
+		const systemPrompt = `Create a comprehensive course based on the user's request. Include:
+
+1. Course title and description
+2. Learning objectives  
+3. Well-organized lessons with:
+   - Clear lesson titles
+   - Detailed lesson content
+   - Real YouTube video URLs (embed format: https://www.youtube.com/embed/VIDEO_ID)
+   - Estimated duration for each lesson
+
+Format the response as a complete course outline with all lessons clearly structured. Use real, working YouTube video URLs that are relevant to each lesson topic. Include current information from web search when available.`;
 
 		try {
 			console.log('Making OpenAI API call with web search for course creation...');
@@ -87,8 +97,7 @@ export const POST: RequestHandler = async ({ request }) => {
 							content: userPrompt
 						}
 					],
-					max_tokens: 4000,
-					temperature: 0.7
+					max_tokens: 4000
 				})
 			});
 
