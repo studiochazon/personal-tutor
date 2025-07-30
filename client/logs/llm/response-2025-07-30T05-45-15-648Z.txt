@@ -1,0 +1,81 @@
+=== LLM Response Log ===
+Timestamp: 2025-07-30T05:45:15.649Z
+Model: gpt-4-0613
+
+=== User Prompt ===
+Christian theology
+
+=== AI Response ===
+{
+  "title": "Foundations of Christian Theology",
+  "description": "This course provides a comprehensive exploration of Christian theology, from its historical roots to its contemporary applications. Learners will gain a deep understanding of key Christian doctrines, biblical interpretation, and theological thought.",
+  "difficulty": "intermediate",
+  "estimated_duration": 180,
+  "lessons": [
+    {
+      "title": "Introduction to Christian Theology",
+      "content": "This lesson provides an overview of Christian theology, its importance, and its relevance today. It includes a brief history of Christian theology and an introduction to key terms and concepts.",
+      "order_index": 1,
+      "estimated_duration": 20,
+      "video_url": "https://www.youtube.com/embed/1Aal9vN3rGM",
+      "video_title": "What is Theology? | The Nature of God",
+      "video_duration": 600
+    },
+    {
+      "title": "Biblical Interpretation in Theology",
+      "content": "This lesson explores how the Bible is interpreted within Christian theology. It includes a discussion of hermeneutics, exegesis, and the role of tradition and reason in interpretation.",
+      "order_index": 2,
+      "estimated_duration": 25,
+      "video_url": "https://www.youtube.com/embed/3PHs_9vX20Y",
+      "video_title": "How to Read the Bible: What is Biblical Theology?",
+      "video_duration": 540
+    },
+    {
+      "title": "Doctrine of God",
+      "content": "This lesson delves into the Christian understanding of God, discussing concepts such as the Trinity, divine attributes, and the problem of evil.",
+      "order_index": 3,
+      "estimated_duration": 30,
+      "video_url": "https://www.youtube.com/embed/0G2S5ziDcO0",
+      "video_title": "The Doctrine of God: Theology Proper",
+      "video_duration": 900
+    },
+    {
+      "title": "Doctrine of Christ",
+      "content": "This lesson focuses on Christology, the study of Jesus Christ. It includes a discussion of the Incarnation, the dual nature of Christ, and the significance of his life, death, and resurrection.",
+      "order_index": 4,
+      "estimated_duration": 30,
+      "video_url": "https://www.youtube.com/embed/7DxhN4_aN0M",
+      "video_title": "Christology: The Person of Christ",
+      "video_duration": 840
+    },
+    {
+      "title": "Doctrine of Salvation",
+      "content": "This lesson explores soteriology, the doctrine of salvation. It includes a discussion of concepts such as grace, faith, justification, and sanctification.",
+      "order_index": 5,
+      "estimated_duration": 25,
+      "video_url": "https://www.youtube.com/embed/3aDXM5H-Fuw",
+      "video_title": "What is Salvation? | Basics of Salvation",
+      "video_duration": 720
+    },
+    {
+      "title": "Doctrine of the Church",
+      "content": "This lesson examines ecclesiology, the study of the church. It includes a discussion of the nature and purpose of the church, the sacraments, and the role of the church in the world.",
+      "order_index": 6,
+      "estimated_duration": 30,
+      "video_url": "https://www.youtube.com/embed/9hNqU8A7yIg",
+      "video_title": "What is the Church? | Ecclesiology",
+      "video_duration": 780
+    },
+    {
+      "title": "Doctrine of Last Things",
+      "content": "This final lesson explores eschatology, the study of last things. It includes a discussion of Christian beliefs about death, resurrection, judgment, and the end of the world.",
+      "order_index": 7,
+      "estimated_duration": 20,
+      "video_url": "https://www.youtube.com/embed/_nI0el9vjWY",
+      "video_title": "What is Eschatology? | The End Times",
+      "video_duration": 600
+    }
+  ]
+}
+
+=== End Response ===
