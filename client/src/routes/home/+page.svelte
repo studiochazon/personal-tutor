@@ -344,7 +344,7 @@ Each lesson should follow this structure:
 						<div class="flex items-center justify-center">
 							<div class="text-center">
 								<h3 class="course-creation-title mb-3">
-									Creating Your Course - <b>{promptText.split(' ')[0] || 'Course'}</b>
+									Creating Your Course - <b>{promptText || 'Course'}</b>
 								</h3>
 								<div class="loading-dots">
 									<div class="loading-dot"></div>
