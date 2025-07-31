@@ -3,6 +3,11 @@ import type { RequestHandler } from './$types';
 import { OPENAI_API_KEY } from '$env/static/private';
 import { logOpenAIRequest } from '$lib/llm-logger';
 import jwt from 'jsonwebtoken';
+import { 
+    OPENAI_CONFIG, 
+    KEYWORD_EXTRACTION_CONFIG, 
+    CONFIG_HELPERS 
+} from '$lib/engine.config';
 
 // JWT secret - in production, use environment variable
 const JWT_SECRET = 'your-super-secret-jwt-key-change-this-in-production';
@@ -180,7 +185,7 @@ export const PATCH: RequestHandler = async ({ request }) => {
 		}
 
 		const body = await request.json();
-		const { course_plan_text, audience = 'intermediate', depth = 'comprehensive' } = body;
+		const { course_plan_text, audience = KEYWORD_EXTRACTION_CONFIG.default_audience, depth = KEYWORD_EXTRACTION_CONFIG.default_depth } = body;
 
 		// Validate required fields
 		if (!course_plan_text) {
@@ -269,10 +274,13 @@ Generate the keyword cloud now based on the provided course plan text.`;
 
 		console.log(`Extracting keywords from course plan text (${course_plan_text.length} characters)`);
 
+		// Get configuration for keyword extraction
+		const keywordConfig = CONFIG_HELPERS.getOperationConfig('keyword_extraction');
+		
 		// Make API call with logging
 		const data = await logOpenAIRequest(
 			{
-				model: 'gpt-4',
+				model: keywordConfig.model,
 				messages: [
 					{
 						role: 'system',
@@ -283,8 +291,8 @@ Generate the keyword cloud now based on the provided course plan text.`;
 						content: prompt
 					}
 				],
-				max_tokens: 2000,
-				temperature: 0.3
+				max_tokens: keywordConfig.max_tokens,
+				temperature: keywordConfig.temperature
 			},
 			`Course plan keyword extraction`,
 			async () => {
@@ -295,7 +303,7 @@ Generate the keyword cloud now based on the provided course plan text.`;
 						'Authorization': `Bearer ${OPENAI_API_KEY}`
 					},
 					body: JSON.stringify({
-						model: 'gpt-4',
+						model: keywordConfig.model,
 						messages: [
 							{
 								role: 'system',
@@ -306,8 +314,8 @@ Generate the keyword cloud now based on the provided course plan text.`;
 								content: prompt
 							}
 						],
-						max_tokens: 2000,
-						temperature: 0.3
+						max_tokens: keywordConfig.max_tokens,
+						temperature: keywordConfig.temperature
 					})
 				});
 
@@ -424,8 +432,8 @@ export const POST: RequestHandler = async ({ request }) => {
 			course_title,
 			course_topic,
 			lessons,
-			audience,
-			depth
+			audience = KEYWORD_EXTRACTION_CONFIG.default_audience,
+			depth = KEYWORD_EXTRACTION_CONFIG.default_depth
 		}: KeywordGenerationRequest = await request.json();
 
 		// Validate required fields
@@ -470,10 +478,13 @@ export const POST: RequestHandler = async ({ request }) => {
 
 		console.log(`Generating keyword cloud for: ${course_title} (${audience}, ${depth})`);
 
+		// Get configuration for keyword extraction
+		const keywordConfig = CONFIG_HELPERS.getOperationConfig('keyword_extraction');
+		
 		// Make API call with logging
 		const data = await logOpenAIRequest(
 			{
-				model: 'gpt-4',
+				model: keywordConfig.model,
 				messages: [
 					{
 						role: 'system',
@@ -484,8 +495,8 @@ export const POST: RequestHandler = async ({ request }) => {
 						content: prompt
 					}
 				],
-				max_tokens: 2000,
-				temperature: 0.4
+				max_tokens: keywordConfig.max_tokens,
+				temperature: keywordConfig.temperature
 			},
 			`Keyword generation: ${course_title}`,
 			async () => {
@@ -496,7 +507,7 @@ export const POST: RequestHandler = async ({ request }) => {
 						'Authorization': `Bearer ${OPENAI_API_KEY}`
 					},
 					body: JSON.stringify({
-						model: 'gpt-4',
+						model: keywordConfig.model,
 						messages: [
 							{
 								role: 'system',
@@ -507,8 +518,8 @@ export const POST: RequestHandler = async ({ request }) => {
 								content: prompt
 							}
 						],
-						max_tokens: 2000,
-						temperature: 0.4
+						max_tokens: keywordConfig.max_tokens,
+						temperature: keywordConfig.temperature
 					})
 				});
 

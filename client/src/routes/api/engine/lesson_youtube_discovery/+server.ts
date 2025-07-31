@@ -4,6 +4,11 @@ import { OPENAI_API_KEY } from '$env/static/private';
 import { logOpenAIRequest } from '$lib/llm-logger';
 import { validateAndGetFallbackVideo } from '$lib/video-validator';
 import jwt from 'jsonwebtoken';
+import { 
+    OPENAI_CONFIG, 
+    YOUTUBE_DISCOVERY_CONFIG, 
+    CONFIG_HELPERS 
+} from '$lib/engine.config';
 
 // JWT secret - in production, use environment variable
 const JWT_SECRET = 'your-super-secret-jwt-key-change-this-in-production';
@@ -19,11 +24,20 @@ interface LessonVideoRequest {
 	preferred_duration?: number; // Preferred video duration in minutes
 	quality_preference?: 'educational' | 'engaging' | 'authoritative';
 	max_retries?: number;
+	// New: Use keyword extraction for better video discovery
+	use_keyword_extraction?: boolean;
+	keyword_cloud?: {
+		primary_keywords: string[];
+		secondary_keywords: string[];
+		long_tail_keywords: string[];
+		video_search_terms: string[];
+		excluded_terms: string[];
+	};
 }
 
 interface VideoResult {
 	lesson_index: number;
-	video_url: string;
+	video_url: string | null;
 	video_title: string;
 	video_duration: number; // In seconds
 	confidence_score: number; // 0-1 score for relevance
@@ -71,13 +85,24 @@ function createVideoDiscoveryPrompt(
 	lessons: any[],
 	courseTitle: string,
 	preferredDuration: number,
-	qualityPreference: string
+	qualityPreference: string,
+	keywordCloud?: any
 ): string {
-	const qualityGuidelines = {
-		educational: 'prioritize clear, structured educational content from reputable channels',
-		engaging: 'prioritize entertaining and engaging content that maintains educational value',
-		authoritative: 'prioritize content from recognized experts, institutions, or authoritative sources'
-	};
+	const qualityGuidelines = YOUTUBE_DISCOVERY_CONFIG.quality_preferences;
+
+	let keywordSection = '';
+	if (keywordCloud) {
+		keywordSection = `
+
+## Keyword Cloud for Enhanced Video Discovery
+- **Primary Keywords**: ${keywordCloud.primary_keywords?.join(', ') || 'None'}
+- **Secondary Keywords**: ${keywordCloud.secondary_keywords?.join(', ') || 'None'}
+- **Video Search Terms**: ${keywordCloud.video_search_terms?.join(', ') || 'None'}
+- **Long-tail Keywords**: ${keywordCloud.long_tail_keywords?.join(', ') || 'None'}
+- **Excluded Terms**: ${keywordCloud.excluded_terms?.join(', ') || 'None'}
+
+Use these keywords to find more relevant and targeted videos. Prioritize videos that match the primary and video search terms.`;
+	}
 
 	return `Find real YouTube videos for these lessons. You are helping create an educational course on "${courseTitle}".
 
@@ -85,7 +110,7 @@ function createVideoDiscoveryPrompt(
 - **Course Title**: ${courseTitle}
 - **Number of Lessons**: ${lessons.length}
 - **Quality Preference**: ${qualityGuidelines[qualityPreference as keyof typeof qualityGuidelines]}
-- **Preferred Video Duration**: ${preferredDuration} minutes (${preferredDuration * 60} seconds)
+- **Preferred Video Duration**: ${preferredDuration} minutes (${preferredDuration * 60} seconds)${keywordSection}
 
 ## Lessons to Match
 ${lessons.map((lesson, index) => `${index + 1}. **${lesson.title}**
@@ -143,17 +168,19 @@ async function getVideoUrlsForLessons(
 	courseTitle: string, 
 	preferredDuration: number,
 	qualityPreference: string,
-	maxRetries: number
+	maxRetries: number,
+	keywordCloud?: any
 ): Promise<Array<{ video_url: string | null; video_title: string | null; video_duration: number | null; confidence_score: number; was_replaced: boolean }>> {
 	
 	for (let attempt = 1; attempt <= maxRetries; attempt++) {
 		try {
 			console.log(`Attempt ${attempt}/${maxRetries}: Getting video URLs for ${lessons.length} lessons`);
 			
-			const videoPrompt = createVideoDiscoveryPrompt(lessons, courseTitle, preferredDuration, qualityPreference);
+			const videoPrompt = createVideoDiscoveryPrompt(lessons, courseTitle, preferredDuration, qualityPreference, keywordCloud);
 
+			const videoConfig = CONFIG_HELPERS.getOperationConfig('video_discovery');
 			const openAIRequest = {
-				model: 'gpt-4',
+				model: videoConfig.model,
 				messages: [
 					{
 						role: 'system',
@@ -164,8 +191,8 @@ async function getVideoUrlsForLessons(
 						content: videoPrompt
 					}
 				],
-				max_tokens: 1500,
-				temperature: 0.3
+				max_tokens: videoConfig.max_tokens,
+				temperature: videoConfig.temperature
 			};
 
 			// Log the request and make the API call
@@ -227,7 +254,7 @@ async function getVideoUrlsForLessons(
 				video.video_url.match(/youtube\.com\/embed\/[a-zA-Z0-9_-]+$/)
 			);
 
-			if (validVideos.length >= lessons.length * 0.7) { // At least 70% success rate
+			if (validVideos.length >= lessons.length * YOUTUBE_DISCOVERY_CONFIG.validation.min_success_rate) {
 				console.log(`✅ Successfully got ${validVideos.length}/${lessons.length} real video URLs on attempt ${attempt}`);
 				
 				// Pad with nulls if we don't have enough videos
@@ -312,9 +339,11 @@ export const POST: RequestHandler = async ({ request }) => {
 		const { 
 			lessons,
 			courseTitle,
-			preferred_duration = 8, // 8 minutes default
-			quality_preference = 'educational',
-			max_retries = 3
+			preferred_duration = YOUTUBE_DISCOVERY_CONFIG.default_preferred_duration,
+			quality_preference = YOUTUBE_DISCOVERY_CONFIG.default_quality_preference,
+			max_retries = YOUTUBE_DISCOVERY_CONFIG.default_max_retries,
+			use_keyword_extraction = YOUTUBE_DISCOVERY_CONFIG.keyword_integration.enabled_by_default,
+			keyword_cloud
 		}: LessonVideoRequest = await request.json();
 
 		// Validate required fields
@@ -351,7 +380,8 @@ export const POST: RequestHandler = async ({ request }) => {
 			courseTitle, 
 			preferred_duration,
 			quality_preference,
-			max_retries
+			max_retries,
+			keyword_cloud
 		);
 
 		// Validate and get fallback videos where needed
@@ -374,7 +404,7 @@ export const POST: RequestHandler = async ({ request }) => {
 						video_url: validated.url,
 						video_title: validated.wasReplaced ? validated.title : (videoResult.video_title || validated.title),
 						video_duration: validated.wasReplaced ? validated.duration : (videoResult.video_duration || validated.duration),
-						confidence_score: validated.wasReplaced ? 0.4 : videoResult.confidence_score,
+						confidence_score: validated.wasReplaced ? YOUTUBE_DISCOVERY_CONFIG.validation.fallback_confidence : videoResult.confidence_score,
 						platform: 'youtube',
 						was_replaced: validated.wasReplaced,
 						fallback_reason: validated.wasReplaced ? 'Original video unavailable' : undefined
@@ -394,13 +424,13 @@ export const POST: RequestHandler = async ({ request }) => {
 			} else {
 				// No video found, provide a fallback
 				try {
-					const fallback = await validateAndGetFallbackVideo(null, lesson.topic);
+					const fallback = await validateAndGetFallbackVideo('', lesson.topic);
 					finalResults.push({
 						lesson_index: i,
 						video_url: fallback.url,
 						video_title: fallback.title,
 						video_duration: fallback.duration,
-						confidence_score: 0.3,
+						confidence_score: YOUTUBE_DISCOVERY_CONFIG.validation.fallback_confidence,
 						platform: 'youtube',
 						was_replaced: true,
 						fallback_reason: 'No suitable video found'
