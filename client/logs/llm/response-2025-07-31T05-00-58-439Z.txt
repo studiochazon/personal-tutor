@@ -1,0 +1,70 @@
+=== LLM Response Log ===
+Timestamp: 2025-07-31T05:00:58.439Z
+Model: gpt-4-0613
+
+=== User Prompt ===
+Course plan keyword extraction
+
+=== AI Response ===
+{
+  "primary_keywords": [
+    "Creationism",
+    "Historical Development of Creationism",
+    "Theological Perspectives of Creationism",
+    "Scientific Perspectives of Creationism",
+    "Forms of Creationism",
+    "Young Earth Creationism",
+    "Old Earth Creationism",
+    "Gap Creationism"
+  ],
+  "secondary_keywords": [
+    "Religious Context of Creationism",
+    "Cultural Context of Creationism",
+    "Creationist Beliefs",
+    "Creationist Thought",
+    "Historical Progression of Creationist Beliefs",
+    "Different Types of Creationism",
+    "Interpretations of Creationism",
+    "Debates on Creationism",
+    "Creationism in Education",
+    "Creationism in Society"
+  ],
+  "long_tail_keywords": [
+    "Introduction to Creationism",
+    "Historical Development of Creationist Beliefs",
+    "Forms of Creationism including Young Earth, Old Earth, and Gap Creationism",
+    "Understanding the Theological Underpinnings of Creationist Beliefs",
+    "Analyzing the Scientific Perspectives of Creationism",
+    "Differentiating between Various Forms of Creationism",
+    "Debates Surrounding the Place of Creationism in Education and Society",
+    "Trace the Historical Progression of Creationist Beliefs",
+    "Examine Different Types of Creationism",
+    "Define Creationism and its Significance in Religious and Cultural Contexts"
+  ],
+  "video_search_terms": [
+    "Creationism Tutorial",
+    "Historical Development of Creationism Explained",
+    "Theological Perspectives of Creationism Guide",
+    "Scientific Perspectives of Creationism Course",
+    "Understanding Creationism Basics",
+    "Young Earth Creationism Explained",
+    "Old Earth Creationism Tutorial",
+    "Gap Creationism Guide",
+    "Different Types of Creationism Video",
+    "Debates on Creationism in Education and Society",
+    "Creationist Beliefs Explained",
+    "Creationism in Religious and Cultural Contexts",
+    "Interpretations of Creationism Video",
+    "Creationism in Education Tutorial",
+    "Creationism in Society Explained"
+  ],
+  "excluded_terms": [
+    "Religion",
+    "Science",
+    "Education",
+    "Society",
+    "History"
+  ]
+}
+
+=== End Response ===

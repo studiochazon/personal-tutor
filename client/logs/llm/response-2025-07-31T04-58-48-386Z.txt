@@ -1,0 +1,72 @@
+=== LLM Response Log ===
+Timestamp: 2025-07-31T04:58:48.387Z
+Model: gpt-4-0613
+
+=== User Prompt ===
+Course plan keyword extraction
+
+=== AI Response ===
+{
+  "primary_keywords": [
+    "Creationism",
+    "Historical Development of Creationism",
+    "Theological Underpinnings of Creationism",
+    "Forms of Creationism",
+    "Young Earth Creationism",
+    "Old Earth Creationism",
+    "Gap Creationism"
+  ],
+  "secondary_keywords": [
+    "Religious Context of Creationism",
+    "Cultural Context of Creationism",
+    "Creationist Beliefs",
+    "Ancient Creationism",
+    "Modern Creationism",
+    "Creationist Thought",
+    "Interpretations of Creationism",
+    "Debates on Creationism",
+    "Education and Creationism",
+    "Society and Creationism"
+  ],
+  "long_tail_keywords": [
+    "Introduction to Creationism",
+    "Historical progression of creationist beliefs",
+    "Different types of Creationism",
+    "Understanding Creationism",
+    "Theological perspectives of Creationism",
+    "Scientific perspectives of Creationism",
+    "Significance of Creationism in religious contexts",
+    "Significance of Creationism in cultural contexts",
+    "Creationism in education",
+    "Creationism in society",
+    "Debates surrounding Creationism",
+    "Historical context of Creationist thought",
+    "Development of Creationist thought"
+  ],
+  "video_search_terms": [
+    "Creationism tutorial",
+    "Creationism explained",
+    "Understanding Creationism course",
+    "Historical Development of Creationism guide",
+    "Theological Underpinnings of Creationism explained",
+    "Forms of Creationism tutorial",
+    "Young Earth Creationism guide",
+    "Old Earth Creationism tutorial",
+    "Gap Creationism explained",
+    "Creationism in education video",
+    "Creationism in society video",
+    "Debates on Creationism video",
+    "Learn Creationism basics",
+    "Introduction to Creationism video",
+    "Advanced Creationism course"
+  ],
+  "excluded_terms": [
+    "Religion",
+    "Science",
+    "History",
+    "Theology",
+    "Society"
+  ]
+}
+
+=== End Response ===

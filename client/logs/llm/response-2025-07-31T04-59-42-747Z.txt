@@ -1,0 +1,70 @@
+=== LLM Response Log ===
+Timestamp: 2025-07-31T04:59:42.747Z
+Model: gpt-4-0613
+
+=== User Prompt ===
+Course plan keyword extraction
+
+=== AI Response ===
+{
+  "primary_keywords": [
+    "Creationism",
+    "Historical Development of Creationism",
+    "Theological Underpinnings of Creationism",
+    "Scientific Perspectives on Creationism",
+    "Forms of Creationism",
+    "Young Earth Creationism",
+    "Old Earth Creationism",
+    "Gap Creationism"
+  ],
+  "secondary_keywords": [
+    "Religious Context of Creationism",
+    "Cultural Context of Creationism",
+    "Creationist Beliefs",
+    "Ancient Creationism",
+    "Modern Creationism",
+    "Creationist Thought",
+    "Interpretations of Creationism",
+    "Creationism in Education",
+    "Creationism in Society",
+    "Creationism Debate"
+  ],
+  "long_tail_keywords": [
+    "Introduction to Creationism",
+    "Historical progression of creationist beliefs",
+    "Understanding different forms of Creationism",
+    "Theological basis of Creationist beliefs",
+    "Significance of Creationism in religious and cultural contexts",
+    "Debates surrounding Creationism in education",
+    "Analyzing the scientific perspectives on Creationism",
+    "Differentiating between Young Earth and Old Earth Creationism",
+    "The concept of Gap Creationism",
+    "The role of Creationism in society"
+  ],
+  "video_search_terms": [
+    "Creationism tutorial",
+    "Understanding Creationism explained",
+    "Historical Development of Creationism guide",
+    "Theological Underpinnings of Creationism course",
+    "Scientific Perspectives on Creationism video",
+    "Introduction to Forms of Creationism",
+    "Young Earth Creationism basics",
+    "Old Earth Creationism explained",
+    "Gap Creationism tutorial",
+    "Creationism in Education debate video",
+    "Creationism in Society discussion",
+    "Creationist Beliefs analysis",
+    "Interpretations of Creationism lecture",
+    "Modern Creationism guide",
+    "Ancient Creationism history video"
+  ],
+  "excluded_terms": [
+    "Evolution",
+    "Big Bang Theory",
+    "Atheism",
+    "Secularism",
+    "Religion"
+  ]
+}
+
+=== End Response ===

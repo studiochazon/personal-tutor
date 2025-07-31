@@ -70,8 +70,9 @@ The v3 engine follows this precise workflow:
 ### 🧩 Individual Step APIs
 
 #### 1. `/api/engine/v3/keyword_generation`
-Generate strategic keyword cloud from course plan.
+Generate strategic keyword cloud from structured course plan or raw course text.
 
+**Method**: POST - Generate keywords from structured lesson data
 ```typescript
 // Request
 {
@@ -93,6 +94,30 @@ Generate strategic keyword cloud from course plan.
     "excluded_terms": string[]         // Terms to avoid
   },
   "total_keywords": number
+}
+```
+
+**Method**: PATCH - Extract keywords from raw course plan text
+```typescript
+// Request
+{
+  "course_plan_text": "Full course plan text content...",
+  "audience": "intermediate",         // Optional, defaults to 'intermediate'
+  "depth": "comprehensive"            // Optional, defaults to 'comprehensive'
+}
+
+// Response  
+{
+  "success": boolean,
+  "keyword_cloud": {
+    "primary_keywords": string[],      // 5-8 core keywords extracted from text
+    "secondary_keywords": string[],    // 10-15 supporting terms
+    "long_tail_keywords": string[],    // 15-20 specific phrases from content
+    "video_search_terms": string[],    // 20-30 video-optimized terms
+    "excluded_terms": string[]         // Terms to avoid in searches
+  },
+  "total_keywords": number,
+  "log_id": "course_plan_extraction"
 }
 ```
 
@@ -300,7 +325,39 @@ const keywordsResponse = await fetch('/api/engine/v3/keyword_generation', {
   })
 });
 
-// Continue with remaining steps...
+        // Continue with remaining steps...
+        ```
+
+### Course Plan Text Keyword Extraction
+```typescript
+// Extract keywords from raw course plan text (like from llm-logs)
+const coursePlanText = `
+=== SIMPLE COURSE CREATION LOG ===
+**Course Title: Understanding Creationism...**
+[Full course plan content]
+`;
+
+const response = await fetch('/api/engine/v3/keyword_generation', {
+  method: 'PATCH',
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer YOUR_JWT_TOKEN'
+  },
+  body: JSON.stringify({
+    course_plan_text: coursePlanText,
+    audience: 'intermediate',
+    depth: 'comprehensive'
+  })
+});
+
+const keywords = await response.json();
+console.log('Extracted keywords:', keywords.keyword_cloud);
+
+// Use keywords for content discovery
+keywords.keyword_cloud.video_search_terms.forEach(term => {
+  // Search YouTube, educational platforms, etc.
+  console.log(`Searching for: ${term}`);
+});
 ```
 
 ## Strategy Configuration
