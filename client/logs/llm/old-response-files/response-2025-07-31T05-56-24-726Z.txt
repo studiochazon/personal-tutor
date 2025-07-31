@@ -1,0 +1,38 @@
+=== LLM Response Log ===
+Timestamp: 2025-07-31T05:56:24.726Z
+Model: gpt-4-0613
+
+=== User Prompt ===
+Video discovery for course: Understanding Creationism
+
+=== AI Response ===
+{
+  "videos": [
+    {
+      "lesson_index": 0,
+      "video_url": "https://www.youtube.com/embed/1Rw6Kjvl0t0",
+      "video_title": "What is Creationism?",
+      "video_duration": 480,
+      "confidence_score": 0.9,
+      "platform": "youtube"
+    },
+    {
+      "lesson_index": 1,
+      "video_url": "https://www.youtube.com/embed/Ohd5uqzlwsU",
+      "video_title": "The History of Creationism",
+      "video_duration": 540,
+      "confidence_score": 0.8,
+      "platform": "youtube"
+    },
+    {
+      "lesson_index": 2,
+      "video_url": "https://www.youtube.com/embed/7HZzGXnYL5I",
+      "video_title": "Types of Creationism Explained",
+      "video_duration": 600,
+      "confidence_score": 0.9,
+      "platform": "youtube"
+    }
+  ]
+}
+
+=== End Response ===

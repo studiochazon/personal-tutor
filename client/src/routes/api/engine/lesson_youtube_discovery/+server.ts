@@ -214,7 +214,8 @@ async function getVideoUrlsForLessons(
 					}
 
 					return response.json();
-				}
+				},
+				'lesson_youtube_discovery'
 			);
 			
 			const videoResponse = data.choices[0]?.message?.content;
@@ -370,6 +371,15 @@ export const POST: RequestHandler = async ({ request }) => {
 					error: `Lesson at index ${i} must have title and topic`
 				}, { status: 400 });
 			}
+		}
+
+		// Validate quality_preference
+		const validQualityPreferences = ['educational', 'engaging', 'authoritative'];
+		if (quality_preference && !validQualityPreferences.includes(quality_preference)) {
+			return json({
+				success: false,
+				error: `quality_preference must be one of: ${validQualityPreferences.join(', ')}`
+			}, { status: 400 });
 		}
 
 		console.log(`Discovering YouTube videos for ${lessons.length} lessons in course: ${courseTitle}`);

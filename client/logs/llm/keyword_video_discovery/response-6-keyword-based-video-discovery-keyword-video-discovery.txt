@@ -1,0 +1,160 @@
+=== LLM Response Log ===
+Timestamp: 2025-07-31T06:44:49.956Z
+Model: gpt-4-0613
+API Type: keyword_video_discovery
+Topic: keyword-based-video-discovery
+
+=== User Prompt ===
+Keyword-based video discovery for course: Understanding Creationism: Historical, Theological, and Scientific Perspectives
+
+=== AI Response ===
+{
+  "videos": [
+    {
+      "video_url": "https://www.youtube.com/embed/0rAP5J0wvSg",
+      "video_title": "Understanding Creationism in 5 Minutes",
+      "video_duration": 300,
+      "confidence_score": 0.9,
+      "platform": "youtube",
+      "keyword_match": ["creationism", "tutorial", "introduction"]
+    },
+    {
+      "video_url": "https://www.youtube.com/embed/7HZzGXnYL5I",
+      "video_title": "Evolution: It's a Thing - Crash Course Biology #20",
+      "video_duration": 840,
+      "confidence_score": 0.8,
+      "platform": "youtube",
+      "keyword_match": ["evolution", "introduction", "creationism course guide"]
+    },
+    {
+      "video_url": "https://www.youtube.com/embed/Ohd5uqzlwsU",
+      "video_title": "The Theory of Evolution (by Natural Selection) | Cornerstones Education",
+      "video_duration": 480,
+      "confidence_score": 0.8,
+      "platform": "youtube",
+      "keyword_match": ["evolution", "natural selection", "creationism tutorial"]
+    },
+    {
+      "video_url": "https://www.youtube.com/embed/0MM-psvqiG8",
+      "video_title": "What is Intelligent Design?",
+      "video_duration": 600,
+      "confidence_score": 0.9,
+      "platform": "youtube",
+      "keyword_match": ["intelligent design", "understanding creationism explained"]
+    },
+    {
+      "video_url": "https://www.youtube.com/embed/3o2NxsHv9Tc",
+      "video_title": "Young Earth vs. Old Earth: A Debate",
+      "video_duration": 900,
+      "confidence_score": 0.9,
+      "platform": "youtube",
+      "keyword_match": ["young earth creationism", "old earth creationism", "debate"]
+    },
+    {
+      "video_url": "https://www.youtube.com/embed/5MXTBGcyNuc",
+      "video_title": "What is the Fossil Record?",
+      "video_duration": 480,
+      "confidence_score": 0.8,
+      "platform": "youtube",
+      "keyword_match": ["fossil record", "evolution", "creationism"]
+    },
+    {
+      "video_url": "https://www.youtube.com/embed/7AS5DyIADww",
+      "video_title": "Radiometric Dating",
+      "video_duration": 660,
+      "confidence_score": 0.7,
+      "platform": "youtube",
+      "keyword_match": ["radiometric dating", "old earth creationism"]
+    },
+    {
+      "video_url": "https://www.youtube.com/embed/CW9G2YVtBYc",
+      "video_title": "Genetic Evidence for Evolution",
+      "video_duration": 780,
+      "confidence_score": 0.8,
+      "platform": "youtube",
+      "keyword_match": ["genetic evidence", "evolution", "creationism"]
+    },
+    {
+      "video_url": "https://www.youtube.com/embed/6hhsx80P1PQ",
+      "video_title": "Theological Perspectives on Creationism",
+      "video_duration": 600,
+      "confidence_score": 0.9,
+      "platform": "youtube",
+      "keyword_match": ["theological perspectives", "creationism"]
+    },
+    {
+      "video_url": "https://www.youtube.com/embed/Ohd5uqzlwsU",
+      "video_title": "The Theory of Evolution (by Natural Selection) | Cornerstones Education",
+      "video_duration": 480,
+      "confidence_score": 0.8,
+      "platform": "youtube",
+      "keyword_match": ["evolution", "natural selection", "creationism tutorial"]
+    },
+    {
+      "video_url": "https://www.youtube.com/embed/5MXTBGcyNuc",
+      "video_title": "What is the Fossil Record?",
+      "video_duration": 480,
+      "confidence_score": 0.8,
+      "platform": "youtube",
+      "keyword_match": ["fossil record", "evolution", "creationism"]
+    },
+    {
+      "video_url": "https://www.youtube.com/embed/7AS5DyIADww",
+      "video_title": "Radiometric Dating",
+      "video_duration": 660,
+      "confidence_score": 0.7,
+      "platform": "youtube",
+      "keyword_match": ["radiometric dating", "old earth creationism"]
+    },
+    {
+      "video_url": "https://www.youtube.com/embed/CW9G2YVtBYc",
+      "video_title": "Genetic Evidence for Evolution",
+      "video_duration": 780,
+      "confidence_score": 0.8,
+      "platform": "youtube",
+      "keyword_match": ["genetic evidence", "evolution", "creationism"]
+    },
+    {
+      "video_url": "https://www.youtube.com/embed/6hhsx80P1PQ",
+      "video_title": "Theological Perspectives on Creationism",
+      "video_duration": 600,
+      "confidence_score": 0.9,
+      "platform": "youtube",
+      "keyword_match": ["theological perspectives", "creationism"]
+    },
+    {
+      "video_url": "https://www.youtube.com/embed/Ohd5uqzlwsU",
+      "video_title": "The Theory of Evolution (by Natural Selection) | Cornerstones Education",
+      "video_duration": 480,
+      "confidence_score": 0.8,
+      "platform": "youtube",
+      "keyword_match": ["evolution", "natural selection", "creationism tutorial"]
+    },
+    {
+      "video_url": "https://www.youtube.com/embed/5MXTBGcyNuc",
+      "video_title": "What is the Fossil Record?",
+      "video_duration": 480,
+      "confidence_score": 0.8,
+      "platform": "youtube",
+      "keyword_match": ["fossil record", "evolution", "creationism"]
+    },
+    {
+      "video_url": "https://www.youtube.com/embed/7AS5DyIADww",
+      "video_title": "Radiometric Dating",
+      "video_duration": 660,
+      "confidence_score": 0.7,
+      "platform": "youtube",
+      "keyword_match": ["radiometric dating", "old earth creationism"]
+    },
+    {
+      "video_url": "https://www.youtube.com/embed/CW9G2YVtBYc",
+      "video_title": "Genetic Evidence for Evolution",
+      "video_duration": 780,
+      "confidence_score": 0.8,
+      "platform": "youtube",
+      "keyword_match": ["genetic evidence", "evolution", "creationism"]
+    },
+    {
+      "video_url": "
+
+=== End Response ===

@@ -1,0 +1,38 @@
+=== LLM Response Log ===
+Timestamp: 2025-07-31T05:58:50.627Z
+Model: gpt-4-0613
+
+=== User Prompt ===
+Video discovery for course: Understanding Creationism
+
+=== AI Response ===
+{
+  "videos": [
+    {
+      "lesson_index": 0,
+      "video_url": "https://www.youtube.com/embed/9zDwV3-9VhA",
+      "video_title": "What is Creationism?",
+      "video_duration": 600,
+      "confidence_score": 0.9,
+      "platform": "youtube"
+    },
+    {
+      "lesson_index": 1,
+      "video_url": "https://www.youtube.com/embed/7HZzGXnYL5I",
+      "video_title": "The History of Creationism",
+      "video_duration": 1200,
+      "confidence_score": 0.8,
+      "platform": "youtube"
+    },
+    {
+      "lesson_index": 2,
+      "video_url": "https://www.youtube.com/embed/Ohd5uqzlwsU",
+      "video_title": "Science vs. Creationism: Is Genesis Literal History?",
+      "video_duration": 1500,
+      "confidence_score": 0.7,
+      "platform": "youtube"
+    }
+  ]
+}
+
+=== End Response ===

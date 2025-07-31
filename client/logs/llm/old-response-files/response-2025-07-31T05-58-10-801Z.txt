@@ -1,0 +1,22 @@
+=== LLM Response Log ===
+Timestamp: 2025-07-31T05:58:10.801Z
+Model: gpt-4-0613
+
+=== User Prompt ===
+Video discovery for course: Test Course
+
+=== AI Response ===
+{
+  "videos": [
+    {
+      "lesson_index": 0,
+      "video_url": "https://www.youtube.com/embed/4MX_UJoIStQ",
+      "video_title": "What is Creationism? | Stated Clearly",
+      "video_duration": 540,
+      "confidence_score": 0.9,
+      "platform": "youtube"
+    }
+  ]
+}
+
+=== End Response ===

@@ -1,0 +1,79 @@
+{
+  "id": "2025-07-31T05-56-15-959Z-atgz6l",
+  "timestamp": "2025-07-31T05:56:15.959Z",
+  "request": {
+    "model": "gpt-4o-mini",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert content strategist specializing in keyword extraction from educational content. Respond with ONLY valid JSON."
+      },
+      {
+        "role": "user",
+        "content": "You are an expert content strategist. Extract and generate comprehensive keywords from this course plan text for finding educational videos and materials online.\n\n## Course Plan Text:\n**Course Title: Understanding Creationism: Historical, Theological, and Scientific Perspectives**\n\n**Course Description:**\nThis comprehensive course explores the concept of creationism, examining its historical development, various interpretations, and the ongoing debates surrounding its place in education and society.\n\n**Learning Objectives:**\n1. Understand the historical context and development of creationist thought.\n2. Identify and differentiate between various forms of creationism.\n3. Analyze the theological underpinnings of creationist beliefs.\n4. Evaluate the scientific critiques and counterarguments to creationist claims.\n\n**Course Outline:**\n\n**Lesson 1: Introduction to Creationism**\n- Define creationism and its significance in religious and cultural contexts.\n- Explore the origins of creationist thought and its evolution over time.\n\n**Lesson 2: Historical Development of Creationist Beliefs**\n- Trace the historical progression of creationist beliefs from ancient times to the present.\n- Highlight key figures and events.\n\n**Lesson 3: Forms of Creationism**\n- Examine different types of creationism, including Young Earth Creationism, Old Earth Creationism, Gap Creationism, Day-Age Creationism, and Progressive Creationism.\n\n## Task: Extract and Generate Keywords\n\nAnalyze the course plan and generate a comprehensive keyword cloud optimized for finding high-quality educational content online (videos, articles, resources).\n\n### Keyword Categories\n\n1. **Primary Keywords** (5-8 terms)\n   - Core topics and concepts from the course\n   - Main subject areas covered\n   - Essential terms that define the course\n\n2. **Secondary Keywords** (10-15 terms)\n   - Supporting concepts from lessons\n   - Related terminology and technical terms\n   - Key concepts mentioned throughout\n\n3. **Long-tail Keywords** (15-20 phrases)\n   - Specific phrases from lesson titles and descriptions\n   - Natural language queries people might search\n   - Educational phrases like \"introduction to\", \"history of\", \"types of\"\n\n4. **Video Search Terms** (20-30 optimized terms)\n   - Terms optimized for video discovery\n   - Include educational modifiers: \"tutorial\", \"explained\", \"guide\", \"course\"\n   - Audience-specific terms based on complexity\n\n5. **Excluded Terms** (5-10 terms)\n   - Overly broad terms that might bring irrelevant results\n   - Terms that are too general or unrelated\n\n### Guidelines\n- Extract actual topics and concepts mentioned in the text\n- Include variations and synonyms of key terms\n- Consider different academic levels and approaches\n- Focus on terms that would help find educational content\n- Include both specific and general terms for comprehensive coverage\n\n## JSON Response Format\n\nRespond with ONLY valid JSON in this exact structure:\n\n{\n  \"primary_keywords\": [\n    \"extracted main concept 1\",\n    \"core topic from course\",\n    \"essential subject area\"\n  ],\n  \"secondary_keywords\": [\n    \"supporting concept\",\n    \"technical term from lessons\",\n    \"related terminology\"\n  ],\n  \"long_tail_keywords\": [\n    \"specific phrase from course plan\",\n    \"introduction to topic name\",\n    \"types of concept mentioned\"\n  ],\n  \"video_search_terms\": [\n    \"topic tutorial\",\n    \"concept explained\",\n    \"course topic guide\",\n    \"learn topic basics\"\n  ],\n  \"excluded_terms\": [\n    \"overly broad term\",\n    \"unrelated concept\"\n  ]\n}\n\nGenerate the keyword cloud now based on the provided course plan text."
+      }
+    ],
+    "max_tokens": 2000,
+    "temperature": 0.2,
+    "user_prompt": "Course plan keyword extraction",
+    "timestamp": "2025-07-31T05:56:15.959Z"
+  },
+  "response": {
+    "content": "{\n  \"primary_keywords\": [\n    \"creationism\",\n    \"historical development\",\n    \"theological perspectives\",\n    \"scientific critiques\",\n    \"educational debates\"\n  ],\n  \"secondary_keywords\": [\n    \"Young Earth Creationism\",\n    \"Old Earth Creationism\",\n    \"Gap Creationism\",\n    \"Day-Age Creationism\",\n    \"Progressive Creationism\",\n    \"historical context\",\n    \"theological underpinnings\",\n    \"creationist thought\",\n    \"cultural significance\",\n    \"key figures in creationism\"\n  ],\n  \"long_tail_keywords\": [\n    \"introduction to creationism\",\n    \"history of creationist beliefs\",\n    \"types of creationism explained\",\n    \"theological perspectives on creationism\",\n    \"scientific critiques of creationism\",\n    \"understanding creationism in education\",\n    \"historical context of creationist thought\",\n    \"differentiating forms of creationism\",\n    \"analyzing creationist beliefs\",\n    \"evaluating scientific counterarguments\",\n    \"exploring origins of creationism\",\n    \"key events in creationist history\",\n    \"importance of creationism in society\",\n    \"creationism and cultural contexts\",\n    \"historical progression of creationism\"\n  ],\n  \"video_search_terms\": [\n    \"creationism tutorial\",\n    \"understanding creationism explained\",\n    \"creationism course guide\",\n    \"learn about creationism basics\",\n    \"historical development of creationism video\",\n    \"types of creationism tutorial\",\n    \"theological perspectives on creationism explained\",\n    \"scientific critiques of creationism guide\",\n    \"creationism in education video\",\n    \"exploring creationist beliefs tutorial\",\n    \"history of creationism course\",\n    \"creationism and society explained\",\n    \"key figures in creationism video\",\n    \"creationism concepts tutorial\",\n    \"creationism overview video\",\n    \"creationism educational resources\",\n    \"creationism debates explained\",\n    \"creationism types guide\",\n    \"creationism historical context video\",\n    \"creationism analysis tutorial\"\n  ],\n  \"excluded_terms\": [\n    \"religion\",\n    \"science\",\n    \"education\",\n    \"beliefs\",\n    \"philosophy\"\n  ]\n}",
+    "usage": {
+      "prompt_tokens": 755,
+      "completion_tokens": 458,
+      "total_tokens": 1213,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "model": "gpt-4o-mini-2024-07-18",
+    "finish_reason": "stop",
+    "raw_response": {
+      "id": "chatcmpl-BzGYm6RJ43taPXiHjGDSXkl7VEATt",
+      "object": "chat.completion",
+      "created": 1753941364,
+      "model": "gpt-4o-mini-2024-07-18",
+      "choices": [
+        {
+          "index": 0,
+          "message": {
+            "role": "assistant",
+            "content": "{\n  \"primary_keywords\": [\n    \"creationism\",\n    \"historical development\",\n    \"theological perspectives\",\n    \"scientific critiques\",\n    \"educational debates\"\n  ],\n  \"secondary_keywords\": [\n    \"Young Earth Creationism\",\n    \"Old Earth Creationism\",\n    \"Gap Creationism\",\n    \"Day-Age Creationism\",\n    \"Progressive Creationism\",\n    \"historical context\",\n    \"theological underpinnings\",\n    \"creationist thought\",\n    \"cultural significance\",\n    \"key figures in creationism\"\n  ],\n  \"long_tail_keywords\": [\n    \"introduction to creationism\",\n    \"history of creationist beliefs\",\n    \"types of creationism explained\",\n    \"theological perspectives on creationism\",\n    \"scientific critiques of creationism\",\n    \"understanding creationism in education\",\n    \"historical context of creationist thought\",\n    \"differentiating forms of creationism\",\n    \"analyzing creationist beliefs\",\n    \"evaluating scientific counterarguments\",\n    \"exploring origins of creationism\",\n    \"key events in creationist history\",\n    \"importance of creationism in society\",\n    \"creationism and cultural contexts\",\n    \"historical progression of creationism\"\n  ],\n  \"video_search_terms\": [\n    \"creationism tutorial\",\n    \"understanding creationism explained\",\n    \"creationism course guide\",\n    \"learn about creationism basics\",\n    \"historical development of creationism video\",\n    \"types of creationism tutorial\",\n    \"theological perspectives on creationism explained\",\n    \"scientific critiques of creationism guide\",\n    \"creationism in education video\",\n    \"exploring creationist beliefs tutorial\",\n    \"history of creationism course\",\n    \"creationism and society explained\",\n    \"key figures in creationism video\",\n    \"creationism concepts tutorial\",\n    \"creationism overview video\",\n    \"creationism educational resources\",\n    \"creationism debates explained\",\n    \"creationism types guide\",\n    \"creationism historical context video\",\n    \"creationism analysis tutorial\"\n  ],\n  \"excluded_terms\": [\n    \"religion\",\n    \"science\",\n    \"education\",\n    \"beliefs\",\n    \"philosophy\"\n  ]\n}",
+            "refusal": null,
+            "annotations": []
+          },
+          "logprobs": null,
+          "finish_reason": "stop"
+        }
+      ],
+      "usage": {
+        "prompt_tokens": 755,
+        "completion_tokens": 458,
+        "total_tokens": 1213,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "audio_tokens": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "audio_tokens": 0,
+          "accepted_prediction_tokens": 0,
+          "rejected_prediction_tokens": 0
+        }
+      },
+      "service_tier": "default",
+      "system_fingerprint": "fp_34a54ae93c"
+    }
+  },
+  "success": true,
+  "duration_ms": 11863
+}

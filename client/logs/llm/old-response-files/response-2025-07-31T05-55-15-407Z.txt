@@ -1,0 +1,72 @@
+=== LLM Response Log ===
+Timestamp: 2025-07-31T05:55:15.407Z
+Model: gpt-4o-mini-2024-07-18
+
+=== User Prompt ===
+Course plan keyword extraction
+
+=== AI Response ===
+{
+  "primary_keywords": [
+    "creationism",
+    "historical development",
+    "theological perspectives",
+    "scientific perspectives",
+    "types of creationism"
+  ],
+  "secondary_keywords": [
+    "Young Earth Creationism",
+    "Old Earth Creationism",
+    "Gap Creationism",
+    "religious context",
+    "cultural significance",
+    "creationist thought",
+    "interpretations of creationism",
+    "education debates",
+    "belief systems",
+    "historical context"
+  ],
+  "long_tail_keywords": [
+    "introduction to creationism",
+    "historical development of creationist beliefs",
+    "forms of creationism explained",
+    "understanding theological underpinnings of creationism",
+    "types of creationism overview",
+    "creationism in education",
+    "significance of creationism in society",
+    "debates surrounding creationism",
+    "historical perspectives on creationism",
+    "analyzing creationist beliefs",
+    "creationism and cultural contexts",
+    "exploring different interpretations of creationism",
+    "impact of creationism on education",
+    "historical progression of creationist thought",
+    "overview of creationist beliefs"
+  ],
+  "video_search_terms": [
+    "creationism tutorial",
+    "creationism explained",
+    "understanding creationism guide",
+    "creationism course",
+    "historical development of creationism video",
+    "types of creationism tutorial",
+    "theological perspectives on creationism explained",
+    "scientific perspectives of creationism",
+    "creationism in education video",
+    "creationism overview",
+    "introduction to creationism tutorial",
+    "creationism and society explained",
+    "historical context of creationism guide",
+    "analyzing creationist beliefs video",
+    "exploring creationism types"
+  ],
+  "excluded_terms": [
+    "religion",
+    "science",
+    "philosophy",
+    "education",
+    "beliefs"
+  ]
+}
+
+=== End Response ===

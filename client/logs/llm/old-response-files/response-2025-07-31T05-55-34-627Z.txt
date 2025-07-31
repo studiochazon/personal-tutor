@@ -1,0 +1,77 @@
+=== LLM Response Log ===
+Timestamp: 2025-07-31T05:55:34.627Z
+Model: gpt-4o-mini-2024-07-18
+
+=== User Prompt ===
+Course plan keyword extraction
+
+=== AI Response ===
+{
+  "primary_keywords": [
+    "creationism",
+    "theological perspectives",
+    "scientific critiques",
+    "historical development",
+    "educational implications"
+  ],
+  "secondary_keywords": [
+    "Young Earth Creationism",
+    "Old Earth Creationism",
+    "Gap Creationism",
+    "Day-Age Creationism",
+    "Progressive Creationism",
+    "Scopes Trial",
+    "Edwards v. Aguillard",
+    "intelligent design",
+    "cultural impacts",
+    "societal debates"
+  ],
+  "long_tail_keywords": [
+    "understanding creationism course",
+    "history of creationism beliefs",
+    "types of creationism explained",
+    "theological foundations of creationism",
+    "scientific critiques of creationism",
+    "legal battles over creationism",
+    "cultural impacts of creationism",
+    "future directions of creationism debate",
+    "introduction to creationism",
+    "examining creationism in education",
+    "analyzing creationist claims",
+    "reflecting on evolution versus creationism",
+    "exploring creationist thought",
+    "teaching creationism in schools",
+    "impact of creationism on society"
+  ],
+  "video_search_terms": [
+    "creationism tutorial",
+    "understanding creationism explained",
+    "creationism course guide",
+    "learn about creationism basics",
+    "history of creationism tutorial",
+    "types of creationism video",
+    "theology of creationism explained",
+    "scientific critiques of creationism tutorial",
+    "creationism in the classroom guide",
+    "cultural impacts of creationism video",
+    "future of creationism explained",
+    "creationism versus evolution tutorial",
+    "legal implications of creationism video",
+    "intelligent design explained",
+    "creationism overview video",
+    "creationism educational resources",
+    "creationism debates tutorial",
+    "creationism historical context video",
+    "creationism beliefs guide",
+    "creationism and science tutorial"
+  ],
+  "excluded_terms": [
+    "religion",
+    "philosophy",
+    "science",
+    "education",
+    "debate"
+  ]
+}
+
+=== End Response ===

@@ -1,0 +1,161 @@
+=== LLM Response Log ===
+Timestamp: 2025-07-31T06:42:41.468Z
+Model: gpt-4-0613
+API Type: keyword_video_discovery
+Topic: keyword-based-video-discovery
+
+=== User Prompt ===
+Keyword-based video discovery for course: Understanding Creationism: Historical, Theological, and Scientific Perspectives
+
+=== AI Response ===
+{
+  "videos": [
+    {
+      "video_url": "https://www.youtube.com/embed/Ohd5uqzlwsU",
+      "video_title": "What is Creationism?",
+      "video_duration": 600,
+      "confidence_score": 0.9,
+      "platform": "youtube",
+      "keyword_match": ["creationism", "introduction to creationism"]
+    },
+    {
+      "video_url": "https://www.youtube.com/embed/7HZzGXnYL5I",
+      "video_title": "Creationism vs. Evolution: The History",
+      "video_duration": 720,
+      "confidence_score": 0.9,
+      "platform": "youtube",
+      "keyword_match": ["evolution", "historical development of creationism"]
+    },
+    {
+      "video_url": "https://www.youtube.com/embed/98f3IavuIfY",
+      "video_title": "Understanding Intelligent Design",
+      "video_duration": 540,
+      "confidence_score": 0.8,
+      "platform": "youtube",
+      "keyword_match": ["intelligent design", "creationism tutorial"]
+    },
+    {
+      "video_url": "https://www.youtube.com/embed/3o2N1Qlv4zg",
+      "video_title": "Young Earth Creationism Explained",
+      "video_duration": 660,
+      "confidence_score": 0.8,
+      "platform": "youtube",
+      "keyword_match": ["young earth creationism", "types of creationism explained"]
+    },
+    {
+      "video_url": "https://www.youtube.com/embed/1TerTgDEgUE",
+      "video_title": "Old Earth Creationism and Science",
+      "video_duration": 480,
+      "confidence_score": 0.9,
+      "platform": "youtube",
+      "keyword_match": ["old earth creationism", "scientific critiques of creationism"]
+    },
+    {
+      "video_url": "https://www.youtube.com/embed/7HZzGXnYL5I",
+      "video_title": "The Basics of Biblical Creation",
+      "video_duration": 720,
+      "confidence_score": 0.8,
+      "platform": "youtube",
+      "keyword_match": ["biblical creation", "learn about creationism basics"]
+    },
+    {
+      "video_url": "https://www.youtube.com/embed/5MXTBGcyNuc",
+      "video_title": "The Scientific Method and Creationism",
+      "video_duration": 600,
+      "confidence_score": 0.8,
+      "platform": "youtube",
+      "keyword_match": ["scientific method", "creationism course guide"]
+    },
+    {
+      "video_url": "https://www.youtube.com/embed/SE7yE0KDIeo",
+      "video_title": "Fossil Record Evidence and Creationism",
+      "video_duration": 660,
+      "confidence_score": 0.8,
+      "platform": "youtube",
+      "keyword_match": ["fossil record", "understanding creationism explained"]
+    },
+    {
+      "video_url": "https://www.youtube.com/embed/Q8DDIe_2cHM",
+      "video_title": "Radiometric Dating and Creationism",
+      "video_duration": 480,
+      "confidence_score": 0.8,
+      "platform": "youtube",
+      "keyword_match": ["radiometric dating", "types of creationism tutorial"]
+    },
+    {
+      "video_url": "https://www.youtube.com/embed/lIEoO5KdPvg",
+      "video_title": "Natural Selection and Creationism",
+      "video_duration": 600,
+      "confidence_score": 0.8,
+      "platform": "youtube",
+      "keyword_match": ["natural selection", "theological perspectives on creationism explained"]
+    },
+    {
+      "video_url": "https://www.youtube.com/embed/zi8FfMBYCkk",
+      "video_title": "Genetic Evidence for Evolution",
+      "video_duration": 720,
+      "confidence_score": 0.8,
+      "platform": "youtube",
+      "keyword_match": ["genetic evidence", "scientific critiques of creationism guide"]
+    },
+    {
+      "video_url": "https://www.youtube.com/embed/Ohd5uqzlwsU",
+      "video_title": "Theological Perspectives on Creationism",
+      "video_duration": 600,
+      "confidence_score": 0.9,
+      "platform": "youtube",
+      "keyword_match": ["theological perspectives", "understanding creationism in education"]
+    },
+    {
+      "video_url": "https://www.youtube.com/embed/7HZzGXnYL5I",
+      "video_title": "The Creationism vs. Evolution Debate in Education",
+      "video_duration": 720,
+      "confidence_score": 0.8,
+      "platform": "youtube",
+      "keyword_match": ["educational debates", "historical context of creationist thought"]
+    },
+    {
+      "video_url": "https://www.youtube.com/embed/1TerTgDEgUE",
+      "video_title": "Differentiating Forms of Creationism",
+      "video_duration": 480,
+      "confidence_score": 0.9,
+      "platform": "youtube",
+      "keyword_match": ["differentiating forms of creationism", "types of creationism explained"]
+    },
+    {
+      "video_url": "https://www.youtube.com/embed/3o2N1Qlv4zg",
+      "video_title": "Understanding Creationism: An Introduction",
+      "video_duration": 660,
+      "confidence_score": 0.9,
+      "platform": "youtube",
+      "keyword_match": ["creationism", "introduction to creationism"]
+    },
+    {
+      "video_url": "https://www.youtube.com/embed/98f3IavuIfY",
+      "video_title": "The History of Creationist Beliefs",
+      "video_duration": 540,
+      "confidence_score": 0.8,
+      "platform": "youtube",
+      "keyword_match": ["history of creationist beliefs", "historical development of creationism"]
+    },
+    {
+      "video_url": "https://www.youtube.com/embed/5MXTBGcyNuc",
+      "video_title": "Types of Creationism Explained",
+      "video_duration": 600,
+      "confidence_score": 0.8,
+      "platform": "youtube",
+      "keyword_match": ["types of creationism", "types of creationism explained"]
+    },
+    {
+      "video_url": "https://www.youtube.com/embed/SE7yE0KDIeo",
+      "video_title": "Theological Perspectives on Creationism",
+      "video_duration": 660,
+      "confidence_score": 0.8,
+      "platform": "youtube",
+      "keyword_match": ["theological perspectives", "theological perspectives on creationism"]
+    },
+    {
+      "video_url": "https://www.youtube.com/embed/Q8DDIe_2cHM",
+      "video_title":
+
+=== End Response ===

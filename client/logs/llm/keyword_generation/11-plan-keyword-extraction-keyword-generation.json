@@ -1,0 +1,79 @@
+{
+  "id": "2025-07-31T05-55-34-625Z-uhtoef",
+  "timestamp": "2025-07-31T05:55:34.625Z",
+  "request": {
+    "model": "gpt-4o-mini",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert content strategist specializing in keyword extraction from educational content. Respond with ONLY valid JSON."
+      },
+      {
+        "role": "user",
+        "content": "You are an expert content strategist. Extract and generate comprehensive keywords from this course plan text for finding educational videos and materials online.\n\n## Course Plan Text:\n=== SIMPLE COURSE CREATION LOG ===\nTimestamp: 2025-07-30T06:19:58.757Z\nLog ID: 2025-07-30T06-19-58-757Z-bhbbbh\nCounter: 1\nModel: gpt-4o-search-preview-2025-03-11\n\n=== USER PROMPT ===\nCreationism\n\n=== AI RESPONSE ===\n**Course Title: Understanding Creationism: Historical, Theological, and Scientific Perspectives**\n\n**Course Description:**\nThis comprehensive course explores the concept of creationism, examining its historical development, various interpretations, and the ongoing debates surrounding its place in education and society. Participants will gain insights into the theological foundations of creationist beliefs, the scientific critiques they face, and the legal battles that have shaped their role in public discourse.\n\n**Learning Objectives:**\n1. Understand the historical context and development of creationist thought.\n2. Identify and differentiate between various forms of creationism.\n3. Analyze the theological underpinnings of creationist beliefs.\n4. Evaluate the scientific critiques and counterarguments to creationist claims.\n5. Examine the legal and educational implications of teaching creationism.\n6. Reflect on the cultural and societal impacts of the creationism versus evolution debate.\n\n**Course Outline:**\n\n**Lesson 1: Introduction to Creationism**\n- **Content:** Define creationism and its significance in religious and cultural contexts. Explore the origins of creationist thought and its evolution over time.\n- **Video:** [Introduction to Creationism](https://www.youtube.com/embed/VIDEO_ID)\n- **Duration:** 30 minutes\n\n**Lesson 2: Historical Development of Creationist Beliefs**\n- **Content:** Trace the historical progression of creationist beliefs from ancient times to the present, highlighting key figures and events.\n- **Video:** [History of Creationism](https://www.youtube.com/embed/VIDEO_ID)\n- **Duration:** 45 minutes\n\n**Lesson 3: Forms of Creationism**\n- **Content:** Examine different types of creationism, including Young Earth Creationism, Old Earth Creationism, Gap Creationism, Day-Age Creationism, and Progressive Creationism.\n- **Video:** [Types of Creationism Explained](https://www.youtube.com/embed/VIDEO_ID)\n- **Duration:** 40 minutes\n\n**Lesson 4: Theological Foundations of Creationist Beliefs**\n- **Content:** Explore the scriptural interpretations and theological arguments that underpin various creationist views.\n- **Video:** [Theology of Creationism](https://www.youtube.com/embed/VIDEO_ID)\n- **Duration:** 35 minutes\n\n**Lesson 5: Scientific Critiques of Creationism**\n- **Content:** Analyze the scientific evidence supporting evolution and the age of the Earth, and how these findings challenge creationist claims.\n- **Video:** [Science vs. Creationism](https://www.youtube.com/embed/VIDEO_ID)\n- **Duration:** 50 minutes\n\n**Lesson 6: Legal Battles and Educational Implications**\n- **Content:** Review significant legal cases, such as the Scopes Trial and Edwards v. Aguillard, and discuss their impact on the teaching of creationism in schools.\n- **Video:** [Creationism in the Classroom](https://www.youtube.com/embed/VIDEO_ID)\n- **Duration:** 45 minutes\n\n**Lesson 7: Cultural and Societal Impacts**\n- **Content:** Reflect on how the creationism versus evolution debate influences cultural, educational, and political landscapes.\n- **Video:** [Creationism's Impact on Society](https://www.youtube.com/embed/VIDEO_ID)\n- **Duration:** 40 minutes\n\n**Lesson 8: Contemporary Perspectives and Future Directions**\n- **Content:** Examine current trends in creationist thought, the rise of intelligent design, and potential future developments in the debate.\n- **Video:** [The Future of Creationism](https://www.youtube.com/embed/VIDEO_ID)\n- **Duration:** 35 minutes\n\n**Note:** The video links provided are placeholders. Please replace \"VIDEO_ID\" with the actual YouTube video IDs relevant to each lesson topic.\n\nBy the end of this course, participants will have a well-rounded understanding of creationism, its various forms, the debates it engenders, and its place in modern society. \n\n=== END LOG ===\n\n\n## Task: Extract and Generate Keywords\n\nAnalyze the course plan and generate a comprehensive keyword cloud optimized for finding high-quality educational content online (videos, articles, resources).\n\n### Keyword Categories\n\n1. **Primary Keywords** (5-8 terms)\n   - Core topics and concepts from the course\n   - Main subject areas covered\n   - Essential terms that define the course\n\n2. **Secondary Keywords** (10-15 terms)\n   - Supporting concepts from lessons\n   - Related terminology and technical terms\n   - Key concepts mentioned throughout\n\n3. **Long-tail Keywords** (15-20 phrases)\n   - Specific phrases from lesson titles and descriptions\n   - Natural language queries people might search\n   - Educational phrases like \"introduction to\", \"history of\", \"types of\"\n\n4. **Video Search Terms** (20-30 optimized terms)\n   - Terms optimized for video discovery\n   - Include educational modifiers: \"tutorial\", \"explained\", \"guide\", \"course\"\n   - Audience-specific terms based on complexity\n\n5. **Excluded Terms** (5-10 terms)\n   - Overly broad terms that might bring irrelevant results\n   - Terms that are too general or unrelated\n\n### Guidelines\n- Extract actual topics and concepts mentioned in the text\n- Include variations and synonyms of key terms\n- Consider different academic levels and approaches\n- Focus on terms that would help find educational content\n- Include both specific and general terms for comprehensive coverage\n\n## JSON Response Format\n\nRespond with ONLY valid JSON in this exact structure:\n\n{\n  \"primary_keywords\": [\n    \"extracted main concept 1\",\n    \"core topic from course\",\n    \"essential subject area\"\n  ],\n  \"secondary_keywords\": [\n    \"supporting concept\",\n    \"technical term from lessons\",\n    \"related terminology\"\n  ],\n  \"long_tail_keywords\": [\n    \"specific phrase from course plan\",\n    \"introduction to topic name\",\n    \"types of concept mentioned\"\n  ],\n  \"video_search_terms\": [\n    \"topic tutorial\",\n    \"concept explained\",\n    \"course topic guide\",\n    \"learn topic basics\"\n  ],\n  \"excluded_terms\": [\n    \"overly broad term\",\n    \"unrelated concept\"\n  ]\n}\n\nGenerate the keyword cloud now based on the provided course plan text."
+      }
+    ],
+    "max_tokens": 2000,
+    "temperature": 0.2,
+    "user_prompt": "Course plan keyword extraction",
+    "timestamp": "2025-07-31T05:55:34.625Z"
+  },
+  "response": {
+    "content": "{\n  \"primary_keywords\": [\n    \"creationism\",\n    \"theological perspectives\",\n    \"scientific critiques\",\n    \"historical development\",\n    \"educational implications\"\n  ],\n  \"secondary_keywords\": [\n    \"Young Earth Creationism\",\n    \"Old Earth Creationism\",\n    \"Gap Creationism\",\n    \"Day-Age Creationism\",\n    \"Progressive Creationism\",\n    \"Scopes Trial\",\n    \"Edwards v. Aguillard\",\n    \"intelligent design\",\n    \"cultural impacts\",\n    \"societal debates\"\n  ],\n  \"long_tail_keywords\": [\n    \"understanding creationism course\",\n    \"history of creationism beliefs\",\n    \"types of creationism explained\",\n    \"theological foundations of creationism\",\n    \"scientific critiques of creationism\",\n    \"legal battles over creationism\",\n    \"cultural impacts of creationism\",\n    \"future directions of creationism debate\",\n    \"introduction to creationism\",\n    \"examining creationism in education\",\n    \"analyzing creationist claims\",\n    \"reflecting on evolution versus creationism\",\n    \"exploring creationist thought\",\n    \"teaching creationism in schools\",\n    \"impact of creationism on society\"\n  ],\n  \"video_search_terms\": [\n    \"creationism tutorial\",\n    \"understanding creationism explained\",\n    \"creationism course guide\",\n    \"learn about creationism basics\",\n    \"history of creationism tutorial\",\n    \"types of creationism video\",\n    \"theology of creationism explained\",\n    \"scientific critiques of creationism tutorial\",\n    \"creationism in the classroom guide\",\n    \"cultural impacts of creationism video\",\n    \"future of creationism explained\",\n    \"creationism versus evolution tutorial\",\n    \"legal implications of creationism video\",\n    \"intelligent design explained\",\n    \"creationism overview video\",\n    \"creationism educational resources\",\n    \"creationism debates tutorial\",\n    \"creationism historical context video\",\n    \"creationism beliefs guide\",\n    \"creationism and science tutorial\"\n  ],\n  \"excluded_terms\": [\n    \"religion\",\n    \"philosophy\",\n    \"science\",\n    \"education\",\n    \"debate\"\n  ]\n}",
+    "usage": {
+      "prompt_tokens": 1402,
+      "completion_tokens": 454,
+      "total_tokens": 1856,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "model": "gpt-4o-mini-2024-07-18",
+    "finish_reason": "stop",
+    "raw_response": {
+      "id": "chatcmpl-BzGY7dZqetYisZhCmrYKeFNtOVpQD",
+      "object": "chat.completion",
+      "created": 1753941323,
+      "model": "gpt-4o-mini-2024-07-18",
+      "choices": [
+        {
+          "index": 0,
+          "message": {
+            "role": "assistant",
+            "content": "{\n  \"primary_keywords\": [\n    \"creationism\",\n    \"theological perspectives\",\n    \"scientific critiques\",\n    \"historical development\",\n    \"educational implications\"\n  ],\n  \"secondary_keywords\": [\n    \"Young Earth Creationism\",\n    \"Old Earth Creationism\",\n    \"Gap Creationism\",\n    \"Day-Age Creationism\",\n    \"Progressive Creationism\",\n    \"Scopes Trial\",\n    \"Edwards v. Aguillard\",\n    \"intelligent design\",\n    \"cultural impacts\",\n    \"societal debates\"\n  ],\n  \"long_tail_keywords\": [\n    \"understanding creationism course\",\n    \"history of creationism beliefs\",\n    \"types of creationism explained\",\n    \"theological foundations of creationism\",\n    \"scientific critiques of creationism\",\n    \"legal battles over creationism\",\n    \"cultural impacts of creationism\",\n    \"future directions of creationism debate\",\n    \"introduction to creationism\",\n    \"examining creationism in education\",\n    \"analyzing creationist claims\",\n    \"reflecting on evolution versus creationism\",\n    \"exploring creationist thought\",\n    \"teaching creationism in schools\",\n    \"impact of creationism on society\"\n  ],\n  \"video_search_terms\": [\n    \"creationism tutorial\",\n    \"understanding creationism explained\",\n    \"creationism course guide\",\n    \"learn about creationism basics\",\n    \"history of creationism tutorial\",\n    \"types of creationism video\",\n    \"theology of creationism explained\",\n    \"scientific critiques of creationism tutorial\",\n    \"creationism in the classroom guide\",\n    \"cultural impacts of creationism video\",\n    \"future of creationism explained\",\n    \"creationism versus evolution tutorial\",\n    \"legal implications of creationism video\",\n    \"intelligent design explained\",\n    \"creationism overview video\",\n    \"creationism educational resources\",\n    \"creationism debates tutorial\",\n    \"creationism historical context video\",\n    \"creationism beliefs guide\",\n    \"creationism and science tutorial\"\n  ],\n  \"excluded_terms\": [\n    \"religion\",\n    \"philosophy\",\n    \"science\",\n    \"education\",\n    \"debate\"\n  ]\n}",
+            "refusal": null,
+            "annotations": []
+          },
+          "logprobs": null,
+          "finish_reason": "stop"
+        }
+      ],
+      "usage": {
+        "prompt_tokens": 1402,
+        "completion_tokens": 454,
+        "total_tokens": 1856,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "audio_tokens": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "audio_tokens": 0,
+          "accepted_prediction_tokens": 0,
+          "rejected_prediction_tokens": 0
+        }
+      },
+      "service_tier": "default",
+      "system_fingerprint": "fp_34a54ae93c"
+    }
+  },
+  "success": true,
+  "duration_ms": 11406
+}

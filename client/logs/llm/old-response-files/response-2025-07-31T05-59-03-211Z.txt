@@ -1,0 +1,22 @@
+=== LLM Response Log ===
+Timestamp: 2025-07-31T05:59:03.211Z
+Model: gpt-4-0613
+
+=== User Prompt ===
+Video discovery for course: Understanding Creationism
+
+=== AI Response ===
+{
+  "videos": [
+    {
+      "lesson_index": 1,
+      "video_url": "https://www.youtube.com/embed/7xL3Jf1Pl8A",
+      "video_title": "What is Creationism? | Stuff You Should Know",
+      "video_duration": 900,
+      "confidence_score": 0.9,
+      "platform": "youtube"
+    }
+  ]
+}
+
+=== End Response ===

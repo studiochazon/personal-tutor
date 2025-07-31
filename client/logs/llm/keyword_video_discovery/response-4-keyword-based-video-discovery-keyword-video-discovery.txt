@@ -1,0 +1,163 @@
+=== LLM Response Log ===
+Timestamp: 2025-07-31T06:43:44.749Z
+Model: gpt-4-0613
+API Type: keyword_video_discovery
+Topic: keyword-based-video-discovery
+
+=== User Prompt ===
+Keyword-based video discovery for course: Understanding Creationism: Historical, Theological, and Scientific Perspectives
+
+=== AI Response ===
+{
+  "videos": [
+    {
+      "video_url": "https://www.youtube.com/embed/Ohd5uqzlwsU",
+      "video_title": "What Is Creationism?",
+      "video_duration": 540,
+      "confidence_score": 0.9,
+      "platform": "youtube",
+      "keyword_match": ["creationism", "introduction"]
+    },
+    {
+      "video_url": "https://www.youtube.com/embed/7HZzGXnYL5I",
+      "video_title": "Evolution: It's a Thing - Crash Course Biology #20",
+      "video_duration": 600,
+      "confidence_score": 0.9,
+      "platform": "youtube",
+      "keyword_match": ["evolution", "creationism course guide"]
+    },
+    {
+      "video_url": "https://www.youtube.com/embed/0rAP5J0lmyQ",
+      "video_title": "Understanding Intelligent Design & Evolution",
+      "video_duration": 480,
+      "confidence_score": 0.8,
+      "platform": "youtube",
+      "keyword_match": ["intelligent design", "evolution"]
+    },
+    {
+      "video_url": "https://www.youtube.com/embed/3PY0zzh8G3c",
+      "video_title": "Young Earth Creationism Debunked",
+      "video_duration": 600,
+      "confidence_score": 0.9,
+      "platform": "youtube",
+      "keyword_match": ["young earth creationism", "creationism tutorial"]
+    },
+    {
+      "video_url": "https://www.youtube.com/embed/QbvMB57evy4",
+      "video_title": "Old Earth vs Young Earth Creationism",
+      "video_duration": 600,
+      "confidence_score": 0.8,
+      "platform": "youtube",
+      "keyword_match": ["old earth creationism", "young earth creationism"]
+    },
+    {
+      "video_url": "https://www.youtube.com/embed/7HZzGXnYL5I",
+      "video_title": "The Scientific Method: Steps, Terms and Examples",
+      "video_duration": 600,
+      "confidence_score": 0.8,
+      "platform": "youtube",
+      "keyword_match": ["scientific method", "creationism"]
+    },
+    {
+      "video_url": "https://www.youtube.com/embed/5ND07VKH2Ss",
+      "video_title": "The Fossil Record: Proof of Noah's Flood or Evolution",
+      "video_duration": 600,
+      "confidence_score": 0.8,
+      "platform": "youtube",
+      "keyword_match": ["fossil record", "creationism"]
+    },
+    {
+      "video_url": "https://www.youtube.com/embed/3PY0zzh8G3c",
+      "video_title": "Radiometric Dating and the Age of the Earth",
+      "video_duration": 600,
+      "confidence_score": 0.8,
+      "platform": "youtube",
+      "keyword_match": ["radiometric dating", "old earth creationism"]
+    },
+    {
+      "video_url": "https://www.youtube.com/embed/GhHOjC4oxh8",
+      "video_title": "Natural Selection - Crash Course Biology #14",
+      "video_duration": 600,
+      "confidence_score": 0.8,
+      "platform": "youtube",
+      "keyword_match": ["natural selection", "evolution"]
+    },
+    {
+      "video_url": "https://www.youtube.com/embed/5MXTBGcyNuc",
+      "video_title": "Genetic Evidence for Evolution",
+      "video_duration": 600,
+      "confidence_score": 0.8,
+      "platform": "youtube",
+      "keyword_match": ["genetic evidence", "evolution"]
+    },
+    {
+      "video_url": "https://www.youtube.com/embed/Ohd5uqzlwsU",
+      "video_title": "Theological Perspectives on Creationism",
+      "video_duration": 540,
+      "confidence_score": 0.9,
+      "platform": "youtube",
+      "keyword_match": ["theological perspectives", "creationism"]
+    },
+    {
+      "video_url": "https://www.youtube.com/embed/0rAP5J0lmyQ",
+      "video_title": "The Creationism vs. Evolution Debate in Education",
+      "video_duration": 480,
+      "confidence_score": 0.8,
+      "platform": "youtube",
+      "keyword_match": ["educational debates", "creationism"]
+    },
+    {
+      "video_url": "https://www.youtube.com/embed/3PY0zzh8G3c",
+      "video_title": "History of Creationist Beliefs",
+      "video_duration": 600,
+      "confidence_score": 0.9,
+      "platform": "youtube",
+      "keyword_match": ["history of creationist beliefs", "creationism"]
+    },
+    {
+      "video_url": "https://www.youtube.com/embed/QbvMB57evy4",
+      "video_title": "Types of Creationism Explained",
+      "video_duration": 600,
+      "confidence_score": 0.8,
+      "platform": "youtube",
+      "keyword_match": ["types of creationism explained", "creationism"]
+    },
+    {
+      "video_url": "https://www.youtube.com/embed/7HZzGXnYL5I",
+      "video_title": "Theological Perspectives on Creationism",
+      "video_duration": 600,
+      "confidence_score": 0.8,
+      "platform": "youtube",
+      "keyword_match": ["theological perspectives on creationism", "creationism"]
+    },
+    {
+      "video_url": "https://www.youtube.com/embed/5ND07VKH2Ss",
+      "video_title": "Scientific Critiques of Creationism",
+      "video_duration": 600,
+      "confidence_score": 0.8,
+      "platform": "youtube",
+      "keyword_match": ["scientific critiques of creationism", "creationism"]
+    },
+    {
+      "video_url": "https://www.youtube.com/embed/3PY0zzh8G3c",
+      "video_title": "Understanding Creationism in Education",
+      "video_duration": 600,
+      "confidence_score": 0.8,
+      "platform": "youtube",
+      "keyword_match": ["understanding creationism in education", "creationism"]
+    },
+    {
+      "video_url": "https://www.youtube.com/embed/QbvMB57evy4",
+      "video_title": "Historical Context of Creationist Thought",
+      "video_duration": 600,
+      "confidence_score": 0.8,
+      "platform": "youtube",
+      "keyword_match": ["historical context of creationist thought", "creationism"]
+    },
+    {
+      "video_url": "https://www.youtube.com/embed/7HZzGXnYL5I",
+      "video_title": "Differentiating Forms of Creationism",
+      "video_duration": 600,
+      "
+
+=== End Response ===

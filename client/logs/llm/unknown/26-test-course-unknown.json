@@ -1,0 +1,79 @@
+{
+  "id": "2025-07-31T05-58-10-800Z-csl1n3",
+  "timestamp": "2025-07-31T05:58:10.800Z",
+  "request": {
+    "model": "gpt-4",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a video research assistant. Find real YouTube educational videos. Respond with ONLY valid JSON."
+      },
+      {
+        "role": "user",
+        "content": "Find real YouTube videos for these lessons. You are helping create an educational course on \"Test Course\".\n\n## Course Information\n- **Course Title**: Test Course\n- **Number of Lessons**: 1\n- **Quality Preference**: undefined\n- **Preferred Video Duration**: 8 minutes (480 seconds)\n\n## Lessons to Match\n1. **Introduction to Creationism**\n   - Topic: Understanding the basic concepts and definitions of creationism\n   - Lesson Duration: 15 minutes\n   - Audience: beginner\n\n## Requirements\n\n### Video Selection Criteria\n- **REAL YouTube URLs**: Use actual, existing YouTube video IDs\n- **Relevance**: Videos must directly relate to the lesson topic\n- **Quality**: Choose high-quality educational content\n- **Duration**: Prefer videos around 8 minutes (480 seconds)\n- **Accessibility**: Publicly available videos with good audio quality\n- **Educational Value**: Content that enhances learning objectives\n\n### Technical Requirements\n- **Format**: Use embed URLs: https://www.youtube.com/embed/VIDEO_ID\n- **NO PLACEHOLDERS**: Never use VIDEO_ID1, VIDEO_ID2, or similar placeholders\n- **Real IDs**: Use actual YouTube video IDs (e.g., W6NZfCO5SIk, PkZNo7MFNFg)\n- **Validation**: Ensure video IDs are real and functional\n\n### Confidence Scoring (0.0 to 1.0)\n- **1.0**: Perfect match for lesson topic and audience\n- **0.8-0.9**: Very relevant with good educational value\n- **0.6-0.7**: Relevant but may need supplementation\n- **0.4-0.5**: Somewhat relevant, acceptable fallback\n- **Below 0.4**: Poor match, avoid if possible\n\n## JSON Response Format\n\nRespond with ONLY valid JSON in this exact structure:\n\n{\n  \"videos\": [\n    {\n      \"lesson_index\": 0,\n      \"video_url\": \"https://www.youtube.com/embed/REAL_VIDEO_ID\",\n      \"video_title\": \"Actual video title from YouTube\",\n      \"video_duration\": 360,\n      \"confidence_score\": 0.9,\n      \"platform\": \"youtube\"\n    }\n  ]\n}\n\n**CRITICAL**: Only use REAL YouTube video IDs. Do not use placeholders or made-up IDs.\n\nFind the best matching videos now."
+      }
+    ],
+    "max_tokens": 1500,
+    "temperature": 0.3,
+    "user_prompt": "Video discovery for course: Test Course",
+    "timestamp": "2025-07-31T05:58:10.800Z"
+  },
+  "response": {
+    "content": "{\n  \"videos\": [\n    {\n      \"lesson_index\": 0,\n      \"video_url\": \"https://www.youtube.com/embed/4MX_UJoIStQ\",\n      \"video_title\": \"What is Creationism? | Stated Clearly\",\n      \"video_duration\": 540,\n      \"confidence_score\": 0.9,\n      \"platform\": \"youtube\"\n    }\n  ]\n}",
+    "usage": {
+      "prompt_tokens": 516,
+      "completion_tokens": 83,
+      "total_tokens": 599,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "model": "gpt-4-0613",
+    "finish_reason": "stop",
+    "raw_response": {
+      "id": "chatcmpl-BzGalmbhePCvfVS79oR7yXUAfkA7m",
+      "object": "chat.completion",
+      "created": 1753941487,
+      "model": "gpt-4-0613",
+      "choices": [
+        {
+          "index": 0,
+          "message": {
+            "role": "assistant",
+            "content": "{\n  \"videos\": [\n    {\n      \"lesson_index\": 0,\n      \"video_url\": \"https://www.youtube.com/embed/4MX_UJoIStQ\",\n      \"video_title\": \"What is Creationism? | Stated Clearly\",\n      \"video_duration\": 540,\n      \"confidence_score\": 0.9,\n      \"platform\": \"youtube\"\n    }\n  ]\n}",
+            "refusal": null,
+            "annotations": []
+          },
+          "logprobs": null,
+          "finish_reason": "stop"
+        }
+      ],
+      "usage": {
+        "prompt_tokens": 516,
+        "completion_tokens": 83,
+        "total_tokens": 599,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "audio_tokens": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "audio_tokens": 0,
+          "accepted_prediction_tokens": 0,
+          "rejected_prediction_tokens": 0
+        }
+      },
+      "service_tier": "default",
+      "system_fingerprint": null
+    }
+  },
+  "success": true,
+  "duration_ms": 3150
+}

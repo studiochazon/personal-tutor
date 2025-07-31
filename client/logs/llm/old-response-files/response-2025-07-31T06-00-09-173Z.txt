@@ -1,0 +1,22 @@
+=== LLM Response Log ===
+Timestamp: 2025-07-31T06:00:09.173Z
+Model: gpt-4-0613
+
+=== User Prompt ===
+Video discovery for course: Test Course
+
+=== AI Response ===
+{
+  "videos": [
+    {
+      "lesson_index": 0,
+      "video_url": "https://www.youtube.com/embed/6Dh-RL__uN4",
+      "video_title": "How to Test - Simple Testing",
+      "video_duration": 480,
+      "confidence_score": 0.9,
+      "platform": "youtube"
+    }
+  ]
+}
+
+=== End Response ===

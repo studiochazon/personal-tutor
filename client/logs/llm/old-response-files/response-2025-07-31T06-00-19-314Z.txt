@@ -1,0 +1,22 @@
+=== LLM Response Log ===
+Timestamp: 2025-07-31T06:00:19.314Z
+Model: gpt-4-0613
+
+=== User Prompt ===
+Video discovery for course: Test Course
+
+=== AI Response ===
+{
+  "videos": [
+    {
+      "lesson_index": 0,
+      "video_url": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+      "video_title": "Rick Astley - Never Gonna Give You Up (Video)",
+      "video_duration": 213,
+      "confidence_score": 0.6,
+      "platform": "youtube"
+    }
+  ]
+}
+
+=== End Response ===

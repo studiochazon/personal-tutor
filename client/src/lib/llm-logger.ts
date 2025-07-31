@@ -1,4 +1,4 @@
-// LLM Response Logger - Stores all OpenAI API responses to files
+// Enhanced LLM Response Logger with better organization
 import fs from 'fs';
 import path from 'path';
 
@@ -27,48 +27,152 @@ export interface LLMLogEntry {
   success: boolean;
   error?: string;
   duration_ms: number;
+  api_type?: string; // New: track API type
+  topic?: string; // New: track topic
 }
 
-export class LLMLogger {
-  private logDir: string;
-  private maxLogFiles: number = 100; // Keep last 100 log files
+export class EnhancedLLMLogger {
+  private baseLogDir: string;
+  private maxLogFiles: number = 100; // Keep last 100 log files per category
+  private counters: Map<string, number> = new Map(); // Track counters per API type
 
   constructor() {
     // Create logs directory in the project root
-    this.logDir = path.join(process.cwd(), 'logs', 'llm');
+    this.baseLogDir = path.join(process.cwd(), 'logs', 'llm');
     this.ensureLogDirectory();
+    this.loadCounters();
   }
 
   /**
    * Ensure the log directory exists
    */
   private ensureLogDirectory(): void {
-    if (!fs.existsSync(this.logDir)) {
-      fs.mkdirSync(this.logDir, { recursive: true });
+    if (!fs.existsSync(this.baseLogDir)) {
+      fs.mkdirSync(this.baseLogDir, { recursive: true });
     }
+
+    // Create subdirectories for different API types
+    const subdirs = [
+      'keyword_generation',
+      'lesson_youtube_discovery', 
+      'keyword_video_discovery',
+      'course_planning',
+      'content_generation',
+      'video_search',
+      'daily'
+    ];
+
+    subdirs.forEach(dir => {
+      const dirPath = path.join(this.baseLogDir, dir);
+      if (!fs.existsSync(dirPath)) {
+        fs.mkdirSync(dirPath, { recursive: true });
+      }
+    });
   }
 
   /**
-   * Generate a unique log entry ID
+   * Load existing counters from files
    */
-  private generateLogId(): string {
-    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-    const random = Math.random().toString(36).substring(2, 8);
-    return `${timestamp}-${random}`;
+  private loadCounters(): void {
+    const subdirs = [
+      'keyword_generation',
+      'lesson_youtube_discovery', 
+      'keyword_video_discovery',
+      'course_planning',
+      'content_generation',
+      'video_search'
+    ];
+
+    subdirs.forEach(apiType => {
+      const dirPath = path.join(this.baseLogDir, apiType);
+      if (fs.existsSync(dirPath)) {
+        const files = fs.readdirSync(dirPath)
+          .filter(file => file.endsWith('.json'))
+          .map(file => {
+            const match = file.match(/^(\d+)-/);
+            return match ? parseInt(match[1]) : 0;
+          });
+        
+        const maxCounter = files.length > 0 ? Math.max(...files) : 0;
+        this.counters.set(apiType, maxCounter);
+      } else {
+        this.counters.set(apiType, 0);
+      }
+    });
   }
 
   /**
-   * Log an LLM request and response
+   * Extract topic from prompt content
+   */
+  private extractTopic(prompt: string): string {
+    // Try to extract course title or main topic
+    const courseTitleMatch = prompt.match(/Course Title[:\s]+([^\n]+)/i);
+    if (courseTitleMatch) {
+      return this.sanitizeFilename(courseTitleMatch[1].trim());
+    }
+
+    // Try to extract from keyword cloud
+    const keywordMatch = prompt.match(/Primary Keywords[:\s]+([^\n]+)/i);
+    if (keywordMatch) {
+      const keywords = keywordMatch[1].split(',').map(k => k.trim());
+      return this.sanitizeFilename(keywords[0] || 'unknown');
+    }
+
+    // Try to extract from lesson titles
+    const lessonMatch = prompt.match(/Lesson \d+[:\s]+([^\n]+)/i);
+    if (lessonMatch) {
+      return this.sanitizeFilename(lessonMatch[1].trim());
+    }
+
+    // Fallback: extract first meaningful words
+    const words = prompt.split(/\s+/).slice(0, 3).join('-');
+    return this.sanitizeFilename(words || 'unknown');
+  }
+
+  /**
+   * Sanitize filename
+   */
+  private sanitizeFilename(filename: string): string {
+    return filename
+      .toLowerCase()
+      .replace(/[^a-z0-9\s-]/g, '') // Remove special characters
+      .replace(/\s+/g, '-') // Replace spaces with hyphens
+      .replace(/-+/g, '-') // Replace multiple hyphens with single
+      .substring(0, 50); // Limit length
+  }
+
+  /**
+   * Get next counter for API type
+   */
+  private getNextCounter(apiType: string): number {
+    const current = this.counters.get(apiType) || 0;
+    const next = current + 1;
+    this.counters.set(apiType, next);
+    return next;
+  }
+
+  /**
+   * Generate descriptive filename
+   */
+  private generateDescriptiveFilename(apiType: string, topic: string): string {
+    const counter = this.getNextCounter(apiType);
+    return `${counter}-${topic}-${apiType.replace(/_/g, '-')}`;
+  }
+
+  /**
+   * Log an LLM request and response with better organization
    */
   async logLLMInteraction(
     request: Omit<LLMRequest, 'timestamp'>,
     response: LLMResponse,
     success: boolean,
     error?: string,
-    duration_ms: number = 0
+    duration_ms: number = 0,
+    apiType: string = 'unknown'
   ): Promise<string> {
-    const logId = this.generateLogId();
     const timestamp = new Date().toISOString();
+    const topic = this.extractTopic(request.user_prompt);
+    const logId = this.generateDescriptiveFilename(apiType, topic);
 
     const logEntry: LLMLogEntry = {
       id: logId,
@@ -80,47 +184,55 @@ export class LLMLogger {
       response,
       success,
       error,
-      duration_ms
+      duration_ms,
+      api_type: apiType,
+      topic
     };
 
-    // Save to individual log file
+    // Save to categorized log file
     const logFileName = `${logId}.json`;
-    const logFilePath = path.join(this.logDir, logFileName);
+    const logDir = path.join(this.baseLogDir, apiType);
+    const logFilePath = path.join(logDir, logFileName);
     
     try {
       fs.writeFileSync(logFilePath, JSON.stringify(logEntry, null, 2));
-      console.log(`📝 LLM Response logged: ${logFileName}`);
+      console.log(`📝 LLM Response logged: ${apiType}/${logFileName}`);
     } catch (err) {
       console.error('Failed to write LLM log file:', err);
     }
 
     // Also append to a daily log file for easier browsing
     const dailyLogFileName = `llm-${new Date().toISOString().split('T')[0]}.jsonl`;
-    const dailyLogFilePath = path.join(this.logDir, dailyLogFileName);
+    const dailyLogDir = path.join(this.baseLogDir, 'daily');
+    const dailyLogFilePath = path.join(dailyLogDir, dailyLogFileName);
     
     try {
-      fs.appendFileSync(dailyLogFilePath, JSON.stringify(logEntry) + '\n');
+      const logLine = JSON.stringify(logEntry) + '\n';
+      fs.appendFileSync(dailyLogFilePath, logLine);
     } catch (err) {
       console.error('Failed to append to daily log file:', err);
     }
 
-    // Clean up old log files
-    this.cleanupOldLogs();
+    // Cleanup old files
+    this.cleanupOldLogs(apiType);
 
     return logId;
   }
 
   /**
-   * Log just the response content to a simple text file for easy reading
+   * Log response content with descriptive naming
    */
   async logResponseContent(
     userPrompt: string,
     responseContent: string,
-    model: string = 'unknown'
+    model: string = 'unknown',
+    apiType: string = 'unknown'
   ): Promise<string> {
-    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-    const fileName = `response-${timestamp}.txt`;
-    const filePath = path.join(this.logDir, fileName);
+    const topic = this.extractTopic(userPrompt);
+    const counter = this.getNextCounter(apiType);
+    const fileName = `response-${counter}-${topic}-${apiType.replace(/_/g, '-')}.txt`;
+    const logDir = path.join(this.baseLogDir, apiType);
+    const filePath = path.join(logDir, fileName);
 
     // Clean and format the content for better readability
     const cleanContent = this.formatResponseContent(responseContent);
@@ -129,6 +241,8 @@ export class LLMLogger {
     const content = `=== LLM Response Log ===
 Timestamp: ${new Date().toISOString()}
 Model: ${model}
+API Type: ${apiType}
+Topic: ${topic}
 
 === User Prompt ===
 ${cleanPrompt}
@@ -141,7 +255,7 @@ ${cleanContent}
 
     try {
       fs.writeFileSync(filePath, content);
-      console.log(`📄 Response content logged: ${fileName}`);
+      console.log(`📄 Response content logged: ${apiType}/${fileName}`);
       return fileName;
     } catch (err) {
       console.error('Failed to write response content file:', err);
@@ -180,11 +294,39 @@ ${cleanContent}
   }
 
   /**
+   * Get all log entries for a specific API type
+   */
+  getLogsForApiType(apiType: string): LLMLogEntry[] {
+    const logDir = path.join(this.baseLogDir, apiType);
+    
+    if (!fs.existsSync(logDir)) {
+      return [];
+    }
+
+    try {
+      const files = fs.readdirSync(logDir)
+        .filter(file => file.endsWith('.json'))
+        .sort()
+        .reverse();
+
+      return files.map(file => {
+        const filePath = path.join(logDir, file);
+        const content = fs.readFileSync(filePath, 'utf-8');
+        return JSON.parse(content);
+      });
+    } catch (err) {
+      console.error('Failed to read API type log files:', err);
+      return [];
+    }
+  }
+
+  /**
    * Get all log entries for a specific date
    */
   getLogsForDate(date: string): LLMLogEntry[] {
     const dailyLogFileName = `llm-${date}.jsonl`;
-    const dailyLogFilePath = path.join(this.logDir, dailyLogFileName);
+    const dailyLogDir = path.join(this.baseLogDir, 'daily');
+    const dailyLogFilePath = path.join(dailyLogDir, dailyLogFileName);
     
     if (!fs.existsSync(dailyLogFilePath)) {
       return [];
@@ -207,28 +349,30 @@ ${cleanContent}
    * Get the latest log entries
    */
   getLatestLogs(limit: number = 10): LLMLogEntry[] {
-    const files = fs.readdirSync(this.logDir)
-      .filter(file => file.endsWith('.json'))
+    const dailyLogDir = path.join(this.baseLogDir, 'daily');
+    const files = fs.readdirSync(dailyLogDir)
+      .filter(file => file.endsWith('.jsonl'))
       .sort()
       .reverse()
-      .slice(0, limit);
+      .slice(0, 1); // Get most recent daily file
 
-    const logs: LLMLogEntry[] = [];
-    
-    for (const file of files) {
-      try {
-        const content = fs.readFileSync(path.join(this.logDir, file), 'utf-8');
-        logs.push(JSON.parse(content));
-      } catch (err) {
-        console.error(`Failed to read log file ${file}:`, err);
-      }
+    if (files.length === 0) {
+      return [];
     }
 
-    return logs;
+    try {
+      const filePath = path.join(dailyLogDir, files[0]);
+      const content = fs.readFileSync(filePath, 'utf-8');
+      const lines = content.trim().split('\n').filter(line => line.trim());
+      return lines.slice(-limit).map(line => JSON.parse(line));
+    } catch (err) {
+      console.error('Failed to read latest log files:', err);
+      return [];
+    }
   }
 
   /**
-   * Get statistics about LLM usage
+   * Get statistics across all API types
    */
   getStats(): {
     totalRequests: number;
@@ -237,107 +381,137 @@ ${cleanContent}
     averageResponseTime: number;
     totalTokens: number;
     models: Record<string, number>;
+    apiTypes: Record<string, number>;
   } {
-    const today = new Date().toISOString().split('T')[0];
-    const logs = this.getLogsForDate(today);
+    const apiTypes = [
+      'keyword_generation',
+      'lesson_youtube_discovery', 
+      'keyword_video_discovery',
+      'course_planning',
+      'content_generation',
+      'video_search'
+    ];
 
-    const stats = {
-      totalRequests: logs.length,
-      successfulRequests: logs.filter(log => log.success).length,
-      failedRequests: logs.filter(log => !log.success).length,
-      averageResponseTime: 0,
-      totalTokens: 0,
-      models: {} as Record<string, number>
-    };
+    let totalRequests = 0;
+    let successfulRequests = 0;
+    let failedRequests = 0;
+    let totalResponseTime = 0;
+    let totalTokens = 0;
+    const models: Record<string, number> = {};
+    const apiTypeCounts: Record<string, number> = {};
 
-    if (logs.length > 0) {
-      const successfulLogs = logs.filter(log => log.success);
-      stats.averageResponseTime = successfulLogs.reduce((sum, log) => sum + log.duration_ms, 0) / successfulLogs.length;
+    apiTypes.forEach(apiType => {
+      const logs = this.getLogsForApiType(apiType);
+      apiTypeCounts[apiType] = logs.length;
       
-      // Calculate total tokens with flexible usage structure
-      stats.totalTokens = successfulLogs.reduce((sum, log) => {
-        const usage = log.response.usage;
-        if (usage?.total_tokens) return sum + usage.total_tokens;
-        if (usage?.completion_tokens && usage?.prompt_tokens) return sum + usage.completion_tokens + usage.prompt_tokens;
-        if (typeof usage === 'number') return sum + usage;
-        return sum;
-      }, 0);
-      
-      // Count models
-      successfulLogs.forEach(log => {
-        const model = log.response.model || 'unknown';
-        stats.models[model] = (stats.models[model] || 0) + 1;
+      logs.forEach(log => {
+        totalRequests++;
+        if (log.success) {
+          successfulRequests++;
+        } else {
+          failedRequests++;
+        }
+        
+        totalResponseTime += log.duration_ms;
+        
+        if (log.response.usage?.total_tokens) {
+          totalTokens += log.response.usage.total_tokens;
+        }
+        
+        const model = log.response.model;
+        models[model] = (models[model] || 0) + 1;
       });
-    }
+    });
 
-    return stats;
+    return {
+      totalRequests,
+      successfulRequests,
+      failedRequests,
+      averageResponseTime: totalRequests > 0 ? totalResponseTime / totalRequests : 0,
+      totalTokens,
+      models,
+      apiTypes: apiTypeCounts
+    };
   }
 
   /**
-   * Clean up old log files to prevent disk space issues
+   * Cleanup old log files for a specific API type
    */
-  private cleanupOldLogs(): void {
-    try {
-      const files = fs.readdirSync(this.logDir)
-        .filter(file => file.endsWith('.json'))
-        .sort()
-        .reverse();
+  private cleanupOldLogs(apiType: string): void {
+    const logDir = path.join(this.baseLogDir, apiType);
+    
+    if (!fs.existsSync(logDir)) {
+      return;
+    }
 
+    try {
+      const files = fs.readdirSync(logDir)
+        .filter(file => file.endsWith('.json'))
+        .map(file => ({
+          name: file,
+          path: path.join(logDir, file),
+          stats: fs.statSync(path.join(logDir, file))
+        }))
+        .sort((a, b) => b.stats.mtime.getTime() - a.stats.mtime.getTime());
+
+      // Keep only the most recent files
       if (files.length > this.maxLogFiles) {
         const filesToDelete = files.slice(this.maxLogFiles);
-        for (const file of filesToDelete) {
-          fs.unlinkSync(path.join(this.logDir, file));
-        }
-        console.log(`🧹 Cleaned up ${filesToDelete.length} old log files`);
+        filesToDelete.forEach(file => {
+          try {
+            fs.unlinkSync(file.path);
+            console.log(`🗑️  Deleted old log file: ${apiType}/${file.name}`);
+          } catch (err) {
+            console.error(`Failed to delete old log file: ${file.name}`, err);
+          }
+        });
       }
     } catch (err) {
-      console.error('Failed to cleanup old logs:', err);
+      console.error('Failed to cleanup old log files:', err);
     }
   }
 
   /**
-   * Export all logs as a single JSON file
+   * Export all logs for a specific API type
    */
-  exportAllLogs(): string {
-    const exportFileName = `llm-export-${new Date().toISOString().split('T')[0]}.json`;
-    const exportFilePath = path.join(this.logDir, exportFileName);
-
+  exportLogsForApiType(apiType: string): string {
+    const logs = this.getLogsForApiType(apiType);
+    const exportPath = path.join(this.baseLogDir, `${apiType}-export-${new Date().toISOString().split('T')[0]}.json`);
+    
     try {
-      const files = fs.readdirSync(this.logDir)
-        .filter(file => file.endsWith('.json') && !file.startsWith('llm-export-'))
-        .sort();
-
-      const allLogs: LLMLogEntry[] = [];
-      
-      for (const file of files) {
-        try {
-          const content = fs.readFileSync(path.join(this.logDir, file), 'utf-8');
-          allLogs.push(JSON.parse(content));
-        } catch (err) {
-          console.error(`Failed to read log file ${file}:`, err);
-        }
-      }
-
-      fs.writeFileSync(exportFilePath, JSON.stringify(allLogs, null, 2));
-      console.log(`📦 Exported ${allLogs.length} log entries to ${exportFileName}`);
-      return exportFileName;
+      fs.writeFileSync(exportPath, JSON.stringify(logs, null, 2));
+      console.log(`📤 Exported ${logs.length} logs for ${apiType} to: ${exportPath}`);
+      return exportPath;
     } catch (err) {
       console.error('Failed to export logs:', err);
       return '';
     }
   }
+
+  /**
+   * Get available API types
+   */
+  getAvailableApiTypes(): string[] {
+    return [
+      'keyword_generation',
+      'lesson_youtube_discovery', 
+      'keyword_video_discovery',
+      'course_planning',
+      'content_generation',
+      'video_search'
+    ];
+  }
 }
 
-// Create a singleton instance
-export const llmLogger = new LLMLogger();
+// Create singleton instance
+export const enhancedLLMLogger = new EnhancedLLMLogger();
 
-/**
- * Utility function to wrap OpenAI API calls with logging
- */
+// Enhanced logOpenAIRequest function
 export async function logOpenAIRequest(
   openAIRequest: any,
   userPrompt: string,
-  apiCall: () => Promise<any>
+  apiCall: () => Promise<any>,
+  apiType: string = 'unknown'
 ): Promise<any> {
   const startTime = Date.now();
   
@@ -403,8 +577,8 @@ export async function logOpenAIRequest(
       raw_response: responseData // Store the complete raw response for debugging
     };
 
-    // Log the interaction
-    await llmLogger.logLLMInteraction(
+    // Log the interaction with enhanced logger
+    await enhancedLLMLogger.logLLMInteraction(
       {
         model: openAIRequest.model,
         messages: openAIRequest.messages,
@@ -415,11 +589,12 @@ export async function logOpenAIRequest(
       logResponseData,
       true,
       undefined,
-      duration
+      duration,
+      apiType
     );
 
     // Also log the response content separately for easy reading
-    await llmLogger.logResponseContent(userPrompt, logResponseData.content, logResponseData.model);
+    await enhancedLLMLogger.logResponseContent(userPrompt, logResponseData.content, logResponseData.model, apiType);
 
     return responseData;
   } catch (error) {
@@ -427,7 +602,7 @@ export async function logOpenAIRequest(
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
 
     // Log the failed interaction
-    await llmLogger.logLLMInteraction(
+    await enhancedLLMLogger.logLLMInteraction(
       {
         model: openAIRequest.model,
         messages: openAIRequest.messages,
@@ -442,9 +617,10 @@ export async function logOpenAIRequest(
       },
       false,
       errorMessage,
-      duration
+      duration,
+      apiType
     );
 
     throw error;
   }
-} 
+}

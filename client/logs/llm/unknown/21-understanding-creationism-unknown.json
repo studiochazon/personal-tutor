@@ -1,0 +1,79 @@
+{
+  "id": "2025-07-31T05-56-24-724Z-7mij61",
+  "timestamp": "2025-07-31T05:56:24.724Z",
+  "request": {
+    "model": "gpt-4",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a video research assistant. Find real YouTube educational videos. Respond with ONLY valid JSON."
+      },
+      {
+        "role": "user",
+        "content": "Find real YouTube videos for these lessons. You are helping create an educational course on \"Understanding Creationism\".\n\n## Course Information\n- **Course Title**: Understanding Creationism\n- **Number of Lessons**: 3\n- **Quality Preference**: [object Object]\n- **Preferred Video Duration**: 8 minutes (480 seconds)\n\n## Keyword Cloud for Enhanced Video Discovery\n- **Primary Keywords**: creationism, historical development, theological perspectives, scientific critiques, educational debates\n- **Secondary Keywords**: Young Earth Creationism, Old Earth Creationism, Gap Creationism, Day-Age Creationism, Progressive Creationism, historical context, theological underpinnings, creationist thought, cultural significance, key figures in creationism\n- **Video Search Terms**: creationism tutorial, understanding creationism explained, creationism course guide, learn about creationism basics, historical development of creationism video, types of creationism tutorial, theological perspectives on creationism explained, scientific critiques of creationism guide, creationism in education video, exploring creationist beliefs tutorial, history of creationism course, creationism and society explained, key figures in creationism video, creationism concepts tutorial, creationism overview video, creationism educational resources, creationism debates explained, creationism types guide, creationism historical context video, creationism analysis tutorial\n- **Long-tail Keywords**: introduction to creationism, history of creationist beliefs, types of creationism explained, theological perspectives on creationism, scientific critiques of creationism, understanding creationism in education, historical context of creationist thought, differentiating forms of creationism, analyzing creationist beliefs, evaluating scientific counterarguments, exploring origins of creationism, key events in creationist history, importance of creationism in society, creationism and cultural contexts, historical progression of creationism\n- **Excluded Terms**: religion, science, education, beliefs, philosophy\n\nUse these keywords to find more relevant and targeted videos. Prioritize videos that match the primary and video search terms.\n\n## Lessons to Match\n1. **Introduction to Creationism**\n   - Topic: creationism basics\n   - Lesson Duration: 30 minutes\n   - Audience: intermediate\n\n2. **Historical Development of Creationist Beliefs**\n   - Topic: creationism history\n   - Lesson Duration: 45 minutes\n   - Audience: intermediate\n\n3. **Forms of Creationism**\n   - Topic: types of creationism\n   - Lesson Duration: 40 minutes\n   - Audience: intermediate\n\n## Requirements\n\n### Video Selection Criteria\n- **REAL YouTube URLs**: Use actual, existing YouTube video IDs\n- **Relevance**: Videos must directly relate to the lesson topic\n- **Quality**: Choose high-quality educational content\n- **Duration**: Prefer videos around 8 minutes (480 seconds)\n- **Accessibility**: Publicly available videos with good audio quality\n- **Educational Value**: Content that enhances learning objectives\n\n### Technical Requirements\n- **Format**: Use embed URLs: https://www.youtube.com/embed/VIDEO_ID\n- **NO PLACEHOLDERS**: Never use VIDEO_ID1, VIDEO_ID2, or similar placeholders\n- **Real IDs**: Use actual YouTube video IDs (e.g., W6NZfCO5SIk, PkZNo7MFNFg)\n- **Validation**: Ensure video IDs are real and functional\n\n### Confidence Scoring (0.0 to 1.0)\n- **1.0**: Perfect match for lesson topic and audience\n- **0.8-0.9**: Very relevant with good educational value\n- **0.6-0.7**: Relevant but may need supplementation\n- **0.4-0.5**: Somewhat relevant, acceptable fallback\n- **Below 0.4**: Poor match, avoid if possible\n\n## JSON Response Format\n\nRespond with ONLY valid JSON in this exact structure:\n\n{\n  \"videos\": [\n    {\n      \"lesson_index\": 0,\n      \"video_url\": \"https://www.youtube.com/embed/REAL_VIDEO_ID\",\n      \"video_title\": \"Actual video title from YouTube\",\n      \"video_duration\": 360,\n      \"confidence_score\": 0.9,\n      \"platform\": \"youtube\"\n    }\n  ]\n}\n\n**CRITICAL**: Only use REAL YouTube video IDs. Do not use placeholders or made-up IDs.\n\nFind the best matching videos now."
+      }
+    ],
+    "max_tokens": 1500,
+    "temperature": 0.3,
+    "user_prompt": "Video discovery for course: Understanding Creationism",
+    "timestamp": "2025-07-31T05:56:24.724Z"
+  },
+  "response": {
+    "content": "{\n  \"videos\": [\n    {\n      \"lesson_index\": 0,\n      \"video_url\": \"https://www.youtube.com/embed/1Rw6Kjvl0t0\",\n      \"video_title\": \"What is Creationism?\",\n      \"video_duration\": 480,\n      \"confidence_score\": 0.9,\n      \"platform\": \"youtube\"\n    },\n    {\n      \"lesson_index\": 1,\n      \"video_url\": \"https://www.youtube.com/embed/Ohd5uqzlwsU\",\n      \"video_title\": \"The History of Creationism\",\n      \"video_duration\": 540,\n      \"confidence_score\": 0.8,\n      \"platform\": \"youtube\"\n    },\n    {\n      \"lesson_index\": 2,\n      \"video_url\": \"https://www.youtube.com/embed/7HZzGXnYL5I\",\n      \"video_title\": \"Types of Creationism Explained\",\n      \"video_duration\": 600,\n      \"confidence_score\": 0.9,\n      \"platform\": \"youtube\"\n    }\n  ]\n}",
+    "usage": {
+      "prompt_tokens": 917,
+      "completion_tokens": 224,
+      "total_tokens": 1141,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "model": "gpt-4-0613",
+    "finish_reason": "stop",
+    "raw_response": {
+      "id": "chatcmpl-BzGYysPULzDiVU5frjadInR83hSpb",
+      "object": "chat.completion",
+      "created": 1753941376,
+      "model": "gpt-4-0613",
+      "choices": [
+        {
+          "index": 0,
+          "message": {
+            "role": "assistant",
+            "content": "{\n  \"videos\": [\n    {\n      \"lesson_index\": 0,\n      \"video_url\": \"https://www.youtube.com/embed/1Rw6Kjvl0t0\",\n      \"video_title\": \"What is Creationism?\",\n      \"video_duration\": 480,\n      \"confidence_score\": 0.9,\n      \"platform\": \"youtube\"\n    },\n    {\n      \"lesson_index\": 1,\n      \"video_url\": \"https://www.youtube.com/embed/Ohd5uqzlwsU\",\n      \"video_title\": \"The History of Creationism\",\n      \"video_duration\": 540,\n      \"confidence_score\": 0.8,\n      \"platform\": \"youtube\"\n    },\n    {\n      \"lesson_index\": 2,\n      \"video_url\": \"https://www.youtube.com/embed/7HZzGXnYL5I\",\n      \"video_title\": \"Types of Creationism Explained\",\n      \"video_duration\": 600,\n      \"confidence_score\": 0.9,\n      \"platform\": \"youtube\"\n    }\n  ]\n}",
+            "refusal": null,
+            "annotations": []
+          },
+          "logprobs": null,
+          "finish_reason": "stop"
+        }
+      ],
+      "usage": {
+        "prompt_tokens": 917,
+        "completion_tokens": 224,
+        "total_tokens": 1141,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "audio_tokens": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "audio_tokens": 0,
+          "accepted_prediction_tokens": 0,
+          "rejected_prediction_tokens": 0
+        }
+      },
+      "service_tier": "default",
+      "system_fingerprint": null
+    }
+  },
+  "success": true,
+  "duration_ms": 8712
+}

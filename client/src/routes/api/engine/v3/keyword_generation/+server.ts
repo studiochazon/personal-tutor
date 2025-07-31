@@ -326,7 +326,8 @@ Generate the keyword cloud now based on the provided course plan text.`;
 				}
 
 				return response;
-			}
+			},
+			'keyword_generation'
 		);
 
 		const responseContent = data?.choices?.[0]?.message?.content;
@@ -530,7 +531,8 @@ export const POST: RequestHandler = async ({ request }) => {
 				}
 
 				return response;
-			}
+			},
+			'keyword_generation'
 		);
 
 		const responseContent = data?.choices?.[0]?.message?.content;

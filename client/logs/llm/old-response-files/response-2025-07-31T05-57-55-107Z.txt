@@ -1,0 +1,38 @@
+=== LLM Response Log ===
+Timestamp: 2025-07-31T05:57:55.107Z
+Model: gpt-4-0613
+
+=== User Prompt ===
+Video discovery for course: Understanding Creationism
+
+=== AI Response ===
+{
+  "videos": [
+    {
+      "lesson_index": 1,
+      "video_url": "https://www.youtube.com/embed/0rAfUUfgfC8",
+      "video_title": "What is Creationism? | Stated Clearly",
+      "video_duration": 540,
+      "confidence_score": 0.9,
+      "platform": "youtube"
+    },
+    {
+      "lesson_index": 2,
+      "video_url": "https://www.youtube.com/embed/Ohd5uqzlwsU",
+      "video_title": "The Evolution of Creationism",
+      "video_duration": 780,
+      "confidence_score": 0.8,
+      "platform": "youtube"
+    },
+    {
+      "lesson_index": 3,
+      "video_url": "https://www.youtube.com/embed/7HZzGXnYL5I",
+      "video_title": "Science vs. Creationism: Inside the Classroom",
+      "video_duration": 900,
+      "confidence_score": 0.9,
+      "platform": "youtube"
+    }
+  ]
+}
+
+=== End Response ===
