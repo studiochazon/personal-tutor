@@ -19,6 +19,9 @@ export interface GeminiRequest {
         topK?: number;
         topP?: number;
     };
+    tools?: Array<{
+        google_search?: {};
+    }>;
 }
 
 export interface GeminiResponse {
@@ -31,6 +34,26 @@ export interface GeminiResponse {
         };
         finishReason: string;
         index: number;
+        groundingMetadata?: {
+            webSearchQueries?: string[];
+            searchEntryPoint?: {
+                renderedContent: string;
+            };
+            groundingChunks?: Array<{
+                web?: {
+                    uri: string;
+                    title: string;
+                };
+            }>;
+            groundingSupports?: Array<{
+                segment: {
+                    startIndex: number;
+                    endIndex: number;
+                    text: string;
+                };
+                groundingChunkIndices: number[];
+            }>;
+        };
     }>;
     usageMetadata?: {
         promptTokenCount: number;
@@ -55,7 +78,8 @@ export async function makeGeminiRequest(request: GeminiRequest): Promise<GeminiR
 
     const geminiRequest = {
         contents,
-        generationConfig: request.generationConfig
+        generationConfig: request.generationConfig,
+        tools: request.tools
     };
 
     const url = `https://generativelanguage.googleapis.com/v1beta/models/${request.model}:generateContent?key=${GEMINI_API_KEY}`;
@@ -77,9 +101,9 @@ export async function makeGeminiRequest(request: GeminiRequest): Promise<GeminiR
 }
 
 /**
- * Convert OpenAI-style request to Gemini format
+ * Convert OpenAI-style request to Gemini format with optional Google Search
  */
-export function convertOpenAIToGemini(openAIRequest: any): GeminiRequest {
+export function convertOpenAIToGemini(openAIRequest: any, enableGoogleSearch: boolean = false): GeminiRequest {
     const messages: GeminiMessage[] = openAIRequest.messages.map((msg: any) => ({
         role: msg.role === 'system' ? 'user' : msg.role, // Gemini doesn't have system role
         parts: [{ text: msg.content }]
@@ -101,7 +125,7 @@ export function convertOpenAIToGemini(openAIRequest: any): GeminiRequest {
         }
     }
 
-    return {
+    const request: GeminiRequest = {
         model: openAIRequest.model,
         messages,
         generationConfig: {
@@ -111,6 +135,13 @@ export function convertOpenAIToGemini(openAIRequest: any): GeminiRequest {
             topP: 0.95
         }
     };
+
+    // Add Google Search tool if enabled
+    if (enableGoogleSearch) {
+        request.tools = [{ google_search: {} }];
+    }
+
+    return request;
 }
 
 /**

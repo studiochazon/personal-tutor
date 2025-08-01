@@ -126,6 +126,12 @@ export const YOUTUBE_DISCOVERY_CONFIG = {
     default_quality_preference: 'educational' as const,
     default_max_retries: 3,
     
+    // Google Search integration
+    google_search: {
+        enabled: true, // Enable Google Search grounding for better video discovery
+        search_real_videos: true // Search for real, current YouTube videos
+    },
+    
     // Quality preferences
     quality_preferences: {
         educational: {

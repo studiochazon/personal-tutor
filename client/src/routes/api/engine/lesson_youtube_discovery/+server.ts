@@ -87,11 +87,12 @@ function verifyAuthToken(request: Request): { userId: number; email: string } | 
 }
 
 function createVideoDiscoveryPrompt(
-	lessons: any[],
-	courseTitle: string,
+	lessons: any[], 
+	courseTitle: string, 
 	preferredDuration: number,
 	qualityPreference: string,
-	keywordCloud?: any
+	keywordCloud?: any,
+	useGoogleSearch: boolean = false
 ): string {
 	const qualityGuidelines = YOUTUBE_DISCOVERY_CONFIG.quality_preferences;
 
@@ -137,7 +138,7 @@ ${lessons.map((lesson, index) => `${index + 1}. **${lesson.title}**
 - **Format**: Use embed URLs: https://www.youtube.com/embed/VIDEO_ID
 - **NO PLACEHOLDERS**: Never use VIDEO_ID1, VIDEO_ID2, or similar placeholders
 - **Real IDs**: Use actual YouTube video IDs (e.g., W6NZfCO5SIk, PkZNo7MFNFg)
-- **Validation**: Ensure video IDs are real and functional
+- **Validation**: Ensure video IDs are real and functional${useGoogleSearch ? '\n- **Search Strategy**: Use Google Search to find current, available YouTube videos. Search for terms like "YouTube [lesson topic] educational video" to find real videos.' : ''}
 
 ### Confidence Scoring (0.0 to 1.0)
 - **1.0**: Perfect match for lesson topic and audience
@@ -181,7 +182,8 @@ async function getVideoUrlsForLessons(
 		try {
 			console.log(`Attempt ${attempt}/${maxRetries}: Getting video URLs for ${lessons.length} lessons`);
 			
-			const videoPrompt = createVideoDiscoveryPrompt(lessons, courseTitle, preferredDuration, qualityPreference, keywordCloud);
+			const useGoogleSearch = YOUTUBE_DISCOVERY_CONFIG.google_search.enabled;
+			const videoPrompt = createVideoDiscoveryPrompt(lessons, courseTitle, preferredDuration, qualityPreference, keywordCloud, useGoogleSearch);
 
 			const videoConfig = CONFIG_HELPERS.getOperationConfig('video_discovery');
 			const request = {
@@ -206,8 +208,9 @@ async function getVideoUrlsForLessons(
 				`Video discovery for course: ${courseTitle}`, 
 				async () => {
 					if (videoConfig.provider === 'gemini') {
-						// Use Gemini API
-						const geminiRequest = convertOpenAIToGemini(request);
+						// Use Gemini API with Google Search if enabled
+						const enableGoogleSearch = YOUTUBE_DISCOVERY_CONFIG.google_search.enabled;
+						const geminiRequest = convertOpenAIToGemini(request, enableGoogleSearch);
 						const geminiResponse = await makeGeminiRequest(geminiRequest);
 						return convertGeminiToOpenAI(geminiResponse);
 					} else {

@@ -1,0 +1,35 @@
+=== LLM Response Log ===
+Timestamp: 2025-08-01T05:41:36.226Z
+Model: unknown
+API Type: lesson_youtube_discovery
+Topic: video-discovery-for
+
+=== User Prompt ===
+Video discovery for course: Understanding Creationism: Historical, Theological, and Scientific Perspectives
+
+=== AI Response ===
+```json
+{
+  "videos": [
+    {
+      "lesson_index": 0,
+      "video_url": "https://www.youtube.com/embed/z4E59yvlA4A",
+      "video_title": "Beyond the \"creation vs. evolution\" debate | Denis Lamoureux | TEDxEdmonton",
+      "video_duration": 1061,
+      "confidence_score": 0.9,
+      "platform": "youtube"
+    },
+    {
+      "lesson_index": 1,
+      "video_url": "https://www.youtube.com/embed/nQHe7M59a6s",
+      "video_title": "The Surprising History of Creationism",
+      "video_duration": 1051,
+      "confidence_score": 1.0,
+      "platform": "youtube"
+    },
+    {
+      "lesson_index": 2,
+      "video_url": "https://www.youtube.com/embed/dPEVHoK9sAM",
+      "
+
+=== End Response ===

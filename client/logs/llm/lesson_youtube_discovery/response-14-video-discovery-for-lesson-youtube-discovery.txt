@@ -1,0 +1,82 @@
+=== LLM Response Log ===
+Timestamp: 2025-08-01T05:42:40.333Z
+Model: unknown
+API Type: lesson_youtube_discovery
+Topic: video-discovery-for
+
+=== User Prompt ===
+Video discovery for course: Understanding Creationism: Historical, Theological, and Scientific Perspectives
+
+=== AI Response ===
+```json
+{
+  "videos": [
+    {
+      "lesson_index": 0,
+      "video_url": "https://www.youtube.com/embed/y_gM42sQ9sA",
+      "video_title": "What is Creationism? (Religious Studies) | Episode 1502",
+      "video_duration": 899,
+      "confidence_score": 0.9,
+      "platform": "youtube"
+    },
+    {
+      "lesson_index": 1,
+      "video_url": "https://www.youtube.com/embed/G5A3-f013p4",
+      "video_title": "A Brief History of Creationism",
+      "video_duration": 2271,
+      "confidence_score": 0.8,
+      "platform": "youtube"
+    },
+    {
+      "lesson_index": 2,
+      "video_url": "https://www.youtube.com/embed/9Badd052g-k",
+      "video_title": "Old-Earth vs. Young-Earth Creationism: A Primer",
+      "video_duration": 762,
+      "confidence_score": 1.0,
+      "platform": "youtube"
+    },
+    {
+      "lesson_index": 3,
+      "video_url": "https://www.youtube.com/embed/rEMf0n813S4",
+      "video_title": "7 Major Interpretations of Genesis 1",
+      "video_duration": 1111,
+      "confidence_score": 0.9,
+      "platform": "youtube"
+    },
+    {
+      "lesson_index": 4,
+      "video_url": "https://www.youtube.com/embed/P3GagfbA2vo",
+      "video_title": "Evidence for Evolution",
+      "video_duration": 620,
+      "confidence_score": 0.9,
+      "platform": "youtube"
+    },
+    {
+      "lesson_index": 5,
+      "video_url": "https://www.youtube.com/embed/R-J_09619aE",
+      "video_title": "Edwards v. Aguillard in 5 Minutes: The Case that Banned Creationism in Public Schools",
+      "video_duration": 310,
+      "confidence_score": 1.0,
+      "platform": "youtube"
+    },
+    {
+      "lesson_index": 6,
+      "video_url": "https://www.youtube.com/embed/n-uH-2K_s-I",
+      "video_title": "Why does it matter if we teach creationism in schools?",
+      "video_duration": 287,
+      "confidence_score": 0.8,
+      "platform": "youtube"
+    },
+    {
+      "lesson_index": 7,
+      "video_url": "https://www.youtube.com/embed/8yv_2l9aVvE",
+      "video_title": "Intelligent Design: A Scientific Alternative to Evolution?",
+      "video_duration": 801,
+      "confidence_score": 1.0,
+      "platform": "youtube"
+    }
+  ]
+}
+```
+
+=== End Response ===

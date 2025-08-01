@@ -1,0 +1,42 @@
+=== LLM Response Log ===
+Timestamp: 2025-08-01T05:40:13.428Z
+Model: unknown
+API Type: lesson_youtube_discovery
+Topic: video-discovery-for
+
+=== User Prompt ===
+Video discovery for course: Introduction to Data Science
+
+=== AI Response ===
+```json
+{
+  "videos": [
+    {
+      "lesson_index": 0,
+      "video_url": "https://www.youtube.com/embed/ukzFI9rgwfU",
+      "video_title": "15 minutes introduction to machine learning | What is ML",
+      "video_duration": 901,
+      "confidence_score": 0.95,
+      "platform": "youtube"
+    },
+    {
+      "lesson_index": 1,
+      "video_url": "https://www.youtube.com/embed/K_ncn40k_4M",
+      "video_title": "Python Programming Basics for Beginners #11 - Summary of Operators and Data Types",
+      "video_duration": 1140,
+      "confidence_score": 0.85,
+      "platform": "youtube"
+    },
+    {
+      "lesson_index": 2,
+      "video_url": "https://www.youtube.com/embed/JwSS70SZdyM",
+      "video_title": "Real-World Data Analysis with Pandas Series | Python Pandas Tutorial For Data Engineering",
+      "video_duration": 1500,
+      "confidence_score": 0.9,
+      "platform": "youtube"
+    }
+  ]
+}
+```
+
+=== End Response ===

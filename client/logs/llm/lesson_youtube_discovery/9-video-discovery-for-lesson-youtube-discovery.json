@@ -1,0 +1,52 @@
+{
+  "id": "9-video-discovery-for-lesson-youtube-discovery",
+  "timestamp": "2025-08-01T05:40:13.425Z",
+  "request": {
+    "model": "gemini-2.5-pro",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a video research assistant. Find real YouTube educational videos. Respond with ONLY valid JSON."
+      },
+      {
+        "role": "user",
+        "content": "Find real YouTube videos for these lessons. You are helping create an educational course on \"Introduction to Data Science\".\n\n## Course Information\n- **Course Title**: Introduction to Data Science\n- **Number of Lessons**: 3\n- **Quality Preference**: [object Object]\n- **Preferred Video Duration**: 15 minutes (900 seconds)\n\n## Keyword Cloud for Enhanced Video Discovery\n- **Primary Keywords**: machine learning, python programming, data science, pandas tutorial, data analysis\n- **Secondary Keywords**: artificial intelligence, programming tutorial, data manipulation, python basics, coding\n- **Video Search Terms**: machine learning tutorial, python programming course, pandas tutorial, data science basics, python for data science\n- **Long-tail Keywords**: machine learning for beginners, python programming tutorial, pandas data analysis tutorial, introduction to data science\n- **Excluded Terms**: advanced, expert level, complex mathematics\n\nUse these keywords to find more relevant and targeted videos. Prioritize videos that match the primary and video search terms.\n\n## Lessons to Match\n1. **Introduction to Machine Learning**\n   - Topic: Basic concepts and overview of machine learning\n   - Lesson Duration: 15 minutes\n   - Audience: beginners\n\n2. **Python Programming Basics**\n   - Topic: Learning Python programming fundamentals\n   - Lesson Duration: 20 minutes\n   - Audience: beginners\n\n3. **Data Analysis with Pandas**\n   - Topic: Using pandas library for data manipulation\n   - Lesson Duration: 25 minutes\n   - Audience: intermediate\n\n## Requirements\n\n### Video Selection Criteria\n- **REAL YouTube URLs**: Use actual, existing YouTube video IDs\n- **Relevance**: Videos must directly relate to the lesson topic\n- **Quality**: Choose high-quality educational content\n- **Duration**: Prefer videos around 15 minutes (900 seconds)\n- **Accessibility**: Publicly available videos with good audio quality\n- **Educational Value**: Content that enhances learning objectives\n\n### Technical Requirements\n- **Format**: Use embed URLs: https://www.youtube.com/embed/VIDEO_ID\n- **NO PLACEHOLDERS**: Never use VIDEO_ID1, VIDEO_ID2, or similar placeholders\n- **Real IDs**: Use actual YouTube video IDs (e.g., W6NZfCO5SIk, PkZNo7MFNFg)\n- **Validation**: Ensure video IDs are real and functional\n- **Search Strategy**: Use Google Search to find current, available YouTube videos. Search for terms like \"YouTube [lesson topic] educational video\" to find real videos.\n\n### Confidence Scoring (0.0 to 1.0)\n- **1.0**: Perfect match for lesson topic and audience\n- **0.8-0.9**: Very relevant with good educational value\n- **0.6-0.7**: Relevant but may need supplementation\n- **0.4-0.5**: Somewhat relevant, acceptable fallback\n- **Below 0.4**: Poor match, avoid if possible\n\n## JSON Response Format\n\nRespond with ONLY valid JSON in this exact structure:\n\n{\n  \"videos\": [\n    {\n      \"lesson_index\": 0,\n      \"video_url\": \"https://www.youtube.com/embed/REAL_VIDEO_ID\",\n      \"video_title\": \"Actual video title from YouTube\",\n      \"video_duration\": 360,\n      \"confidence_score\": 0.9,\n      \"platform\": \"youtube\"\n    }\n  ]\n}\n\n**CRITICAL**: Only use REAL YouTube video IDs. Do not use placeholders or made-up IDs.\n\nFind the best matching videos now."
+      }
+    ],
+    "max_tokens": 4000,
+    "temperature": 0.3,
+    "user_prompt": "Video discovery for course: Introduction to Data Science",
+    "timestamp": "2025-08-01T05:40:13.425Z"
+  },
+  "response": {
+    "content": "```json\n{\n  \"videos\": [\n    {\n      \"lesson_index\": 0,\n      \"video_url\": \"https://www.youtube.com/embed/ukzFI9rgwfU\",\n      \"video_title\": \"15 minutes introduction to machine learning | What is ML\",\n      \"video_duration\": 901,\n      \"confidence_score\": 0.95,\n      \"platform\": \"youtube\"\n    },\n    {\n      \"lesson_index\": 1,\n      \"video_url\": \"https://www.youtube.com/embed/K_ncn40k_4M\",\n      \"video_title\": \"Python Programming Basics for Beginners #11 - Summary of Operators and Data Types\",\n      \"video_duration\": 1140,\n      \"confidence_score\": 0.85,\n      \"platform\": \"youtube\"\n    },\n    {\n      \"lesson_index\": 2,\n      \"video_url\": \"https://www.youtube.com/embed/JwSS70SZdyM\",\n      \"video_title\": \"Real-World Data Analysis with Pandas Series | Python Pandas Tutorial For Data Engineering\",\n      \"video_duration\": 1500,\n      \"confidence_score\": 0.9,\n      \"platform\": \"youtube\"\n    }\n  ]\n}\n```",
+    "usage": {
+      "prompt_tokens": 796,
+      "completion_tokens": 367,
+      "total_tokens": 2614
+    },
+    "model": "unknown",
+    "finish_reason": "STOP",
+    "raw_response": {
+      "choices": [
+        {
+          "message": {
+            "role": "assistant",
+            "content": "```json\n{\n  \"videos\": [\n    {\n      \"lesson_index\": 0,\n      \"video_url\": \"https://www.youtube.com/embed/ukzFI9rgwfU\",\n      \"video_title\": \"15 minutes introduction to machine learning | What is ML\",\n      \"video_duration\": 901,\n      \"confidence_score\": 0.95,\n      \"platform\": \"youtube\"\n    },\n    {\n      \"lesson_index\": 1,\n      \"video_url\": \"https://www.youtube.com/embed/K_ncn40k_4M\",\n      \"video_title\": \"Python Programming Basics for Beginners #11 - Summary of Operators and Data Types\",\n      \"video_duration\": 1140,\n      \"confidence_score\": 0.85,\n      \"platform\": \"youtube\"\n    },\n    {\n      \"lesson_index\": 2,\n      \"video_url\": \"https://www.youtube.com/embed/JwSS70SZdyM\",\n      \"video_title\": \"Real-World Data Analysis with Pandas Series | Python Pandas Tutorial For Data Engineering\",\n      \"video_duration\": 1500,\n      \"confidence_score\": 0.9,\n      \"platform\": \"youtube\"\n    }\n  ]\n}\n```"
+          },
+          "finish_reason": "STOP",
+          "index": 0
+        }
+      ],
+      "usage": {
+        "prompt_tokens": 796,
+        "completion_tokens": 367,
+        "total_tokens": 2614
+      }
+    }
+  },
+  "success": true,
+  "duration_ms": 31319,
+  "api_type": "lesson_youtube_discovery",
+  "topic": "video-discovery-for"
+}
