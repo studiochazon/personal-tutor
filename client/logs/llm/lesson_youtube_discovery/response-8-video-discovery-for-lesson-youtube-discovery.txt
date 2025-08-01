@@ -1,0 +1,82 @@
+=== LLM Response Log ===
+Timestamp: 2025-08-01T05:17:38.895Z
+Model: unknown
+API Type: lesson_youtube_discovery
+Topic: video-discovery-for
+
+=== User Prompt ===
+Video discovery for course: Understanding Creationism: Historical, Theological, and Scientific Perspectives
+
+=== AI Response ===
+```json
+{
+  "videos": [
+    {
+      "lesson_index": 0,
+      "video_url": "https://www.youtube.com/embed/G4t3g2239_c",
+      "video_title": "What Is Creationism?",
+      "video_duration": 822,
+      "confidence_score": 1.0,
+      "platform": "youtube"
+    },
+    {
+      "lesson_index": 1,
+      "video_url": "https://www.youtube.com/embed/a-3X6V6_2wM",
+      "video_title": "A Brief History of Young Earth Creationism",
+      "video_duration": 899,
+      "confidence_score": 0.9,
+      "platform": "youtube"
+    },
+    {
+      "lesson_index": 2,
+      "video_url": "https://www.youtube.com/embed/w5369-OobM4",
+      "video_title": "Young Earth vs. Old Earth Creationism: What's the Difference?",
+      "video_duration": 899,
+      "confidence_score": 1.0,
+      "platform": "youtube"
+    },
+    {
+      "lesson_index": 3,
+      "video_url": "https://www.youtube.com/embed/G_igA_j362I",
+      "video_title": "The Lost World of Genesis One",
+      "video_duration": 442,
+      "confidence_score": 0.95,
+      "platform": "youtube"
+    },
+    {
+      "lesson_index": 4,
+      "video_url": "https://www.youtube.com/embed/o-Q_94zR02s",
+      "video_title": "How Do We Know How Old The Earth Is?",
+      "video_duration": 415,
+      "confidence_score": 0.9,
+      "platform": "youtube"
+    },
+    {
+      "lesson_index": 5,
+      "video_url": "https://www.youtube.com/embed/l33f9pI96as",
+      "video_title": "The Scopes Monkey Trial | A Reading Through History",
+      "video_duration": 648,
+      "confidence_score": 1.0,
+      "platform": "youtube"
+    },
+    {
+      "lesson_index": 6,
+      "video_url": "https://www.youtube.com/embed/zV3gboA-a_I",
+      "video_title": "Science vs. God: A False Dichotomy | Dr. Ian Hutchinson | University of Toronto",
+      "video_duration": 707,
+      "confidence_score": 0.9,
+      "platform": "youtube"
+    },
+    {
+      "lesson_index": 7,
+      "video_url": "https://www.youtube.com/embed/bICEv_XbL3E",
+      "video_title": "Intelligent Design",
+      "video_duration": 447,
+      "confidence_score": 0.95,
+      "platform": "youtube"
+    }
+  ]
+}
+```
+
+=== End Response ===

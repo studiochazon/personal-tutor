@@ -3,6 +3,14 @@
  * Centralized configuration for all engine APIs
  */
 
+// AI Provider Configuration
+export const AI_PROVIDERS = {
+    openai: 'openai',
+    gemini: 'gemini'
+} as const;
+
+export type AIProvider = typeof AI_PROVIDERS[keyof typeof AI_PROVIDERS];
+
 // OpenAI Model Configuration
 export const OPENAI_CONFIG = {
     // Default model for most operations
@@ -30,7 +38,7 @@ export const OPENAI_CONFIG = {
         },
         video_discovery: {
             temperature: 0.3,
-            max_tokens: 1500,
+            max_tokens: 4000,
             timeout: 45000 // 45 seconds
         },
         course_planning: {
@@ -48,6 +56,66 @@ export const OPENAI_CONFIG = {
             max_tokens: 2500,
             timeout: 45000 // 45 seconds
         }
+    }
+};
+
+// Gemini Model Configuration
+export const GEMINI_CONFIG = {
+    // Default model for most operations
+    default_model: 'gemini-2.5-pro',
+    
+    // Model for specific operations
+    models: {
+        keyword_extraction: 'gemini-2.5-pro',
+        video_discovery: 'gemini-2.5-pro',
+        course_planning: 'gemini-2.5-pro',
+        content_generation: 'gemini-2.5-pro',
+        lesson_planning: 'gemini-2.5-pro'
+    },
+    
+    // Default parameters
+    default_temperature: 0.3,
+    default_max_tokens: 1500,
+    
+    // Operation-specific parameters
+    parameters: {
+        keyword_extraction: {
+            temperature: 0.2,
+            max_tokens: 2000,
+            timeout: 30000 // 30 seconds
+        },
+        video_discovery: {
+            temperature: 0.3,
+            max_tokens: 4000,
+            timeout: 45000 // 45 seconds
+        },
+        course_planning: {
+            temperature: 0.4,
+            max_tokens: 3000,
+            timeout: 60000 // 60 seconds
+        },
+        content_generation: {
+            temperature: 0.5,
+            max_tokens: 4000,
+            timeout: 90000 // 90 seconds
+        },
+        lesson_planning: {
+            temperature: 0.3,
+            max_tokens: 2500,
+            timeout: 45000 // 45 seconds
+        }
+    }
+};
+
+// Provider Selection Configuration
+export const PROVIDER_CONFIG = {
+    // Which provider to use for each operation
+    providers: {
+        keyword_extraction: AI_PROVIDERS.openai,
+        video_discovery: AI_PROVIDERS.gemini, // Using Gemini for YouTube discovery
+        course_planning: AI_PROVIDERS.openai,
+        content_generation: AI_PROVIDERS.openai,
+        lesson_planning: AI_PROVIDERS.openai
     }
 };
 
@@ -439,14 +507,24 @@ export const ENV_CONFIG = {
 // Helper functions
 export const CONFIG_HELPERS = {
     /**
-     * Get configuration for a specific operation
+     * Get configuration for a specific operation (supports multiple providers)
      */
     getOperationConfig(operation: keyof typeof OPENAI_CONFIG.parameters) {
-        return {
-            model: OPENAI_CONFIG.models[operation] || OPENAI_CONFIG.default_model,
-            ...OPENAI_CONFIG.parameters[operation],
-            ...OPENAI_CONFIG.parameters[operation]
-        };
+        const provider = PROVIDER_CONFIG.providers[operation];
+        
+        if (provider === AI_PROVIDERS.gemini) {
+            return {
+                provider: 'gemini',
+                model: GEMINI_CONFIG.models[operation] || GEMINI_CONFIG.default_model,
+                ...GEMINI_CONFIG.parameters[operation]
+            };
+        } else {
+            return {
+                provider: 'openai',
+                model: OPENAI_CONFIG.models[operation] || OPENAI_CONFIG.default_model,
+                ...OPENAI_CONFIG.parameters[operation]
+            };
+        }
     },
     
     /**

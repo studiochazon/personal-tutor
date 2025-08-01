@@ -1,0 +1,29 @@
+=== LLM Response Log ===
+Timestamp: 2025-08-01T05:16:01.833Z
+Model: unknown
+API Type: lesson_youtube_discovery
+Topic: video-discovery-for
+
+=== User Prompt ===
+Video discovery for course: Understanding Creationism: Historical, Theological, and Scientific Perspectives
+
+=== AI Response ===
+{
+  "choices": [
+    {
+      "message": {
+        "role": "assistant",
+        "content": ""
+      },
+      "finish_reason": "MAX_TOKENS",
+      "index": 0
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 1205,
+    "completion_tokens": 0,
+    "total_tokens": 2704
+  }
+}
+
+=== End Response ===

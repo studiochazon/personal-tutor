@@ -1,4 +1,4 @@
-// Cost Calculator for OpenAI API usage
+// Cost Calculator for AI API usage (OpenAI and Gemini)
 export interface TokenUsage {
   prompt_tokens: number;
   completion_tokens: number;
@@ -11,6 +11,7 @@ export interface CostInfo {
   completion_cost: number;
   tokens_used: TokenUsage;
   model: string;
+  provider: string;
   currency: string;
 }
 
@@ -33,12 +34,29 @@ const OPENAI_PRICING = {
   'default': { prompt: 0.01, completion: 0.03 }
 };
 
-export function calculateOpenAICost(
+// Gemini pricing per 1K tokens (as of 2024)
+const GEMINI_PRICING = {
+  'gemini-2.5-pro': { prompt: 0.00125, completion: 0.005 },
+  'gemini-2.0-flash-exp': { prompt: 0.000075, completion: 0.0003 },
+  'gemini-1.5-pro': { prompt: 0.00125, completion: 0.005 },
+  'gemini-1.5-flash': { prompt: 0.000075, completion: 0.0003 },
+  
+  // Default fallback
+  'default': { prompt: 0.00125, completion: 0.005 }
+};
+
+export function calculateAICost(
   usage: TokenUsage,
-  model: string
+  model: string,
+  provider: 'openai' | 'gemini' = 'openai'
 ): CostInfo {
-  // Get pricing for the model, fallback to default if not found
-  const pricing = OPENAI_PRICING[model as keyof typeof OPENAI_PRICING] || OPENAI_PRICING.default;
+  // Get pricing for the model based on provider
+  let pricing;
+  if (provider === 'gemini') {
+    pricing = GEMINI_PRICING[model as keyof typeof GEMINI_PRICING] || GEMINI_PRICING.default;
+  } else {
+    pricing = OPENAI_PRICING[model as keyof typeof OPENAI_PRICING] || OPENAI_PRICING.default;
+  }
   
   // Calculate costs per 1K tokens
   const promptCost = (usage.prompt_tokens / 1000) * pricing.prompt;
@@ -51,8 +69,17 @@ export function calculateOpenAICost(
     completion_cost: completionCost,
     tokens_used: usage,
     model,
+    provider,
     currency: 'USD'
   };
+}
+
+// Backward compatibility
+export function calculateOpenAICost(
+  usage: TokenUsage,
+  model: string
+): CostInfo {
+  return calculateAICost(usage, model, 'openai');
 }
 
 export function formatCost(cost: number): string {

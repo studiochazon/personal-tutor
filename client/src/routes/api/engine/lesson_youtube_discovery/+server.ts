@@ -9,6 +9,11 @@ import {
     YOUTUBE_DISCOVERY_CONFIG, 
     CONFIG_HELPERS 
 } from '$lib/engine.config';
+import { 
+    makeGeminiRequest, 
+    convertOpenAIToGemini, 
+    convertGeminiToOpenAI 
+} from '$lib/gemini-client';
 
 // JWT secret - in production, use environment variable
 const JWT_SECRET = 'your-super-secret-jwt-key-change-this-in-production';
@@ -179,7 +184,7 @@ async function getVideoUrlsForLessons(
 			const videoPrompt = createVideoDiscoveryPrompt(lessons, courseTitle, preferredDuration, qualityPreference, keywordCloud);
 
 			const videoConfig = CONFIG_HELPERS.getOperationConfig('video_discovery');
-			const openAIRequest = {
+			const request = {
 				model: videoConfig.model,
 				messages: [
 					{
@@ -195,25 +200,33 @@ async function getVideoUrlsForLessons(
 				temperature: videoConfig.temperature
 			};
 
-			// Log the request and make the API call
+			// Log the request and make the API call based on provider
 			const data = await logOpenAIRequest(
-				openAIRequest, 
+				request, 
 				`Video discovery for course: ${courseTitle}`, 
 				async () => {
-					const response = await fetch('https://api.openai.com/v1/chat/completions', {
-						method: 'POST',
-						headers: {
-							'Authorization': `Bearer ${OPENAI_API_KEY}`,
-							'Content-Type': 'application/json'
-						},
-						body: JSON.stringify(openAIRequest)
-					});
+					if (videoConfig.provider === 'gemini') {
+						// Use Gemini API
+						const geminiRequest = convertOpenAIToGemini(request);
+						const geminiResponse = await makeGeminiRequest(geminiRequest);
+						return convertGeminiToOpenAI(geminiResponse);
+					} else {
+						// Use OpenAI API
+						const response = await fetch('https://api.openai.com/v1/chat/completions', {
+							method: 'POST',
+							headers: {
+								'Authorization': `Bearer ${OPENAI_API_KEY}`,
+								'Content-Type': 'application/json'
+							},
+							body: JSON.stringify(request)
+						});
 
-					if (!response.ok) {
-						throw new Error(`OpenAI API error: ${response.status}`);
+						if (!response.ok) {
+							throw new Error(`OpenAI API error: ${response.status}`);
+						}
+
+						return response.json();
 					}
-
-					return response.json();
 				},
 				'lesson_youtube_discovery'
 			);
@@ -221,7 +234,7 @@ async function getVideoUrlsForLessons(
 			const videoResponse = data.choices[0]?.message?.content;
 
 			if (!videoResponse) {
-				throw new Error('No response content from OpenAI');
+				throw new Error(`No response content from ${videoConfig.provider} API`);
 			}
 
 			// Parse the video response
