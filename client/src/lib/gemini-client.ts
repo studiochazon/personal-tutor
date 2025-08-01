@@ -97,7 +97,10 @@ export async function makeGeminiRequest(request: GeminiRequest): Promise<GeminiR
         throw new Error(`Gemini API error: ${response.status} - ${errorText}`);
     }
 
-    return response.json();
+    const responseData = await response.json();
+    console.log('🔍 Raw Gemini response:', JSON.stringify(responseData, null, 2));
+    
+    return responseData;
 }
 
 /**
@@ -148,7 +151,24 @@ export function convertOpenAIToGemini(openAIRequest: any, enableGoogleSearch: bo
  * Convert Gemini response to OpenAI format for compatibility
  */
 export function convertGeminiToOpenAI(geminiResponse: GeminiResponse): any {
-    const content = geminiResponse.candidates[0]?.content?.parts[0]?.text || '';
+    // Check if response has candidates
+    if (!geminiResponse.candidates || geminiResponse.candidates.length === 0) {
+        console.error('❌ Gemini response missing candidates:', geminiResponse);
+        throw new Error('Gemini response missing candidates array');
+    }
+    
+    const candidate = geminiResponse.candidates[0];
+    if (!candidate.content || !candidate.content.parts || candidate.content.parts.length === 0) {
+        console.error('❌ Gemini candidate missing content/parts:', candidate);
+        throw new Error('Gemini candidate missing content or parts');
+    }
+    
+    const content = candidate.content.parts[0]?.text || '';
+    
+    if (!content) {
+        console.error('❌ Gemini response has empty content:', candidate);
+        throw new Error('Gemini response contains empty content');
+    }
     
     return {
         choices: [{
@@ -156,7 +176,7 @@ export function convertGeminiToOpenAI(geminiResponse: GeminiResponse): any {
                 role: 'assistant',
                 content: content
             },
-            finish_reason: geminiResponse.candidates[0]?.finishReason || 'stop',
+            finish_reason: candidate.finishReason || 'stop',
             index: 0
         }],
         usage: {

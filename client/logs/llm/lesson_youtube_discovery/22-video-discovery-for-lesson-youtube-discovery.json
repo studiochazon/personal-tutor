@@ -1,0 +1,52 @@
+{
+  "id": "22-video-discovery-for-lesson-youtube-discovery",
+  "timestamp": "2025-08-01T08:46:04.964Z",
+  "request": {
+    "model": "gemini-2.5-pro",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a video research assistant. Find real YouTube educational videos. Respond with ONLY valid JSON."
+      },
+      {
+        "role": "user",
+        "content": "Find real YouTube videos for these lessons. You are helping create an educational course on \"Mixed Educational Topics Test\".\n\n## Course Information\n- **Course Title**: Mixed Educational Topics Test\n- **Number of Lessons**: 4\n- **Quality Preference**: [object Object]\n- **Preferred Video Duration**: 20 minutes (1200 seconds)\n\n## Keyword Cloud for Enhanced Video Discovery\n- **Primary Keywords**: python programming, basic math, elementary education, programming tutorial\n- **Secondary Keywords**: coding, mathematics, education, learning\n- **Video Search Terms**: python tutorial, math for kids, programming basics, elementary math\n- **Long-tail Keywords**: python programming tutorial for beginners, basic math for kids, simple programming concepts\n- **Excluded Terms**: advanced, complex, expert level\n\nUse these keywords to find more relevant and targeted videos. Prioritize videos that match the primary and video search terms.\n\n## Lessons to Match\n1. **Advanced Quantum Mechanics for Toddlers**\n   - Topic: Teaching quantum physics concepts to 2-year-olds\n   - Lesson Duration: 30 minutes\n   - Audience: toddlers\n\n2. **Basic Python Programming**\n   - Topic: Introduction to Python programming for beginners\n   - Lesson Duration: 20 minutes\n   - Audience: beginners\n\n3. **Ancient Mesopotamian Tax Law**\n   - Topic: Detailed analysis of taxation systems in ancient Mesopotamia\n   - Lesson Duration: 45 minutes\n   - Audience: graduate students\n\n4. **Simple Math for Kids**\n   - Topic: Basic addition and subtraction for elementary students\n   - Lesson Duration: 15 minutes\n   - Audience: children\n\n## Requirements\n\n### Video Selection Criteria\n- **REAL YouTube URLs**: Use actual, existing YouTube video IDs\n- **Relevance**: Videos must directly relate to the lesson topic\n- **Quality**: Choose high-quality educational content\n- **Duration**: Prefer videos around 20 minutes (1200 seconds)\n- **Accessibility**: Publicly available videos with good audio quality\n- **Educational Value**: Content that enhances learning objectives\n\n### Technical Requirements\n- **Format**: Use embed URLs: https://www.youtube.com/embed/VIDEO_ID\n- **NO PLACEHOLDERS**: Never use VIDEO_ID1, VIDEO_ID2, or similar placeholders\n- **Real IDs**: Use actual YouTube video IDs (e.g., W6NZfCO5SIk, PkZNo7MFNFg)\n- **Live Verification**: Use Google Search to verify videos are currently accessible and not removed/private\n- **Keyword Relevance**: Videos must be highly relevant to the provided keywords and lesson topics\n- **Empty URL Handling**: If no suitable video is found, use empty string \"\" for video_url and provide detailed reason\n- **Search Strategy**: Use Google Search to find current, available YouTube videos. Search for terms like \"YouTube [lesson topic] educational video\" to find real videos.\n\n### Confidence Scoring (0.0 to 1.0)\n- **1.0**: Perfect match for lesson topic and audience\n- **0.8-0.9**: Very relevant with good educational value\n- **0.6-0.7**: Relevant but may need supplementation\n- **0.4-0.5**: Somewhat relevant, acceptable fallback\n- **Below 0.4**: Poor match, avoid if possible\n\n## JSON Response Format\n\nRespond with ONLY valid JSON in this exact structure:\n\n{\n  \"videos\": [\n    {\n      \"lesson_index\": 0,\n      \"video_url\": \"https://www.youtube.com/embed/REAL_VIDEO_ID\",\n      \"video_title\": \"Actual video title from YouTube\",\n      \"video_duration\": 360,\n      \"confidence_score\": 0.9,\n      \"platform\": \"youtube\",\n      \"verified_live\": true,\n      \"reason\": \"\"\n    }\n  ]\n}\n\n### Required Fields:\n- **video_url**: Use \"\" (empty string) if no suitable video found\n- **reason**: Required when video_url is empty. Explain why no video was found (e.g., \"No current educational videos found for this specific topic\", \"Available videos are too advanced for target audience\", \"Videos found but all are private/restricted\")\n- **verified_live**: Boolean indicating if the video was verified as currently accessible using Google Search\n- **confidence_score**: Must reflect actual relevance to keywords and lesson topic\n\n### Examples of Proper Error Handling:\nWhen no suitable video is found, return:\n{\n  lesson_index: 0,\n  video_url: \"\",\n  video_title: \"No suitable video found\",\n  video_duration: 0,\n  confidence_score: 0.0,\n  platform: \"youtube\",\n  verified_live: false,\n  reason: \"No current educational videos found for advanced creationism theology that match keyword requirements\"\n}\n\n**CRITICAL INSTRUCTIONS**:\n1. Use Google Search to verify videos are currently live and accessible\n2. If unsure about video availability, use empty string for video_url\n3. Prioritize keyword relevance over finding any video\n4. Provide detailed, helpful reasons when no video is found\n\nFind the best matching videos now."
+      }
+    ],
+    "max_tokens": 4000,
+    "temperature": 0.3,
+    "user_prompt": "Video discovery for course: Mixed Educational Topics Test",
+    "timestamp": "2025-08-01T08:46:04.964Z"
+  },
+  "response": {
+    "content": "```json\n{\n  \"videos\": [\n    {\n      \"lesson_index\": 0,\n      \"video_url\": \"\",\n      \"video_title\": \"No suitable video found\",\n      \"video_duration\": 0,\n      \"confidence_score\": 0.0,\n      \"platform\": \"youtube\",\n      \"verified_live\": false,\n      \"reason\": \"No educational videos exist for teaching quantum mechanics to toddlers. The topic is conceptually inappropriate for the target audience's cognitive development.\"\n    },\n    {\n      \"lesson_index\": 1,\n      \"video_url\": \"https://www.youtube.com/embed/x_hp_5iGgKk\",\n      \"video_title\": \"Learn Python In 20 Minutes!\",\n      \"video_duration\": 1406,\n      \"confidence_score\": 0.9,\n      \"platform\": \"youtube\",\n      \"verified_live\": true,\n      \"reason\": \"\"\n    },\n    {\n      \"lesson_index\": 2,\n      \"video_url\": \"https://www.youtube.com/embed/JqOiS53T64A\",\n      \"video_title\": \"Taxes in Mesopotamia\",\n      \"video_duration\": 247,\n      \"confidence_score\": 0.7,\n      \"platform\": \"youtube\",\n      \"verified_live\": true,\n      \"reason\": \"This video is highly relevant and from a reputable source, but its duration is significantly shorter than the requested 45 minutes. Longer, graduate-level lectures on this specific topic are not readily available.\"\n    },\n    {\n      \"lesson_index\": 3,\n      \"video_url\": \"https://www.youtube.com/embed/_aK_1T-s4A4\",\n      \"video_title\": \"Addition and Subtraction with Dinosaurs - Math for Kids - Math Games\",\n      \"video_duration\": 755,\n      \"confidence_score\": 1.0,\n      \"platform\": \"youtube\",\n      \"verified_live\": true,\n      \"reason\": \"\"\n    }\n  ]\n}\n```",
+    "usage": {
+      "prompt_tokens": 1151,
+      "completion_tokens": 553,
+      "total_tokens": 5218
+    },
+    "model": "unknown",
+    "finish_reason": "STOP",
+    "raw_response": {
+      "choices": [
+        {
+          "message": {
+            "role": "assistant",
+            "content": "```json\n{\n  \"videos\": [\n    {\n      \"lesson_index\": 0,\n      \"video_url\": \"\",\n      \"video_title\": \"No suitable video found\",\n      \"video_duration\": 0,\n      \"confidence_score\": 0.0,\n      \"platform\": \"youtube\",\n      \"verified_live\": false,\n      \"reason\": \"No educational videos exist for teaching quantum mechanics to toddlers. The topic is conceptually inappropriate for the target audience's cognitive development.\"\n    },\n    {\n      \"lesson_index\": 1,\n      \"video_url\": \"https://www.youtube.com/embed/x_hp_5iGgKk\",\n      \"video_title\": \"Learn Python In 20 Minutes!\",\n      \"video_duration\": 1406,\n      \"confidence_score\": 0.9,\n      \"platform\": \"youtube\",\n      \"verified_live\": true,\n      \"reason\": \"\"\n    },\n    {\n      \"lesson_index\": 2,\n      \"video_url\": \"https://www.youtube.com/embed/JqOiS53T64A\",\n      \"video_title\": \"Taxes in Mesopotamia\",\n      \"video_duration\": 247,\n      \"confidence_score\": 0.7,\n      \"platform\": \"youtube\",\n      \"verified_live\": true,\n      \"reason\": \"This video is highly relevant and from a reputable source, but its duration is significantly shorter than the requested 45 minutes. Longer, graduate-level lectures on this specific topic are not readily available.\"\n    },\n    {\n      \"lesson_index\": 3,\n      \"video_url\": \"https://www.youtube.com/embed/_aK_1T-s4A4\",\n      \"video_title\": \"Addition and Subtraction with Dinosaurs - Math for Kids - Math Games\",\n      \"video_duration\": 755,\n      \"confidence_score\": 1.0,\n      \"platform\": \"youtube\",\n      \"verified_live\": true,\n      \"reason\": \"\"\n    }\n  ]\n}\n```"
+          },
+          "finish_reason": "STOP",
+          "index": 0
+        }
+      ],
+      "usage": {
+        "prompt_tokens": 1151,
+        "completion_tokens": 553,
+        "total_tokens": 5218
+      }
+    }
+  },
+  "success": true,
+  "duration_ms": 59744,
+  "api_type": "lesson_youtube_discovery",
+  "topic": "video-discovery-for"
+}

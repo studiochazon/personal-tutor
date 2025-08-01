@@ -49,6 +49,8 @@ interface VideoResult {
 	platform: 'youtube' | 'vimeo' | 'other';
 	was_replaced: boolean; // If original was unavailable and replaced
 	fallback_reason?: string;
+	reason?: string; // Explanation for why no video URL was found
+	verified_live?: boolean; // Whether the video was verified as currently accessible
 }
 
 interface YouTubeDiscoveryResponse {
@@ -138,7 +140,9 @@ ${lessons.map((lesson, index) => `${index + 1}. **${lesson.title}**
 - **Format**: Use embed URLs: https://www.youtube.com/embed/VIDEO_ID
 - **NO PLACEHOLDERS**: Never use VIDEO_ID1, VIDEO_ID2, or similar placeholders
 - **Real IDs**: Use actual YouTube video IDs (e.g., W6NZfCO5SIk, PkZNo7MFNFg)
-- **Validation**: Ensure video IDs are real and functional${useGoogleSearch ? '\n- **Search Strategy**: Use Google Search to find current, available YouTube videos. Search for terms like "YouTube [lesson topic] educational video" to find real videos.' : ''}
+- **Live Verification**: ${useGoogleSearch ? 'Use Google Search to verify videos are currently accessible and not removed/private' : 'Ensure video IDs are real and functional'}
+- **Keyword Relevance**: Videos must be highly relevant to the provided keywords and lesson topics
+- **Empty URL Handling**: If no suitable video is found, use empty string "" for video_url and provide detailed reason${useGoogleSearch ? '\n- **Search Strategy**: Use Google Search to find current, available YouTube videos. Search for terms like "YouTube [lesson topic] educational video" to find real videos.' : ''}
 
 ### Confidence Scoring (0.0 to 1.0)
 - **1.0**: Perfect match for lesson topic and audience
@@ -159,12 +163,37 @@ Respond with ONLY valid JSON in this exact structure:
       "video_title": "Actual video title from YouTube",
       "video_duration": 360,
       "confidence_score": 0.9,
-      "platform": "youtube"
+      "platform": "youtube",
+      "verified_live": true,
+      "reason": ""
     }
   ]
 }
 
-**CRITICAL**: Only use REAL YouTube video IDs. Do not use placeholders or made-up IDs.
+### Required Fields:
+- **video_url**: Use "" (empty string) if no suitable video found
+- **reason**: Required when video_url is empty. Explain why no video was found (e.g., "No current educational videos found for this specific topic", "Available videos are too advanced for target audience", "Videos found but all are private/restricted")
+- **verified_live**: Boolean indicating if the video was verified as currently accessible${useGoogleSearch ? ' using Google Search' : ''}
+- **confidence_score**: Must reflect actual relevance to keywords and lesson topic
+
+### Examples of Proper Error Handling:
+When no suitable video is found, return:
+{
+  lesson_index: 0,
+  video_url: "",
+  video_title: "No suitable video found",
+  video_duration: 0,
+  confidence_score: 0.0,
+  platform: "youtube",
+  verified_live: false,
+  reason: "No current educational videos found for advanced creationism theology that match keyword requirements"
+}
+
+**CRITICAL INSTRUCTIONS**:
+1. ${useGoogleSearch ? 'Use Google Search to verify videos are currently live and accessible' : 'Only use videos you are confident exist and are accessible'}
+2. If unsure about video availability, use empty string for video_url
+3. Prioritize keyword relevance over finding any video
+4. Provide detailed, helpful reasons when no video is found
 
 Find the best matching videos now.`;
 }
@@ -262,42 +291,58 @@ async function getVideoUrlsForLessons(
 				throw new Error('Invalid video response format: expected videos array');
 			}
 
-			// Validate that we got real video URLs
-			const validVideos = videoData.videos.filter((video: any) => 
-				video.video_url && 
-				video.video_url.includes('youtube.com/embed/') && 
-				!video.video_url.includes('VIDEO_ID') &&
-				!video.video_url.includes('placeholder') &&
-				video.video_url.match(/youtube\.com\/embed\/[a-zA-Z0-9_-]+$/)
+			// Process all videos, including those with empty URLs but valid reasons
+			const processedVideos = videoData.videos.map((video: any) => ({
+				...video,
+				has_valid_url: video.video_url && 
+							   video.video_url.includes('youtube.com/embed/') && 
+							   !video.video_url.includes('VIDEO_ID') &&
+							   !video.video_url.includes('placeholder') &&
+							   video.video_url.match(/youtube\.com\/embed\/[a-zA-Z0-9_-]+$/),
+				has_empty_url_with_reason: !video.video_url && video.reason
+			}));
+
+			// Count valid results (either real URLs or empty URLs with reasons)
+			const validResults = processedVideos.filter((video: any) => 
+				video.has_valid_url || video.has_empty_url_with_reason
 			);
 
-			if (validVideos.length >= lessons.length * YOUTUBE_DISCOVERY_CONFIG.validation.min_success_rate) {
-				console.log(`✅ Successfully got ${validVideos.length}/${lessons.length} real video URLs on attempt ${attempt}`);
+			// Accept if we have valid results (URLs or proper reasons) for most lessons
+			if (validResults.length >= lessons.length * YOUTUBE_DISCOVERY_CONFIG.validation.min_success_rate) {
+				const validUrls = processedVideos.filter((v: any) => v.has_valid_url).length;
+				const emptyWithReasons = processedVideos.filter((v: any) => v.has_empty_url_with_reason).length;
+				console.log(`✅ Successfully processed ${validResults.length}/${lessons.length} lessons on attempt ${attempt}`);
+				console.log(`   📺 Real video URLs: ${validUrls}`);
+				console.log(`   📝 Empty URLs with reasons: ${emptyWithReasons}`);
 				
-				// Pad with nulls if we don't have enough videos
-				const paddedResults = lessons.map((_, index) => {
-					const video = validVideos[index];
+				// Map all lessons to results
+				const mappedResults = lessons.map((_, index) => {
+					const video = processedVideos.find((v: any) => v.lesson_index === index) || processedVideos[index];
 					if (video) {
 						return {
-							video_url: video.video_url,
-							video_title: video.video_title || null,
-							video_duration: video.video_duration || null,
-							confidence_score: video.confidence_score || 0.5,
-							was_replaced: false
+							video_url: video.video_url || null,
+							video_title: video.video_title || "No suitable video found",
+							video_duration: video.video_duration || 0,
+							confidence_score: video.confidence_score || 0,
+							was_replaced: false,
+							reason: video.reason || "",
+							verified_live: video.verified_live || false
 						};
 					}
 					return {
 						video_url: null,
-						video_title: null,
-						video_duration: null,
+						video_title: "No video processed",
+						video_duration: 0,
 						confidence_score: 0,
-						was_replaced: false
+						was_replaced: false,
+						reason: "No result returned for this lesson",
+						verified_live: false
 					};
 				});
 
-				return paddedResults;
+				return mappedResults;
 			} else {
-				console.log(`❌ Attempt ${attempt}: Only got ${validVideos.length}/${lessons.length} valid videos, retrying...`);
+				console.log(`❌ Attempt ${attempt}: Only got ${validResults.length}/${lessons.length} valid results, retrying...`);
 				if (attempt === maxRetries) {
 					console.log('Max retries reached, returning partial results');
 					const paddedResults = lessons.map(() => ({
@@ -433,7 +478,9 @@ export const POST: RequestHandler = async ({ request }) => {
 						confidence_score: validated.wasReplaced ? YOUTUBE_DISCOVERY_CONFIG.validation.fallback_confidence : videoResult.confidence_score,
 						platform: 'youtube',
 						was_replaced: validated.wasReplaced,
-						fallback_reason: validated.wasReplaced ? 'Original video unavailable' : undefined
+						fallback_reason: validated.wasReplaced ? 'Original video unavailable' : undefined,
+						reason: videoResult.reason || '',
+						verified_live: videoResult.verified_live || false
 					});
 				} catch (error) {
 					console.error(`Error validating video for lesson ${i}:`, error);
@@ -444,35 +491,54 @@ export const POST: RequestHandler = async ({ request }) => {
 						video_duration: videoResult.video_duration || 600,
 						confidence_score: videoResult.confidence_score,
 						platform: 'youtube',
-						was_replaced: false
+						was_replaced: false,
+						reason: videoResult.reason || '',
+						verified_live: videoResult.verified_live || false
 					});
 				}
 			} else {
-				// No video found, provide a fallback
-				try {
-					const fallback = await validateAndGetFallbackVideo('', lesson.topic);
-					finalResults.push({
-						lesson_index: i,
-						video_url: fallback.url,
-						video_title: fallback.title,
-						video_duration: fallback.duration,
-						confidence_score: YOUTUBE_DISCOVERY_CONFIG.validation.fallback_confidence,
-						platform: 'youtube',
-						was_replaced: true,
-						fallback_reason: 'No suitable video found'
-					});
-				} catch (error) {
-					console.error(`Error getting fallback video for lesson ${i}:`, error);
+				// No video URL found - check if this is an intentional empty response with reason
+				if (videoResult.reason) {
+					// Gemini intentionally returned empty URL with explanation - respect this decision
+					console.log(`📝 Respecting Gemini's decision: Empty URL with reason for lesson ${i}`);
 					finalResults.push({
 						lesson_index: i,
 						video_url: null,
-						video_title: 'No video available',
-						video_duration: 0,
-						confidence_score: 0,
+						video_title: videoResult.video_title || 'No suitable video found',
+						video_duration: videoResult.video_duration || 0,
+						confidence_score: videoResult.confidence_score || 0,
 						platform: 'youtube',
 						was_replaced: false,
-						fallback_reason: 'Video discovery failed'
+						reason: videoResult.reason,
+						verified_live: videoResult.verified_live || false
 					});
+				} else {
+					// Truly no result - provide a fallback only as last resort
+					try {
+						const fallback = await validateAndGetFallbackVideo('', lesson.topic);
+						finalResults.push({
+							lesson_index: i,
+							video_url: fallback.url,
+							video_title: fallback.title,
+							video_duration: fallback.duration,
+							confidence_score: YOUTUBE_DISCOVERY_CONFIG.validation.fallback_confidence,
+							platform: 'youtube',
+							was_replaced: true,
+							fallback_reason: 'No suitable video found'
+						});
+					} catch (error) {
+						console.error(`Error getting fallback video for lesson ${i}:`, error);
+						finalResults.push({
+							lesson_index: i,
+							video_url: null,
+							video_title: 'No video available',
+							video_duration: 0,
+							confidence_score: 0,
+							platform: 'youtube',
+							was_replaced: false,
+							fallback_reason: 'Video discovery failed'
+						});
+					}
 				}
 			}
 		}

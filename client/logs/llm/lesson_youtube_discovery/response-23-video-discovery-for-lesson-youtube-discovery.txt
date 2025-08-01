@@ -1,0 +1,58 @@
+=== LLM Response Log ===
+Timestamp: 2025-08-01T08:46:04.968Z
+Model: unknown
+API Type: lesson_youtube_discovery
+Topic: video-discovery-for
+
+=== User Prompt ===
+Video discovery for course: Mixed Educational Topics Test
+
+=== AI Response ===
+```json
+{
+  "videos": [
+    {
+      "lesson_index": 0,
+      "video_url": "",
+      "video_title": "No suitable video found",
+      "video_duration": 0,
+      "confidence_score": 0.0,
+      "platform": "youtube",
+      "verified_live": false,
+      "reason": "No educational videos exist for teaching quantum mechanics to toddlers. The topic is conceptually inappropriate for the target audience's cognitive development."
+    },
+    {
+      "lesson_index": 1,
+      "video_url": "https://www.youtube.com/embed/x_hp_5iGgKk",
+      "video_title": "Learn Python In 20 Minutes!",
+      "video_duration": 1406,
+      "confidence_score": 0.9,
+      "platform": "youtube",
+      "verified_live": true,
+      "reason": ""
+    },
+    {
+      "lesson_index": 2,
+      "video_url": "https://www.youtube.com/embed/JqOiS53T64A",
+      "video_title": "Taxes in Mesopotamia",
+      "video_duration": 247,
+      "confidence_score": 0.7,
+      "platform": "youtube",
+      "verified_live": true,
+      "reason": "This video is highly relevant and from a reputable source, but its duration is significantly shorter than the requested 45 minutes. Longer, graduate-level lectures on this specific topic are not readily available."
+    },
+    {
+      "lesson_index": 3,
+      "video_url": "https://www.youtube.com/embed/_aK_1T-s4A4",
+      "video_title": "Addition and Subtraction with Dinosaurs - Math for Kids - Math Games",
+      "video_duration": 755,
+      "confidence_score": 1.0,
+      "platform": "youtube",
+      "verified_live": true,
+      "reason": ""
+    }
+  ]
+}
+```
+
+=== End Response ===

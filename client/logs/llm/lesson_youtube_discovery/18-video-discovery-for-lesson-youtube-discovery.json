@@ -1,0 +1,52 @@
+{
+  "id": "18-video-discovery-for-lesson-youtube-discovery",
+  "timestamp": "2025-08-01T08:39:38.308Z",
+  "request": {
+    "model": "gemini-2.5-pro",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a video research assistant. Find real YouTube educational videos. Respond with ONLY valid JSON."
+      },
+      {
+        "role": "user",
+        "content": "Find real YouTube videos for these lessons. You are helping create an educational course on \"Simple Python Course\".\n\n## Course Information\n- **Course Title**: Simple Python Course\n- **Number of Lessons**: 1\n- **Quality Preference**: [object Object]\n- **Preferred Video Duration**: 20 minutes (1200 seconds)\n\n## Keyword Cloud for Enhanced Video Discovery\n- **Primary Keywords**: python, programming\n- **Secondary Keywords**: coding, tutorial\n- **Video Search Terms**: python tutorial\n- **Long-tail Keywords**: python programming tutorial\n- **Excluded Terms**: advanced\n\nUse these keywords to find more relevant and targeted videos. Prioritize videos that match the primary and video search terms.\n\n## Lessons to Match\n1. **Python Programming Basics**\n   - Topic: Introduction to Python programming\n   - Lesson Duration: 20 minutes\n   - Audience: beginners\n\n## Requirements\n\n### Video Selection Criteria\n- **REAL YouTube URLs**: Use actual, existing YouTube video IDs\n- **Relevance**: Videos must directly relate to the lesson topic\n- **Quality**: Choose high-quality educational content\n- **Duration**: Prefer videos around 20 minutes (1200 seconds)\n- **Accessibility**: Publicly available videos with good audio quality\n- **Educational Value**: Content that enhances learning objectives\n\n### Technical Requirements\n- **Format**: Use embed URLs: https://www.youtube.com/embed/VIDEO_ID\n- **NO PLACEHOLDERS**: Never use VIDEO_ID1, VIDEO_ID2, or similar placeholders\n- **Real IDs**: Use actual YouTube video IDs (e.g., W6NZfCO5SIk, PkZNo7MFNFg)\n- **Live Verification**: Use Google Search to verify videos are currently accessible and not removed/private\n- **Keyword Relevance**: Videos must be highly relevant to the provided keywords and lesson topics\n- **Empty URL Handling**: If no suitable video is found, use empty string \"\" for video_url and provide detailed reason\n- **Search Strategy**: Use Google Search to find current, available YouTube videos. Search for terms like \"YouTube [lesson topic] educational video\" to find real videos.\n\n### Confidence Scoring (0.0 to 1.0)\n- **1.0**: Perfect match for lesson topic and audience\n- **0.8-0.9**: Very relevant with good educational value\n- **0.6-0.7**: Relevant but may need supplementation\n- **0.4-0.5**: Somewhat relevant, acceptable fallback\n- **Below 0.4**: Poor match, avoid if possible\n\n## JSON Response Format\n\nRespond with ONLY valid JSON in this exact structure:\n\n{\n  \"videos\": [\n    {\n      \"lesson_index\": 0,\n      \"video_url\": \"https://www.youtube.com/embed/REAL_VIDEO_ID\",\n      \"video_title\": \"Actual video title from YouTube\",\n      \"video_duration\": 360,\n      \"confidence_score\": 0.9,\n      \"platform\": \"youtube\",\n      \"verified_live\": true,\n      \"reason\": \"\"\n    }\n  ]\n}\n\n### Required Fields:\n- **video_url**: Use \"\" (empty string) if no suitable video found\n- **reason**: Required when video_url is empty. Explain why no video was found (e.g., \"No current educational videos found for this specific topic\", \"Available videos are too advanced for target audience\", \"Videos found but all are private/restricted\")\n- **verified_live**: Boolean indicating if the video was verified as currently accessible using Google Search\n- **confidence_score**: Must reflect actual relevance to keywords and lesson topic\n\n### Examples of Proper Error Handling:\nWhen no suitable video is found, return:\n{\n  lesson_index: 0,\n  video_url: \"\",\n  video_title: \"No suitable video found\",\n  video_duration: 0,\n  confidence_score: 0.0,\n  platform: \"youtube\",\n  verified_live: false,\n  reason: \"No current educational videos found for advanced creationism theology that match keyword requirements\"\n}\n\n**CRITICAL INSTRUCTIONS**:\n1. Use Google Search to verify videos are currently live and accessible\n2. If unsure about video availability, use empty string for video_url\n3. Prioritize keyword relevance over finding any video\n4. Provide detailed, helpful reasons when no video is found\n\nFind the best matching videos now."
+      }
+    ],
+    "max_tokens": 4000,
+    "temperature": 0.3,
+    "user_prompt": "Video discovery for course: Simple Python Course",
+    "timestamp": "2025-08-01T08:39:38.308Z"
+  },
+  "response": {
+    "content": "```json\n{\n  \"videos\": [\n    {\n      \"lesson_index\": 0,\n      \"video_url\": \"https://www.youtube.com/embed/vfgNBs_p_2I\",\n      \"video_title\": \"Learn Python Basics in Just 20 Minutes!\",\n      \"video_duration\": 1201,\n      \"confidence_score\": 1.0,\n      \"platform\": \"youtube\",\n      \"verified_live\": true,\n      \"reason\": \"\"\n    }\n  ]\n}\n```",
+    "usage": {
+      "prompt_tokens": 989,
+      "completion_tokens": 148,
+      "total_tokens": 3386
+    },
+    "model": "unknown",
+    "finish_reason": "STOP",
+    "raw_response": {
+      "choices": [
+        {
+          "message": {
+            "role": "assistant",
+            "content": "```json\n{\n  \"videos\": [\n    {\n      \"lesson_index\": 0,\n      \"video_url\": \"https://www.youtube.com/embed/vfgNBs_p_2I\",\n      \"video_title\": \"Learn Python Basics in Just 20 Minutes!\",\n      \"video_duration\": 1201,\n      \"confidence_score\": 1.0,\n      \"platform\": \"youtube\",\n      \"verified_live\": true,\n      \"reason\": \"\"\n    }\n  ]\n}\n```"
+          },
+          "finish_reason": "STOP",
+          "index": 0
+        }
+      ],
+      "usage": {
+        "prompt_tokens": 989,
+        "completion_tokens": 148,
+        "total_tokens": 3386
+      }
+    }
+  },
+  "success": true,
+  "duration_ms": 37970,
+  "api_type": "lesson_youtube_discovery",
+  "topic": "video-discovery-for"
+}

@@ -1,0 +1,28 @@
+=== LLM Response Log ===
+Timestamp: 2025-08-01T08:39:38.313Z
+Model: unknown
+API Type: lesson_youtube_discovery
+Topic: video-discovery-for
+
+=== User Prompt ===
+Video discovery for course: Simple Python Course
+
+=== AI Response ===
+```json
+{
+  "videos": [
+    {
+      "lesson_index": 0,
+      "video_url": "https://www.youtube.com/embed/vfgNBs_p_2I",
+      "video_title": "Learn Python Basics in Just 20 Minutes!",
+      "video_duration": 1201,
+      "confidence_score": 1.0,
+      "platform": "youtube",
+      "verified_live": true,
+      "reason": ""
+    }
+  ]
+}
+```
+
+=== End Response ===
