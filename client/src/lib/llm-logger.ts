@@ -59,6 +59,11 @@ export class EnhancedLLMLogger {
       'course_planning',
       'content_generation',
       'video_search',
+      'artifact_generation',
+      'artifact_prioritization',
+      'course_plan_refinement',
+      'video_verification',
+      'orchestrator_v3',
       'daily'
     ];
 
@@ -80,7 +85,12 @@ export class EnhancedLLMLogger {
       'keyword_video_discovery',
       'course_planning',
       'content_generation',
-      'video_search'
+      'video_search',
+      'artifact_generation',
+      'artifact_prioritization',
+      'course_plan_refinement',
+      'video_verification',
+      'orchestrator_v3'
     ];
 
     subdirs.forEach(apiType => {
@@ -389,7 +399,12 @@ ${cleanContent}
       'keyword_video_discovery',
       'course_planning',
       'content_generation',
-      'video_search'
+      'video_search',
+      'artifact_generation',
+      'artifact_prioritization',
+      'course_plan_refinement',
+      'video_verification',
+      'orchestrator_v3'
     ];
 
     let totalRequests = 0;
@@ -498,7 +513,12 @@ ${cleanContent}
       'keyword_video_discovery',
       'course_planning',
       'content_generation',
-      'video_search'
+      'video_search',
+      'artifact_generation',
+      'artifact_prioritization',
+      'course_plan_refinement',
+      'video_verification',
+      'orchestrator_v3'
     ];
   }
 }

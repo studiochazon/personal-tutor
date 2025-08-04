@@ -413,7 +413,7 @@ export const POST: RequestHandler = async ({ request }) => {
 				primary_artifact: primaryArtifact,
 				supplementary_artifacts: supplementaryArtifacts,
 				total_artifacts: (primaryArtifact ? 1 : 0) + supplementaryArtifacts.length,
-				prioritization_notes
+				prioritization_notes: prioritizationNotes
 			};
 
 			prioritizedLessons.push(prioritizedLesson);
