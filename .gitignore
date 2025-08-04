@@ -30,3 +30,8 @@ build/
 dist/
 .svelte-kit/
 .output/
+
+# Deployment build artifacts (contains compiled secrets)
+deploy-tutor/temp-deploy/build/
+**/build/
+client/build/
