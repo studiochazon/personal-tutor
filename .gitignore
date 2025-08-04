@@ -3,6 +3,12 @@
 .env.*
 !.env.example
 !.env.template
+!env.production
+!env.remote
+
+# Secrets file (never commit)
+**/secrets.env
+secrets.env
 
 # Deployment artifacts
 deploy-tutor/temp-deploy/.env
