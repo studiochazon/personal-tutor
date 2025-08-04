@@ -24,6 +24,7 @@ interface QualityIndicators {
 	learning_effectiveness: number;
 }
 
+// Support both old and new lesson structures for backward compatibility
 interface RefinedLesson {
 	title: string;
 	objectives: string[];
@@ -31,16 +32,28 @@ interface RefinedLesson {
 	order: number;
 	key_concepts: string[];
 	prerequisites?: string[];
-	video_integration: VideoIntegration;
-	content_adjustments: string[];
-	quality_indicators: QualityIndicators;
+	video_integration?: VideoIntegration; // Old structure - optional for backward compatibility
+	content_adjustments?: string[];
+	quality_indicators?: QualityIndicators;
+}
+
+// New lesson structure with artifacts
+interface PrioritizedLesson {
+	lesson_index: number;
+	lesson_title: string;
+	lesson_topic: string;
+	lesson_duration: number;
+	primary_artifact: any | null;
+	supplementary_artifacts: any[];
+	total_artifacts: number;
+	prioritization_notes: string;
 }
 
 interface CourseSaveRequest {
 	course_data: {
 		title: string;
 		topic: string;
-		lessons: RefinedLesson[];
+		lessons: RefinedLesson[] | PrioritizedLesson[]; // Support both structures
 		total_duration: number;
 		video_coverage: number;
 		quality_score: number;
@@ -84,7 +97,7 @@ interface CourseSaveResponse {
 	database_operations?: {
 		course_created: boolean;
 		lessons_created: number;
-		videos_linked: number;
+		artifacts_linked: number;
 		metadata_saved: boolean;
 	};
 	log_id?: string;
@@ -267,52 +280,193 @@ export const POST: RequestHandler = async ({ request }) => {
 
 			// Insert lessons
 			let lessonsCreated = 0;
-			let videosLinked = 0;
+			let artifactsLinked = 0;
 
-			for (const lesson of course_data.lessons) {
+			for (let i = 0; i < course_data.lessons.length; i++) {
+				const lesson = course_data.lessons[i];
+				
+				// Check if this is a prioritized lesson or refined lesson
+				const isPrioritizedLesson = 'lesson_index' in lesson && 'primary_artifact' in lesson;
+				
+				// Extract lesson data based on structure
+				const lessonData = isPrioritizedLesson ? {
+					title: (lesson as PrioritizedLesson).lesson_title,
+					duration: (lesson as PrioritizedLesson).lesson_duration,
+					order: (lesson as PrioritizedLesson).lesson_index + 1,
+					topic: (lesson as PrioritizedLesson).lesson_topic,
+					objectives: [],
+					key_concepts: [],
+					prerequisites: [],
+					prioritization_notes: (lesson as PrioritizedLesson).prioritization_notes
+				} : {
+					title: (lesson as RefinedLesson).title,
+					duration: (lesson as RefinedLesson).duration,
+					order: (lesson as RefinedLesson).order,
+					topic: '',
+					objectives: (lesson as RefinedLesson).objectives || [],
+					key_concepts: (lesson as RefinedLesson).key_concepts || [],
+					prerequisites: (lesson as RefinedLesson).prerequisites || [],
+					content_adjustments: (lesson as RefinedLesson).content_adjustments || [],
+					quality_indicators: (lesson as RefinedLesson).quality_indicators || {}
+				};
+
 				// Insert lesson
 				const [lessonResult] = await connection.execute(
 					`INSERT INTO lessons (
-						course_id, title, content, duration, lesson_order, created_at, updated_at
-					) VALUES (?, ?, ?, ?, ?, NOW(), NOW())`,
+						course_id, title, content, duration, lesson_order, lesson_topic, created_at, updated_at
+					) VALUES (?, ?, ?, ?, ?, ?, NOW(), NOW())`,
 					[
 						courseId,
-						lesson.title,
+						lessonData.title,
 						JSON.stringify({
-							objectives: lesson.objectives,
-							key_concepts: lesson.key_concepts,
-							prerequisites: lesson.prerequisites || [],
-							content_adjustments: lesson.content_adjustments,
-							quality_indicators: lesson.quality_indicators
+							objectives: lessonData.objectives,
+							key_concepts: lessonData.key_concepts,
+							prerequisites: lessonData.prerequisites,
+							content_adjustments: lessonData.content_adjustments || [],
+							quality_indicators: lessonData.quality_indicators || {},
+							prioritization_notes: lessonData.prioritization_notes || ''
 						}),
-						lesson.duration,
-						lesson.order
+						lessonData.duration,
+						lessonData.order,
+						lessonData.topic || null
 					]
 				) as any;
 
 				const lessonId = lessonResult.insertId;
 				lessonsCreated++;
 
-				// Insert video integration if available
-				if (lesson.video_integration.primary_video) {
-					await connection.execute(
-						`INSERT INTO lesson_videos (
-							lesson_id, video_url, video_title, video_duration,
-							confidence_score, video_timing, video_role,
-							integration_notes, created_at
-						) VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())`,
-						[
-							lessonId,
-							lesson.video_integration.primary_video.url,
-							lesson.video_integration.primary_video.title,
-							lesson.video_integration.primary_video.duration,
-							lesson.video_integration.primary_video.confidence_score,
-							lesson.video_integration.video_timing,
-							lesson.video_integration.video_role,
-							lesson.video_integration.primary_video.integration_notes
-						]
-					);
-					videosLinked++;
+				if (isPrioritizedLesson) {
+					// Handle new artifact structure
+					const prioritizedLesson = lesson as PrioritizedLesson;
+					
+					// Insert primary artifact
+					if (prioritizedLesson.primary_artifact) {
+						const artifact = prioritizedLesson.primary_artifact;
+						
+						// Insert into artifacts table
+						const [artifactResult] = await connection.execute(
+							`INSERT INTO artifacts (
+								type, title, content, content_url, metadata, created_at, updated_at
+							) VALUES (?, ?, ?, ?, ?, NOW(), NOW())`,
+							[
+								artifact.type,
+								artifact.title,
+								artifact.content || '',
+								artifact.content_url || artifact.video_url || null,
+								JSON.stringify(artifact.metadata || {})
+							]
+						) as any;
+
+						const artifactId = artifactResult.insertId;
+
+						// Link artifact to lesson
+						await connection.execute(
+							`INSERT INTO lesson_artifacts (
+								lesson_id, artifact_id, priority_role, display_order, priority_score,
+								selection_reason, integration_notes, created_at, updated_at
+							) VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), NOW())`,
+							[
+								lessonId,
+								artifactId,
+								'primary',
+								1,
+								artifact.priority_score || 0.8,
+								artifact.selection_reason || 'Primary learning content',
+								artifact.integration_notes || ''
+							]
+						);
+						
+						artifactsLinked++;
+					}
+
+					// Insert supplementary artifacts
+					for (let j = 0; j < prioritizedLesson.supplementary_artifacts.length; j++) {
+						const artifact = prioritizedLesson.supplementary_artifacts[j];
+						
+						// Insert into artifacts table
+						const [artifactResult] = await connection.execute(
+							`INSERT INTO artifacts (
+								type, title, content, content_url, metadata, created_at, updated_at
+							) VALUES (?, ?, ?, ?, ?, NOW(), NOW())`,
+							[
+								artifact.type,
+								artifact.title,
+								artifact.content || '',
+								artifact.content_url || artifact.video_url || null,
+								JSON.stringify(artifact.metadata || {})
+							]
+						) as any;
+
+						const artifactId = artifactResult.insertId;
+
+						// Link artifact to lesson
+						await connection.execute(
+							`INSERT INTO lesson_artifacts (
+								lesson_id, artifact_id, priority_role, display_order, priority_score,
+								selection_reason, integration_notes, created_at, updated_at
+							) VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), NOW())`,
+							[
+								lessonId,
+								artifactId,
+								'supplementary',
+								j + 2, // Start after primary (which is 1)
+								artifact.priority_score || 0.6,
+								artifact.selection_reason || 'Supplementary learning content',
+								artifact.integration_notes || ''
+							]
+						);
+						
+						artifactsLinked++;
+					}
+				} else {
+					// Handle old video integration structure for backward compatibility
+					const refinedLesson = lesson as RefinedLesson;
+					if (refinedLesson.video_integration?.primary_video) {
+						// Convert old video structure to artifact
+						const video = refinedLesson.video_integration.primary_video;
+						
+						// Insert as video artifact
+						const [artifactResult] = await connection.execute(
+							`INSERT INTO artifacts (
+								type, title, content, content_url, metadata, created_at, updated_at
+							) VALUES (?, ?, ?, ?, ?, NOW(), NOW())`,
+							[
+								'video',
+								video.title,
+								'',
+								video.url,
+								JSON.stringify({
+									estimated_time: Math.round(video.duration / 60),
+									difficulty: 'medium',
+									learning_objective: 'Video-based learning',
+									video_duration: video.duration,
+									platform: video.url.includes('youtube') ? 'youtube' : 'other',
+									confidence_score: video.confidence_score
+								})
+							]
+						) as any;
+
+						const artifactId = artifactResult.insertId;
+
+						// Link to lesson as primary
+						await connection.execute(
+							`INSERT INTO lesson_artifacts (
+								lesson_id, artifact_id, priority_role, display_order, priority_score,
+								selection_reason, integration_notes, created_at, updated_at
+							) VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), NOW())`,
+							[
+								lessonId,
+								artifactId,
+								'primary',
+								1,
+								video.confidence_score || 0.7,
+								'Migrated from video integration',
+								video.integration_notes || ''
+							]
+						);
+						
+						artifactsLinked++;
+					}
 				}
 			}
 
@@ -365,7 +519,7 @@ export const POST: RequestHandler = async ({ request }) => {
 				database_operations: {
 					course_created: true,
 					lessons_created: lessonsCreated,
-					videos_linked: videosLinked,
+					artifacts_linked: artifactsLinked,
 					metadata_saved: true
 				},
 				log_id: 'saved'

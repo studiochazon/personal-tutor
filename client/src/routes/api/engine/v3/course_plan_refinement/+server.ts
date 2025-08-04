@@ -42,6 +42,7 @@ interface CoursePlanRefinementRequest {
 	depth: 'overview' | 'comprehensive' | 'deep-dive';
 	original_lessons: OriginalLesson[];
 	verified_videos: VideoData[];
+	prioritized_artifacts?: any[]; // Optional prioritized artifacts from new engine flow
 	refinement_strategy?: 'optimize_for_videos' | 'maintain_structure' | 'balanced';
 	min_quality_threshold?: number;
 }
